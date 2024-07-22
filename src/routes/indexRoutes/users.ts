@@ -1,7 +1,7 @@
 import { prisma } from "../../app";
-import Route from "../Route";
+import CRUDRouter from "../CRUDRouter";
 
-const route = new Route(prisma.user);
-const usersRoutes = route.setupCRUDRoutes();
+const router = new CRUDRouter(prisma.user);
+const usersRoutes = router.setupCRUDRoutes();
 
 export default usersRoutes;

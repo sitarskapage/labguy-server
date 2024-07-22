@@ -3,7 +3,7 @@ import { Controller } from "../controllers/Controller";
 import { Prisma } from "@prisma/client";
 import { DefaultArgs } from "@prisma/client/runtime/library";
 
-export default class Route {
+export default class CRUDRouter {
   controller: Controller;
 
   constructor(model: Prisma.UserDelegate<DefaultArgs>) {
