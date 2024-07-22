@@ -15,6 +15,7 @@ export class Controller {
     const entries = await this.model.findMany();
     res.status(200).json(entries);
   });
+
   //CREATE
   create = asyncHandler(async (req: Request, res: Response) => {
     const reqBody = req.body;
@@ -22,6 +23,7 @@ export class Controller {
 
     res.status(201).json(newEntry);
   });
+
   //UPDATE SINGLE
   update = asyncHandler(async (req: Request, res: Response) => {
     const id: number = parseInt(req.params.id, 10);
@@ -34,6 +36,7 @@ export class Controller {
 
     res.status(200).json(updated);
   });
+
   //DELETE SINGLE
   delete = asyncHandler(async (req: Request, res: Response) => {
     const id: number = parseInt(req.params.id, 10);
@@ -44,7 +47,8 @@ export class Controller {
 
     res.status(200).json(deleted);
   });
-  //DELETE LIST
+
+  //DELETE MANY
   deleteMany = asyncHandler(async (req: Request, res: Response) => {
     const ids: number[] = req.body.ids;
 
@@ -55,6 +59,7 @@ export class Controller {
     res.status(200).json(deleted);
   });
 
+  //UPDATE MANY
   updateMany = asyncHandler(async (req: Request, res: Response) => {
     const updates: { id: number; data: { [key: string]: unknown } }[] =
       req.body.updates;
@@ -71,6 +76,7 @@ export class Controller {
     res.status(200).json(updatedItems);
   });
 
+  //CREATE MANY
   createMany = asyncHandler(async (req: Request, res: Response) => {
     const newEntries = req.body.items;
 
