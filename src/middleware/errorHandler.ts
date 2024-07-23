@@ -5,7 +5,7 @@ export default function errorHandler(
   err: Error,
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   // Log the error stack for debugging
   console.error(err.stack);

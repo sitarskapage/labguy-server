@@ -4,7 +4,7 @@ import { Prisma } from "@prisma/client";
 import { DefaultArgs } from "@prisma/client/runtime/library";
 
 export default class CRUDRouter {
-  controller: Controller;
+  controller;
 
   constructor(model: Prisma.UserDelegate<DefaultArgs>) {
     this.controller = new Controller(model);

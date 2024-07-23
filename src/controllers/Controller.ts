@@ -69,8 +69,8 @@ export class Controller {
         this.model.update({
           where: { id: update.id },
           data: update.data,
-        })
-      )
+        }),
+      ),
     );
 
     res.status(200).json(updatedItems);

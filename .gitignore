@@ -131,3 +131,6 @@ dist
 
 #env
 .env
+
+#prisma
+/prisma/migrations
