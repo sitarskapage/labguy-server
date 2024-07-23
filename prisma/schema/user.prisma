@@ -3,23 +3,23 @@ model SocialMedia {
   profileUrl String
   username   String
   contact    Contact @relation(fields: [userId], references: [userId])
-  userId     Int     @unique
+  userId     Int     @id @unique
 }
 
 model Contact {
   email       String?
   socialmedia SocialMedia[]
   profile     Profile       @relation(fields: [userId], references: [userId])
-  userId      Int           @unique
+  userId      Int           @id @unique
 }
 
 model Profile {
-  statement_html  String
-  additional_html String[]
+  html_statement  String?
+  html_additional String?
   portfolio_pdf   String?
   contact         Contact[]
   user            User      @relation(fields: [userId], references: [id])
-  userId          Int       @unique
+  userId          Int       @id @unique
 }
 
 model User {

@@ -1,23 +1,30 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
+import { prisma } from "../client";
+import { Prisma } from "@prisma/client";
+
+type LowercaseFirstLetter<S extends string> =
+  S extends `${infer First}${infer Rest}` ? `${Lowercase<First>}${Rest}` : S;
+
+type LowercaseModelName = LowercaseFirstLetter<Prisma.ModelName>;
 
 export class Controller {
-  model;
+  service: any;
 
-  constructor(model: any) {
-    this.model = model;
+  constructor(model: LowercaseModelName) {
+    this.service = prisma[model];
   }
 
   //READ
   get = asyncHandler(async (req: Request, res: Response) => {
-    const entries = await this.model.findMany();
+    const entries = await this.service.findMany();
     res.status(200).json(entries);
   });
 
   //CREATE
   create = asyncHandler(async (req: Request, res: Response) => {
     const reqBody = req.body;
-    const newEntry = await this.model.create({ data: reqBody });
+    const newEntry = await this.service.create({ data: reqBody });
 
     res.status(201).json(newEntry);
   });
@@ -27,7 +34,7 @@ export class Controller {
     const id: number = parseInt(req.params.id, 10);
     const updatedItem: { [key: string]: unknown } = req.body;
 
-    const updated = await this.model.update({
+    const updated = await this.service.update({
       where: { id },
       data: updatedItem,
     });
@@ -39,7 +46,7 @@ export class Controller {
   delete = asyncHandler(async (req: Request, res: Response) => {
     const id: number = parseInt(req.params.id, 10);
 
-    const deleted = await this.model.delete({
+    const deleted = await this.service.delete({
       where: { id },
     });
 
@@ -50,7 +57,7 @@ export class Controller {
   deleteMany = asyncHandler(async (req: Request, res: Response) => {
     const ids: number[] = req.body.ids;
 
-    const deleted = await this.model.deleteMany({
+    const deleted = await this.service.deleteMany({
       where: { id: { in: ids } },
     });
 
@@ -64,7 +71,7 @@ export class Controller {
 
     const updatedItems = await Promise.all(
       updates.map((update) =>
-        this.model.update({
+        this.service.update({
           where: { id: update.id },
           data: update.data,
         }),
@@ -78,7 +85,7 @@ export class Controller {
   createMany = asyncHandler(async (req: Request, res: Response) => {
     const newEntries = req.body.items;
 
-    const createdEntries = await this.model.createMany({
+    const createdEntries = await this.service.createMany({
       data: newEntries,
       skipDuplicates: true,
     });

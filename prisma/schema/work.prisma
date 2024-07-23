@@ -1,13 +1,9 @@
 model Work {
     id                 Int            @id @default(autoincrement())
     general            GeneralSection @relation(fields: [generalSectionSlug], references: [slug])
+    generalSectionSlug String
+    dimensions         String?
+    year               Int?
     images             ImageRef[]
     videos             VideoRef[]
-    medium             String[]
-    dimensions         String
-    year               Int
-    generalSectionSlug String
-    mediaReferenceId   Int
-    imageRefEtag       String
-    videoRefEtag       String
 }

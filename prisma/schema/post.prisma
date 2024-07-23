@@ -1,21 +1,8 @@
-model Content {
-  id     Int         @id @default(autoincrement())
-  type   ContentType
-  html   String
-  Post   Post        @relation(fields: [postid], references: [id])
-  postid Int
-}
-
-enum ContentType {
-  TEXT
-  IMAGE
-}
-
 model Post {
   id                 Int             @id @default(autoincrement())
   general            GeneralSection? @relation(fields: [generalSectionSlug], references: [slug])
-  content            Content[]
-  author             User            @relation(fields: [userId], references: [id])
   generalSectionSlug String?
+  html               String
+  author             User            @relation(fields: [userId], references: [id])
   userId             Int
 }
