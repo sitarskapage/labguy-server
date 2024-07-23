@@ -3,9 +3,12 @@ import asyncHandler from "express-async-handler";
 import { prisma } from "../client";
 import { Prisma } from "@prisma/client";
 
+// Type to lowercase the first letter of a string
 type LowercaseFirstLetter<S extends string> =
   S extends `${infer First}${infer Rest}` ? `${Lowercase<First>}${Rest}` : S;
 
+// LowercaseModelName ensures that the first letter of Prisma.ModelName is lowercase
+// This is necessary because Prisma.ModelName's start with a capital letter, but we need lowercase names to use with Prisma client.
 type LowercaseModelName = LowercaseFirstLetter<Prisma.ModelName>;
 
 export class Controller {
