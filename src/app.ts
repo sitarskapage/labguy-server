@@ -23,7 +23,7 @@ app.use(errorHandler);
 
 //server
 app.listen(3000, () => {
-  console.debug("App listening on :3000");
+  console.debug("App listening on 3000");
 });
 
 export default app;

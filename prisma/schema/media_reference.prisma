@@ -4,9 +4,7 @@ enum MediaType {
 }
 
 model ImageRef {
-    id Int @id @default(autoincrement())
-
-    etag               String         @unique
+    etag               String         @id @unique
     type               MediaType
     general            GeneralSection @relation(fields: [generalSectionSlug], references: [slug])
     cld_url            String         @unique
@@ -23,9 +21,7 @@ model ImageRef {
 }
 
 model VideoRef {
-    id Int @id @default(autoincrement())
-
-    etag               String         @unique
+    etag               String         @id @unique
     type               MediaType
     general            GeneralSection @relation(fields: [generalSectionSlug], references: [slug])
     yt_url             String         @unique

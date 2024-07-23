@@ -2,22 +2,22 @@ import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 
 export class Controller {
-  service;
+  model;
 
-  constructor(service: any) {
-    this.service = service;
+  constructor(model: any) {
+    this.model = model;
   }
 
   //READ
   get = asyncHandler(async (req: Request, res: Response) => {
-    const entries = await this.service.findMany();
+    const entries = await this.model.findMany();
     res.status(200).json(entries);
   });
 
   //CREATE
   create = asyncHandler(async (req: Request, res: Response) => {
     const reqBody = req.body;
-    const newEntry = await this.service.create({ data: reqBody });
+    const newEntry = await this.model.create({ data: reqBody });
 
     res.status(201).json(newEntry);
   });
@@ -27,7 +27,7 @@ export class Controller {
     const id: number = parseInt(req.params.id, 10);
     const updatedItem: { [key: string]: unknown } = req.body;
 
-    const updated = await this.service.update({
+    const updated = await this.model.update({
       where: { id },
       data: updatedItem,
     });
@@ -39,7 +39,7 @@ export class Controller {
   delete = asyncHandler(async (req: Request, res: Response) => {
     const id: number = parseInt(req.params.id, 10);
 
-    const deleted = await this.service.delete({
+    const deleted = await this.model.delete({
       where: { id },
     });
 
@@ -50,7 +50,7 @@ export class Controller {
   deleteMany = asyncHandler(async (req: Request, res: Response) => {
     const ids: number[] = req.body.ids;
 
-    const deleted = await this.service.deleteMany({
+    const deleted = await this.model.deleteMany({
       where: { id: { in: ids } },
     });
 
@@ -64,7 +64,7 @@ export class Controller {
 
     const updatedItems = await Promise.all(
       updates.map((update) =>
-        this.service.update({
+        this.model.update({
           where: { id: update.id },
           data: update.data,
         }),
@@ -78,7 +78,7 @@ export class Controller {
   createMany = asyncHandler(async (req: Request, res: Response) => {
     const newEntries = req.body.items;
 
-    const createdEntries = await this.service.createMany({
+    const createdEntries = await this.model.createMany({
       data: newEntries,
       skipDuplicates: true,
     });
