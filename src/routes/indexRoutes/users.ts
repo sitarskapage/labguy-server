@@ -1,4 +1,4 @@
-import { prisma } from "../../app";
+import { prisma } from "../../client";
 import CRUDRouter from "../CRUDRouter";
 
 const router = new CRUDRouter(prisma.user);

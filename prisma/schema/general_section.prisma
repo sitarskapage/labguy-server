@@ -1,4 +1,6 @@
 model GeneralSection {
+    id Int @id @default(autoincrement())
+
     title       String
     description String?
     published   Boolean  @default(false)

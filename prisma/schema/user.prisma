@@ -2,15 +2,15 @@ model SocialMedia {
   platform   String
   profileUrl String
   username   String
-  contact    Contact @relation(fields: [userEmail], references: [userEmail])
-  userEmail  String  @unique
+  contact    Contact @relation(fields: [userId], references: [userId])
+  userId     Int     @unique
 }
 
 model Contact {
   email       String?
   socialmedia SocialMedia[]
-  profile     Profile       @relation(fields: [userEmail], references: [userEmail])
-  userEmail   String        @unique
+  profile     Profile       @relation(fields: [userId], references: [userId])
+  userId      Int           @unique
 }
 
 model Profile {
@@ -18,11 +18,12 @@ model Profile {
   additional_html String[]
   portfolio_pdf   String?
   contact         Contact[]
-  user            User      @relation(fields: [userEmail], references: [email])
-  userEmail       String    @unique
+  user            User      @relation(fields: [userId], references: [id])
+  userId          Int       @unique
 }
 
 model User {
+  id      Int      @id @default(autoincrement())
   email   String   @unique
   profile Profile?
   posts   Post[]

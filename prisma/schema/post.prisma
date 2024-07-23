@@ -15,7 +15,7 @@ model Post {
   id                 Int             @id @default(autoincrement())
   general            GeneralSection? @relation(fields: [generalSectionSlug], references: [slug])
   content            Content[]
-  author             User            @relation(fields: [userEmail], references: [email])
+  author             User            @relation(fields: [userId], references: [id])
   generalSectionSlug String?
-  userEmail          String
+  userId             Int
 }

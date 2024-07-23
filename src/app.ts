@@ -5,10 +5,8 @@ import morgan from "morgan";
 import router from "./routes";
 import errorHandler from "./middleware/errorHandler";
 import { limiter } from "./middleware/config/limiter";
-import { PrismaClient } from "@prisma/client";
 // init
-export const app = express();
-export const prisma = new PrismaClient();
+const app = express();
 
 //middleware
 app.use(express.json());
@@ -27,3 +25,5 @@ app.use(errorHandler);
 app.listen(3000, () => {
   console.debug("App listening on :3000");
 });
+
+export default app;
