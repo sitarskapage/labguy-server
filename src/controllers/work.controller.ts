@@ -23,7 +23,7 @@ export class WorkController {
       where: { id: workId },
       data: {
         images: {
-          connect: imageRef.etag.map((etag) => ({ etag })),
+          connect: ,
         },
         videos: {
           connect: videoRefEtags.map((etag) => ({ etag })),
