@@ -16,7 +16,7 @@ model Contact {
 model Profile {
   html_statement  String?
   html_additional String?
-  portfolio_pdf   String?
+  portfolio_pdf   String[]
   contact         Contact[]
   user            User      @relation(fields: [userId], references: [id])
   userId          Int       @id @unique
