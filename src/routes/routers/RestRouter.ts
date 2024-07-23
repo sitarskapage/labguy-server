@@ -1,16 +1,16 @@
+// CRUDRouter.ts
 import { Router } from "express";
-import { Controller } from "../controllers/Controller";
-import { Prisma } from "@prisma/client";
-import { DefaultArgs } from "@prisma/client/runtime/library";
+import { Controller } from "../../controllers/Controller";
 
-export default class CRUDRouter {
+// Generic type for the delegate
+export default class RestRouter {
   controller;
 
-  constructor(model: Prisma.UserDelegate<DefaultArgs>) {
-    this.controller = new Controller(model);
+  constructor(controller: Controller) {
+    this.controller = controller;
   }
 
-  setupCRUDRoutes(): Router {
+  getRouter(): Router {
     const router = Router();
 
     // Single entity routes
