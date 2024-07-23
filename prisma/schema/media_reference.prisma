@@ -7,13 +7,16 @@ enum MediaType {
 model ImageRef {
     etag               String         @id @unique
     type               MediaType      @default(IMAGE)
-    general            GeneralSection @relation(fields: [generalSectionSlug], references: [slug])
     cld_url            String         @unique
     filename           String?
     format             String?
     bytes              Int?
-    generalSectionSlug String
-    Project            Project?       @relation(fields: [projectId], references: [id])
+title
+alt
+size
+tags
+
+Project            Project?       @relation(fields: [projectId], references: [id])
     projectId          Int?
     Work               Work?          @relation(fields: [workId], references: [id])
     workId             Int?
@@ -24,9 +27,12 @@ model ImageRef {
 model VideoRef {
     etag               String         @id @unique
     type               MediaType      @default(VIDEO)
-    general            GeneralSection @relation(fields: [generalSectionSlug], references: [slug])
     yt_url             String         @unique
-    generalSectionSlug String
+title
+duration
+definition
+tags
+
     Project            Project?       @relation(fields: [projectId], references: [id])
     projectId          Int?
     Work               Work?          @relation(fields: [workId], references: [id])
