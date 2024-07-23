@@ -18,4 +18,10 @@ router.use("/works", workRouter);
 router.use("/projects", projectRouter);
 router.use("/posts", postRouter);
 
+//media get all (read only)
+//images crud ext w cloudinary
+//videos default crud
+
+//profile custom crud
+
 export default router;
