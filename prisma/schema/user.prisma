@@ -1,30 +1,30 @@
 model SocialMedia {
+  id         Int     @id @default(autoincrement())
   platform   String
   profileUrl String
   username   String
   contact    Contact @relation(fields: [userId], references: [userId])
-  userId     Int     @id @unique
+  userId     Int     @unique
 }
 
 model Contact {
+  id          Int           @id @default(autoincrement())
   email       String?
   socialmedia SocialMedia[]
   profile     Profile       @relation(fields: [userId], references: [userId])
-  userId      Int           @id @unique
+  userId      Int           @unique
 }
 
 model Profile {
   html_statement  String?
   html_additional String?
-  portfolio_pdf   String[]
+  portfolio_pdf   String?
   contact         Contact[]
-  user            User      @relation(fields: [userId], references: [id])
   userId          Int       @id @unique
 }
 
 model User {
-  id      Int      @id @default(autoincrement())
-  email   String   @unique
-  profile Profile?
-  posts   Post[]
+  id    Int    @id @default(autoincrement())
+  email String @unique
+  posts Post[]
 }
