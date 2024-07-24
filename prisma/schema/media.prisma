@@ -1,0 +1,41 @@
+enum MediaType {
+    IMAGE
+    VIDEO
+    THREE_D
+}
+
+model ImageRef {
+    etag     String    @id @unique
+    type     MediaType @default(IMAGE)
+    cld_url  String    @unique
+    filename String?
+    format   String?
+    bytes    Int?
+    alt      String?
+    size     String?
+    tags     String[]
+
+    Project       Project?     @relation(fields: [projectId], references: [id])
+    projectId     Int?
+    Work          Work?        @relation(fields: [workId], references: [id])
+    workId        Int?
+    Preferences   Preferences? @relation(fields: [preferencesId], references: [id])
+    preferencesId Int?         @unique
+}
+
+model VideoRef {
+    etag       String    @id @unique
+    type       MediaType @default(VIDEO)
+    yt_url     String    @unique
+    title      String?
+    duration   String?
+    definition String?
+    tags       String[]
+
+    Project       Project?     @relation(fields: [projectId], references: [id])
+    projectId     Int?
+    Work          Work?        @relation(fields: [workId], references: [id])
+    workId        Int?
+    Preferences   Preferences? @relation(fields: [preferencesId], references: [id])
+    preferencesId Int?         @unique
+}

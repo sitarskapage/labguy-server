@@ -8,7 +8,7 @@ export class PostController extends Controller {
     super(model);
   }
 
-  getNested = asyncHandler(async (req: Request, res: Response) => {
+  getWithNested = asyncHandler(async (req: Request, res: Response) => {
     const posts = await this.service.findMany({
       include: {
         general: true,
@@ -19,7 +19,7 @@ export class PostController extends Controller {
     res.status(200).json(posts);
   });
 
-  createNested = asyncHandler(async (req: Request, res: Response) => {
+  createWithNested = asyncHandler(async (req: Request, res: Response) => {
     const createdEntry = await this.service.create({
       data: {
         ...req.body,
@@ -34,7 +34,7 @@ export class PostController extends Controller {
     res.status(200).json(createdEntry);
   });
 
-  updateNested = asyncHandler(async (req: Request, res: Response) => {
+  updateWithNested = asyncHandler(async (req: Request, res: Response) => {
     const postId: number = parseInt(req.params.id, 10);
     const updatedEntry = await this.service.update({
       where: { id: postId },
