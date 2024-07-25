@@ -26,9 +26,7 @@ async function main() {
     where: { etag: "etag-image-1" },
     update: {
       type: MediaType.IMAGE,
-      general: {
-        connect: { slug: generalSection.slug },
-      },
+
       cld_url: "https://example.com/image1.jpg",
       filename: "image1.jpg",
       format: "jpg",
@@ -37,9 +35,7 @@ async function main() {
     create: {
       etag: "etag-image-1",
       type: MediaType.IMAGE,
-      general: {
-        connect: { slug: generalSection.slug },
-      },
+
       cld_url: "https://example.com/image1.jpg",
       filename: "image1.jpg",
       format: "jpg",
@@ -51,9 +47,7 @@ async function main() {
     where: { etag: "etag-image-2" },
     update: {
       type: MediaType.IMAGE,
-      general: {
-        connect: { slug: generalSection.slug },
-      },
+
       cld_url: "https://example.com/image2.jpg",
       filename: "image2.jpg",
       format: "png",
@@ -62,9 +56,7 @@ async function main() {
     create: {
       etag: "etag-image-2",
       type: MediaType.IMAGE,
-      general: {
-        connect: { slug: generalSection.slug },
-      },
+
       cld_url: "https://example.com/image2.jpg",
       filename: "image2.jpg",
       format: "png",
@@ -77,17 +69,13 @@ async function main() {
     where: { etag: "etag-video-1" },
     update: {
       type: MediaType.VIDEO,
-      general: {
-        connect: { slug: generalSection.slug },
-      },
+
       yt_url: "https://youtube.com/video1",
     },
     create: {
       etag: "etag-video-1",
       type: MediaType.VIDEO,
-      general: {
-        connect: { slug: generalSection.slug },
-      },
+
       yt_url: "https://youtube.com/video1",
     },
   });
@@ -96,17 +84,13 @@ async function main() {
     where: { etag: "etag-video-2" },
     update: {
       type: MediaType.VIDEO,
-      general: {
-        connect: { slug: generalSection.slug },
-      },
+
       yt_url: "https://youtube.com/video2",
     },
     create: {
       etag: "etag-video-2",
       type: MediaType.VIDEO,
-      general: {
-        connect: { slug: generalSection.slug },
-      },
+
       yt_url: "https://youtube.com/video2",
     },
   });
@@ -116,23 +100,25 @@ async function main() {
     where: { email: "user@example.com" },
     update: {
       email: "user@example.com",
-      profile: {
-        update: {
-          statement_html: "<p>Profile statement</p>",
-          additional_html: ["<p>Additional info</p>"],
-          portfolio_pdf: "https://example.com/portfolio.pdf",
-        },
-      },
     },
     create: {
       email: "user@example.com",
-      profile: {
-        create: {
-          statement_html: "<p>Profile statement</p>",
-          additional_html: ["<p>Additional info</p>"],
-          portfolio_pdf: "https://example.com/portfolio.pdf",
-        },
-      },
+    },
+  });
+
+  // Upsert Profile
+  const profile = await prisma.profile.upsert({
+    where: { userId: user.id },
+    update: {
+      html_statement: "HTML Statement",
+      html_additional: "Additional HTML information",
+      portfolio_pdf: "https://example.com/portfolio.pdf",
+    },
+    create: {
+      userId: user.id,
+      html_statement: "HTML Statement",
+      html_additional: "Additional HTML information",
+      portfolio_pdf: "https://example.com/portfolio.pdf",
     },
   });
 
