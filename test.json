@@ -1,0 +1,38 @@
+{
+  "html_statement": "Updated statement",
+  "html_additional": "Additional info",
+  "portfolio_pdf": "http://example.com/portfolio.pdf",
+  "userId": 1,
+  "contact": [
+    {
+      "email": "Anewemail@example.com",
+      "socialmedia": [
+        {
+          "platform": "A",
+          "profileUrl": "http://twitter.com/newprofile",
+          "username": "newusername"
+        },
+        {
+          "platform": "B",
+          "profileUrl": "http://linkedin.com/in/newprofile",
+          "username": "newusername3"
+        }
+      ]
+    },
+    {
+      "email": "Bnewemail@example.com",
+      "socialmedia": [
+        {
+          "platform": "C",
+          "profileUrl": "http://twitter.com/newprofile",
+          "username": "newusername"
+        },
+        {
+          "platform": "D",
+          "profileUrl": "http://linkedin.com/in/newprofile",
+          "username": "newusername3"
+        }
+      ]
+    }
+  ]
+}

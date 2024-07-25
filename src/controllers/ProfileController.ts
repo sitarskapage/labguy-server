@@ -6,10 +6,10 @@ import { Prisma } from "@prisma/client";
 export class ProfileController {
   // READ
   getProfile = asyncHandler(async (req: Request, res: Response) => {
-    const id: number = parseInt(req.params.id, 10);
+    const userId: number = parseInt(req.params.id, 10);
 
-    const profiles = await prisma.profile.findUnique({
-      where: { userId: id },
+    const profile = await prisma.profile.findUnique({
+      where: { userId: userId },
       include: {
         contact: {
           include: {
@@ -18,52 +18,74 @@ export class ProfileController {
         },
       },
     });
-    res.status(200).json(profiles);
+    res.status(200).json(profile);
   });
 
   // UPDATE SINGLE
   updateProfile = asyncHandler(async (req: Request, res: Response) => {
-    const id: number = parseInt(req.params.id, 10);
+    const userId: number = parseInt(req.params.id, 10);
 
     const p = req.body;
-    const c = p.contact;
+    const cArr = p.contact;
 
-    const customConnectOrCreate = (data: any[], id: number) => {
-      return data.map((item) => ({
-        where: { id: id },
-        create: item,
-      }));
-    };
+    async function updateProfile() {
+      delete p.contact;
+      await prisma.profile.update({
+        where: { userId: userId },
+        data: p,
+      });
+    }
 
-    const result = await prisma.profile.update({
-      include: {
-        contact: {
-          include: {
-            socialmedia: true,
+    async function updateContact() {
+      console.log("Received contact array:", cArr);
+
+      for (const cItem of cArr) {
+        console.log("Processing contact with ID:", cItem.id);
+
+        await prisma.contact.upsert({
+          where: {
+            id: cItem.id,
+            userId: 1,
           },
-        },
-      },
-      where: { userId: id },
-      data: {
-        ...p,
-        contact: {
-          connectOrCreate: c.map((citem: { socialmedia: [] }) => {
-            return {
-              where: { id: id },
-              create: {
-                ...citem,
-                socialmedia: {
-                  connectOrCreate: citem.socialmedia.map((smitem: object) => {
-                    return { where: { id: id }, create: smitem };
-                  }),
-                },
-              },
-            };
-          }),
-        },
-      },
-    });
-    console.log(result);
-    res.status(200).json(result);
+          update: {
+            id: cItem.id,
+            email: cItem.email,
+            userId: userId,
+            socialmedia: {
+              connectOrCreate: cItem.socialmedia.map(
+                (smItem: Prisma.SocialMediaCreateManyInput) => ({
+                  where: {
+                    id: smItem.id,
+                  },
+                  create: {
+                    platform: smItem.platform,
+                    profileUrl: smItem.profileUrl,
+                    username: smItem.username,
+                  },
+                }),
+              ),
+            },
+          },
+          create: {
+            email: cItem.email,
+            userId: userId,
+            socialmedia: {
+              create: cItem.socialmedia.map(
+                (smItem: Prisma.SocialMediaCreateManyInput) => ({
+                  platform: smItem.platform,
+                  profileUrl: smItem.profileUrl,
+                  username: smItem.username,
+                }),
+              ),
+            },
+          },
+        });
+      }
+    }
+
+    updateProfile();
+    updateContact();
+
+    res.status(200);
   });
 }
