@@ -10,7 +10,7 @@ import morgan from "morgan";
 import router from "./routes";
 import errorHandler from "./middleware/errorHandler";
 import { limiter } from "./middleware/config/limiter";
-import { auth } from "./utils/auth";
+import auth  from "./middleware/auth";
 
 // init
 const app = express();
@@ -22,19 +22,10 @@ app.use(helmet());
 app.use(morgan("dev"));
 app.use(limiter);
 
+//auth
+app.use(auth)
+
 // routes
-
-/************************************************************/
-/* Apply auth middleware to all POST routes *****************/
-/************************************************************/
-app.use((req, res, next) => {
-  if (req.method === "POST") {
-    return auth(req, res, next);
-  }
-  next();
-});
-/************************************************************/
-
 app.use("/api/", router);
 
 // errors
