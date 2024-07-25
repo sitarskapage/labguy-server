@@ -19,7 +19,7 @@ model Profile {
   userId          Int       @id @unique
   html_statement  String?
   html_additional String?
-  portfolio_pdf   String?
+  portfolio_pdf   String?  @default("https://archive.org/details/jakubkanna_PORTFOLIO_2024")
   contact         Contact[]
 }
 
