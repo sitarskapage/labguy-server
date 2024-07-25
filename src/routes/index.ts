@@ -1,4 +1,3 @@
-// routes.js
 import { Router } from "express";
 import userRouter from "./routers/default/UserRouter";
 import workRouter from "./routers/post/WorkRouter";
@@ -10,21 +9,21 @@ import profileRouter from "./routers/custom/ProfileRouter";
 import imageRouter from "./routers/custom/ImageRouter";
 import mediaRouter from "./routers/custom/MediaRouter";
 
-// New Router instance
+//New Router instance
 const router = Router();
 
 // /api/
 
-//default paths
+// default paths
 router.use("/users", userRouter);
 router.use("/preferences", preferencesRouter);
 
-//post paths
+// post paths
 router.use("/works", workRouter);
 router.use("/projects", projectRouter);
 router.use("/posts", postRouter);
 
-//custom paths
+// custom paths
 router.use("/profiles", profileRouter);
 router.use("/videos", videoRouter);
 router.use("/images", imageRouter);
