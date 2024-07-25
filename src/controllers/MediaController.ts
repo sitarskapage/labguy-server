@@ -113,7 +113,7 @@ export class MediaController {
     res.status(200).json(records);
   });
 
-  deleteMany = asyncHandler(async (req: Request, res: Response) => {
+  deleteManyMedia = asyncHandler(async (req: Request, res: Response) => {
     const etags: string[] = req.body.etags;
 
     const deleted = await this.delegate.deleteMany({
