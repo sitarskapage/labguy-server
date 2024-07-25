@@ -1,5 +1,6 @@
 /*TODO:
 + AUTH
++ Forgot password
 */
 
 import express from "express";
@@ -9,6 +10,7 @@ import morgan from "morgan";
 import router from "./routes";
 import errorHandler from "./middleware/errorHandler";
 import { limiter } from "./middleware/config/limiter";
+import { auth } from "./utils/auth";
 
 // init
 const app = express();
@@ -21,6 +23,18 @@ app.use(morgan("dev"));
 app.use(limiter);
 
 // routes
+
+/************************************************************/
+/* Apply auth middleware to all POST routes *****************/
+/************************************************************/
+app.use((req, res, next) => {
+  if (req.method === "POST") {
+    return auth(req, res, next);
+  }
+  next();
+});
+/************************************************************/
+
 app.use("/api/", router);
 
 // errors

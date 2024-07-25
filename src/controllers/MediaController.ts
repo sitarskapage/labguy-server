@@ -6,7 +6,6 @@ import { prisma } from "../client";
 import { MediaType } from "@prisma/client";
 
 export class MediaController {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   delegate: any;
 
   constructor(model: "imageRef" | "videoRef") {
