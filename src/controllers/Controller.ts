@@ -12,33 +12,49 @@ type LowercaseFirstLetter<S extends string> =
 type LowercaseModelName = LowercaseFirstLetter<Prisma.ModelName>;
 
 export class Controller {
-  service: any;
+  delegate: any;
 
   constructor(model: LowercaseModelName) {
-    this.service = prisma[model];
+    this.delegate = prisma[model];
   }
+
+  //UPSERT
+  upsert = asyncHandler(async (req: Request, res: Response) => {
+    const newRecord = await this.delegate.upsert({
+      where: {
+        id: req.body.id,
+      },
+      create: req.body,
+      update: req.body,
+    });
+
+    res.status(201).json(newRecord);
+
+    return newRecord;
+  });
 
   //READ
   get = asyncHandler(async (req: Request, res: Response) => {
-    const entries = await this.service.findMany();
-    res.status(200).json(entries);
+    const records = await this.delegate.findMany();
+    res.status(200).json(records);
   });
 
   //CREATE
   create = asyncHandler(async (req: Request, res: Response) => {
     const reqBody = req.body;
-    const newEntry = await this.service.create({ data: reqBody });
+    const newRecord = await this.delegate.create({ data: reqBody });
 
-    res.status(201).json(newEntry);
+    res.status(201).json(newRecord);
   });
 
   //UPDATE SINGLE
   update = asyncHandler(async (req: Request, res: Response) => {
     const id: number = parseInt(req.params.id, 10);
+
     const updatedItem: { [key: string]: unknown } = req.body;
 
-    const updated = await this.service.update({
-      where: { id },
+    const updated = await this.delegate.update({
+      where: { id: id },
       data: updatedItem,
     });
 
@@ -49,8 +65,8 @@ export class Controller {
   delete = asyncHandler(async (req: Request, res: Response) => {
     const id: number = parseInt(req.params.id, 10);
 
-    const deleted = await this.service.delete({
-      where: { id },
+    const deleted = await this.delegate.delete({
+      where: { id: id },
     });
 
     res.status(200).json(deleted);
@@ -60,7 +76,7 @@ export class Controller {
   deleteMany = asyncHandler(async (req: Request, res: Response) => {
     const ids: number[] = req.body.ids;
 
-    const deleted = await this.service.deleteMany({
+    const deleted = await this.delegate.deleteMany({
       where: { id: { in: ids } },
     });
 
@@ -74,7 +90,7 @@ export class Controller {
 
     const updatedItems = await Promise.all(
       updates.map((update) =>
-        this.service.update({
+        this.delegate.update({
           where: { id: update.id },
           data: update.data,
         }),
@@ -86,13 +102,13 @@ export class Controller {
 
   //CREATE MANY
   createMany = asyncHandler(async (req: Request, res: Response) => {
-    const newEntries = req.body.items;
+    const newrecords = req.body.items;
 
-    const createdEntries = await this.service.createMany({
-      data: newEntries,
+    const createdrecords = await this.delegate.createMany({
+      data: newrecords,
       skipDuplicates: true,
     });
 
-    res.status(201).json(createdEntries);
+    res.status(201).json(createdrecords);
   });
 }

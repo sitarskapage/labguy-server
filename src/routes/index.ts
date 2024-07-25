@@ -1,14 +1,16 @@
 // routes.js
 import { Router } from "express";
-import userRouter from "./routers/UserRouter";
-import workRouter from "./routers/WorkRouter";
-import projectRouter from "./routers/ProjectRouter";
-import preferencesRouter from "./routers/PreferencesRouter";
-import postRouter from "./routers/PostRouter";
+import userRouter from "./routers/default/UserRouter";
+import workRouter from "./routers/post/WorkRouter";
+import projectRouter from "./routers/post/ProjectRouter";
+import preferencesRouter from "./routers/default/PreferencesRouter";
+import postRouter from "./routers/post/PostRouter";
 import { prisma } from "../client";
 import asyncHandler from "express-async-handler";
-import videoRouter from "./routers/VideoRouter";
-import profileRouter from "./routers/ProfileRouter";
+import videoRouter from "./routers/custom/VideoRouter";
+import profileRouter from "./routers/custom/ProfileRouter";
+import imageRouter from "./routers/custom/ImageRouter";
+//media paths
 
 // New Router instance
 const router = Router();
@@ -18,7 +20,6 @@ const router = Router();
 //default paths
 router.use("/users", userRouter);
 router.use("/preferences", preferencesRouter);
-router.use("/videos", videoRouter);
 
 //post paths
 router.use("/works", workRouter);
@@ -27,7 +28,8 @@ router.use("/posts", postRouter);
 
 //custom paths
 router.use("/profiles", profileRouter);
-
+router.use("/videos", videoRouter);
+router.use("/images", imageRouter);
 router.get(
   "/media",
   asyncHandler(async (req, res) => {
@@ -37,7 +39,5 @@ router.get(
     res.status(200).json(media);
   }),
 );
-
-//images crud ext w cloudinary
 
 export default router;

@@ -1,5 +1,5 @@
-export async function generateSlug(title: string, service: any) {
-  const count = await service.count();
+export async function generateSlug(title: string, client: any) {
+  const count = await client.count();
   const uniqueId = count < 1 ? null : count + 1;
 
   const formattedTitle = title

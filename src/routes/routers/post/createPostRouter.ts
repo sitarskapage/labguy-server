@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { PostController } from "../src/controllers/PostController";
+import { PostController } from "../../../controllers/PostController";
 
 // Create a base router function for generic CRUD operations
 export function createPostRouter<T extends PostController>(

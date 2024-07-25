@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import { Controller } from "./Controller";
-import { generateSlug } from "../../utils/generateSlug";
+import { generateSlug } from "../utils/generateSlug";
 
 export class PostController extends Controller {
   constructor(model: "work" | "project" | "post") {
@@ -9,7 +9,7 @@ export class PostController extends Controller {
   }
 
   getWithNested = asyncHandler(async (req: Request, res: Response) => {
-    const posts = await this.service.findMany({
+    const posts = await this.delegate.findMany({
       include: {
         general: true,
         images: true,
@@ -20,23 +20,23 @@ export class PostController extends Controller {
   });
 
   createWithNested = asyncHandler(async (req: Request, res: Response) => {
-    const createdEntry = await this.service.create({
+    const createdRecord = await this.delegate.create({
       data: {
         ...req.body,
         general: {
           create: {
             ...req.body.general,
-            slug: generateSlug(req.body.general.title, this.service),
+            slug: generateSlug(req.body.general.title, this.delegate),
           },
         },
       },
     });
-    res.status(200).json(createdEntry);
+    res.status(200).json(createdRecord);
   });
 
   updateWithNested = asyncHandler(async (req: Request, res: Response) => {
     const postId: number = parseInt(req.params.id, 10);
-    const updatedEntry = await this.service.update({
+    const updatedRecord = await this.delegate.update({
       where: { id: postId },
       update: { ...req.body, general: { update: req.body.general } },
       include: {
@@ -46,6 +46,6 @@ export class PostController extends Controller {
       },
     });
 
-    res.status(200).json(updatedEntry);
+    res.status(200).json(updatedRecord);
   });
 }

@@ -31,6 +31,7 @@ async function main() {
       filename: "image1.jpg",
       format: "jpg",
       bytes: 123456,
+      public_id: "abbsmlkgkggkssaafg",
     },
     create: {
       etag: "etag-image-1",
@@ -40,6 +41,7 @@ async function main() {
       filename: "image1.jpg",
       format: "jpg",
       bytes: 123456,
+      public_id: "abbsmlkgkggkssaafg",
     },
   });
 
@@ -52,6 +54,7 @@ async function main() {
       filename: "image2.jpg",
       format: "png",
       bytes: 654321,
+      public_id: "amlkgkggkss",
     },
     create: {
       etag: "etag-image-2",
@@ -61,6 +64,7 @@ async function main() {
       filename: "image2.jpg",
       format: "png",
       bytes: 654321,
+      public_id: "amlkgkggkss",
     },
   });
 

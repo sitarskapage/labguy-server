@@ -9,6 +9,7 @@ import morgan from "morgan";
 import router from "./routes";
 import errorHandler from "./middleware/errorHandler";
 import { limiter } from "./middleware/config/limiter";
+
 // init
 const app = express();
 

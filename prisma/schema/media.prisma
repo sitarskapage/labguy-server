@@ -5,15 +5,19 @@ enum MediaType {
 }
 
 model ImageRef {
-    etag     String    @id @unique
-    type     MediaType @default(IMAGE)
-    cld_url  String    @unique
-    filename String?
-    format   String?
-    bytes    Int?
-    alt      String?
-    size     String?
-    tags     String[]
+    etag       String    @unique
+    type       MediaType @default(IMAGE)
+    cld_url    String    @unique
+    filename   String?
+    format     String?
+    bytes      Int?
+    alt        String?
+    dimensions String?
+    tags       String[]
+    public_id  String    @unique
+
+    createdAt DateTime  @default(now())
+    updatedAt DateTime? @updatedAt
 
     Project       Project?     @relation(fields: [projectId], references: [id])
     projectId     Int?
@@ -24,7 +28,7 @@ model ImageRef {
 }
 
 model VideoRef {
-    etag       String    @id @unique
+    etag       String    @unique
     type       MediaType @default(VIDEO)
     yt_url     String    @unique
     title      String?
