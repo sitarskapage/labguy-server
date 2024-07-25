@@ -8,7 +8,7 @@ export class PostController extends Controller {
     super(model);
   }
 
-  getWithNested = asyncHandler(async (req: Request, res: Response) => {
+  get = asyncHandler(async (req: Request, res: Response) => {
     const posts = await this.delegate.findMany({
       include: {
         general: true,
@@ -19,7 +19,7 @@ export class PostController extends Controller {
     res.status(200).json(posts);
   });
 
-  createWithNested = asyncHandler(async (req: Request, res: Response) => {
+  create = asyncHandler(async (req: Request, res: Response) => {
     const createdRecord = await this.delegate.create({
       data: {
         ...req.body,
@@ -34,7 +34,7 @@ export class PostController extends Controller {
     res.status(200).json(createdRecord);
   });
 
-  updateWithNested = asyncHandler(async (req: Request, res: Response) => {
+  update = asyncHandler(async (req: Request, res: Response) => {
     const postId: number = parseInt(req.params.id, 10);
     const updatedRecord = await this.delegate.update({
       where: { id: postId },
