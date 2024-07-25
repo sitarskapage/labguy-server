@@ -1,19 +1,21 @@
 model Preferences {
-    id        Int    @id @default(autoincrement())
-    brandname String @unique
-    domain    String @unique
+    id                        Int      @id @default(autoincrement())
+    brandname                 String   @unique
+    domain                    String   @unique
 
-    homepage_header           String
-    homepage_subheader        String
-    homepage_background_image ImageRef?
-    homepage_background_video VideoRef?
+    homepage_heading          String   @default("Homepage")
+    homepage_subheading        String   @default("Sub-Heading")
+    homepage_background_image ImageRef? @default(null)
+    homepage_background_video VideoRef? @default(null)
 
-    enable_dashboard_darkmode Boolean @default(false)
-    enable_portfolio_pdf      Boolean @default(false)
+    enable_dashboard_darkmode Boolean   @default(false)
+    enable_portfolio_pdf      Boolean   @default(false)
 
-    api_server_url    String
-    api_youtube_key   String
-    api_cld_url       String
-    api_cld_key       String
-    api_cld_cloudname String
+    api_server_url            String   @default("")
+
+    api_youtube_key           String   @default("")
+
+    api_cld_url               String   @default("")
+    api_cld_key               String   @default("")
+    api_cld_cloudname         String   @default("")
 }
