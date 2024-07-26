@@ -28,6 +28,8 @@ export class ProfileController {
     const p = req.body;
     const cArr = p.contact;
 
+    if (!Array.isArray(cArr)) throw new Error("Invalid request");
+
     async function updateProfile() {
       delete p.contact;
       await prisma.profile.update({

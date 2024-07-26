@@ -10,7 +10,7 @@ import morgan from "morgan";
 import router from "./routes";
 import errorHandler from "./middleware/errorHandler";
 import { limiter } from "./middleware/config/limiter";
-import auth  from "./middleware/auth";
+import { authVerify } from "./middleware/auth";
 
 // init
 const app = express();
@@ -23,7 +23,7 @@ app.use(morgan("dev"));
 app.use(limiter);
 
 //auth
-app.use(auth)
+app.use(authVerify);
 
 // routes
 app.use("/api/", router);

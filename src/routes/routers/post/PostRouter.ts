@@ -1,7 +1,7 @@
-import { createPostRouter } from "./createPostRouter";
 import { PostController } from "../../../controllers/PostController";
+import { createDeafultRouter } from "../../../utils/createDefaultRouter";
 
 const userController = new PostController("post");
-const postRouter = createPostRouter(userController);
+const postRouter = createDeafultRouter(userController);
 
 export default postRouter;

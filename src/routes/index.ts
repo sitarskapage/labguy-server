@@ -15,7 +15,6 @@ const router = Router();
 // /api/
 
 // default paths
-router.use("/users", userRouter);
 router.use("/preferences", preferencesRouter);
 
 // post paths
@@ -24,6 +23,7 @@ router.use("/projects", projectRouter);
 router.use("/posts", postRouter);
 
 // custom paths
+router.use("/", userRouter);
 router.use("/profiles", profileRouter);
 router.use("/videos", videoRouter);
 router.use("/images", imageRouter);

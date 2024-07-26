@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Controller } from "../../../controllers/Controller";
+import { Controller } from "../controllers/Controller";
 
 // Create a base router function for generic CRUD operations
 export function createDeafultRouter<T extends Controller>(
