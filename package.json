@@ -30,6 +30,7 @@
     "@types/jsonwebtoken": "^9.0.6",
     "@types/morgan": "^1.9.9",
     "@types/node": "^20.14.11",
+    "@types/nodemailer": "^6.4.15",
     "@types/validator": "^13.12.0",
     "@typescript-eslint/eslint-plugin": "^7.16.1",
     "@typescript-eslint/parser": "^7.16.1",
@@ -48,9 +49,11 @@
     "express": "^4.19.2",
     "express-async-handler": "^1.2.0",
     "express-rate-limit": "^7.3.1",
+    "handlebars": "^4.7.8",
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
+    "nodemailer": "^6.9.14",
     "sanitize-filename": "^1.6.3",
     "validator": "^13.12.0"
   }

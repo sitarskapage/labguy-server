@@ -4,8 +4,13 @@ import jsonwebtoken from "jsonwebtoken";
 import path from "path";
 import asyncHandler from "express-async-handler";
 
+interface UserPayload {
+  id: string;
+  email: string;
+}
+
 function getPublicKey(): string {
-  const pathToKey = path.join(__dirname, "..", "id_rsa_pub.pem");
+  const pathToKey = path.join(__dirname, "..", "..", "id_rsa_pub.pem");
   return readFileSync(pathToKey, "utf8");
 }
 
@@ -23,27 +28,57 @@ function getTokenFromHeader(authHeader: string | undefined): string {
   return token;
 }
 
-function verifyToken(token: string, publicKey: string): Promise<void> {
+function verifyToken(token: string): Promise<UserPayload> {
+  const publicKey = getPublicKey();
+
   return new Promise((resolve, reject) => {
-    jsonwebtoken.verify(token, publicKey, (err) => {
-      if (err) {
-        return reject(new Error(err.message));
-      }
-      resolve();
-    });
+    jsonwebtoken.verify(
+      token,
+      publicKey,
+      { algorithms: ["RS256"] },
+      (err, decoded) => {
+        if (err) {
+          return reject(new Error(err.message));
+        }
+        // Check if decoded data includes the necessary fields
+        if (
+          typeof decoded !== "object" ||
+          !("sub" in decoded) ||
+          !("email" in decoded)
+        ) {
+          console.log("decoded", decoded);
+          return reject(new Error("Invalid token payload"));
+        }
+
+        // Extract user info from the decoded payload
+        const userPayload: UserPayload = {
+          id: (decoded as any).sub,
+          email: (decoded as any).email,
+        };
+        resolve(userPayload);
+      },
+    );
   });
+}
+
+function isProtectedReq(req: Request): boolean {
+  if (req.method === "POST") {
+    if (!req.path.includes("/user")) {
+      return true;
+    }
+  }
+  return false;
 }
 
 const authVerify = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    if (req.method === "POST") {
-      const publicKey = getPublicKey();
+    if (isProtectedReq(req)) {
       const token = getTokenFromHeader(req.headers.authorization);
       //verify
-      await verifyToken(token, publicKey);
+      await verifyToken(token);
     }
     next();
   },
 );
 
-export { authVerify };
+export { authVerify, verifyToken };

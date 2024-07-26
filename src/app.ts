@@ -1,5 +1,4 @@
 /*TODO:
-+ AUTH
 + Forgot password
 */
 

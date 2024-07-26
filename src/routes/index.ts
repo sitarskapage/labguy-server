@@ -23,7 +23,7 @@ router.use("/projects", projectRouter);
 router.use("/posts", postRouter);
 
 // custom paths
-router.use("/", userRouter);
+router.use("/user", userRouter);
 router.use("/profiles", profileRouter);
 router.use("/videos", videoRouter);
 router.use("/images", imageRouter);

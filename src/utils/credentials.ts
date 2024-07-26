@@ -2,7 +2,11 @@ import { randomBytes, pbkdf2Sync, BinaryLike } from "crypto";
 import validator from "validator";
 
 export function validEmail(email: string) {
-  return validator.isEmail(email);
+  if (validator.isEmail(email)) {
+    return true;
+  } else {
+    throw new Error("Invalid email or password");
+  }
 }
 
 export function genPassword(password: BinaryLike) {
@@ -25,5 +29,9 @@ export function validPassword(
   const hashVerify = pbkdf2Sync(password, salt, 10000, 64, "sha512").toString(
     "hex",
   );
-  return hash === hashVerify;
+  if (hash === hashVerify) {
+    return true;
+  } else {
+    throw new Error("Invalid email or password");
+  }
 }
