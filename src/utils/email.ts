@@ -1,22 +1,16 @@
 import fs from "fs";
 import path from "path";
 import nodemailer from "nodemailer";
-import Handlebars from "handlebars";
+import ejs from "ejs";
 import { env } from "process";
 
-// Function to get the email template
-function getEmailTemplate() {
-  const filePath = path.join(__dirname, "password-reset-email.hbs");
-  return fs.readFileSync(filePath, "utf8");
-}
-
 // Function to send a reset email
-export async function sendResetEmail(
-  resetLink: string,
-  to: string,
-  creatorName?: string,
-): Promise<void> {
-  // Create a transporter object
+export async function sendResetEmail(resetLink: string, to: any, creatorName: any) {
+  const templatePath = path.join(__dirname, "/templates/password-reset-email.ejs");
+  const template = fs.readFileSync(templatePath, "utf8");
+  const message = ejs.render(template, { resetLink, creatorName });
+console.log(template)
+
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -25,20 +19,13 @@ export async function sendResetEmail(
     },
   });
 
-  // Read and compile the email template
-  const templateSource = getEmailTemplate();
-  const template = Handlebars.compile(templateSource);
-  const message = template({ resetLink, creatorName });
-
-  // Define the mail options
   const mailOptions = {
     from: env.EMAIL_USER,
-    to: to,
+    to,
     subject: "Password Reset Request",
     html: message,
   };
 
-  // Send the email
   try {
     await transporter.sendMail(mailOptions);
     console.log(`Password reset email sent to ${to}`);
