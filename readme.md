@@ -1,6 +1,5 @@
 TODO:
-1. Cascade delete
-2. 
-
++. Cascade delete
++. Controller upsert for youtube
 + auto-generate PDF
 + 3D media support
