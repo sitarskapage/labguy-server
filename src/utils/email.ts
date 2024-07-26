@@ -14,6 +14,7 @@ function getEmailTemplate() {
 export async function sendResetEmail(
   resetLink: string,
   to: string,
+  creatorName?: string,
 ): Promise<void> {
   // Create a transporter object
   const transporter = nodemailer.createTransport({
@@ -27,14 +28,14 @@ export async function sendResetEmail(
   // Read and compile the email template
   const templateSource = getEmailTemplate();
   const template = Handlebars.compile(templateSource);
-  const message = template({ resetLink });
+  const message = template({ resetLink, creatorName });
 
   // Define the mail options
   const mailOptions = {
     from: env.EMAIL_USER,
     to: to,
     subject: "Password Reset Request",
-    text: message,
+    html: message,
   };
 
   // Send the email

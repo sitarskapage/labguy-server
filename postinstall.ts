@@ -81,24 +81,33 @@ async function setENV_VARIABLE(
 async function init() {
   try {
     logMessage("Starting installation...", "\x1b[1m\x1b[34m");
-
+    //gen keypair
     await genKeyPair();
 
+    //set variables
     logMessage("Setting variables...", "\x1b[34m");
 
     await setENV_VARIABLE(
       "DATABASE_URL",
       "Please enter your PostgreSQL database connection URL: ",
     );
-    await setENV_VARIABLE("ADMIN_EMAIL", "Please enter the admin email: ");
+    await setENV_VARIABLE("ADMIN_EMAIL", "Please enter the admin Gmail: ");
+    await setENV_VARIABLE(
+      "ADMIN_EMAIL_PASSWORD",
+      "Please generate password for your application via Google. Use the same email as provided before to sing in. After password has been generated, copy and paste it without editing. Server will send reset-password links via provided gmail account. Link: https://myaccount.google.com/apppasswords. : ",
+    );
+    await setENV_VARIABLE("CLD_API_SECRET", "CLD SECRET: ");
+    await setENV_VARIABLE("CLD_API_KEY", "CLD KEY: ");
+    await setENV_VARIABLE("CLD_CLOUD_NAME", "CLD CLOUD NAME: ");
+    await setENV_VARIABLE("CLD_PRESET_NAME", "CLD PRESET NAME: ");
 
     logMessage("Seeding the database...", "\x1b[34m");
 
-    // Invoke seed function after all other operations are complete
+    // seed db
     await seed();
 
     logMessage(
-      "Installation complete. Make sure you keep PRIVATE KEY and DATABASE URL secret.",
+      "Installation complete. Make sure you keep PRIVATE KEY, DATABASE URL and CLD SECRET private.",
       "\x1b[1m\x1b[32m",
     );
   } catch (error) {

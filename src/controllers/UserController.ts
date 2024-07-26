@@ -56,10 +56,18 @@ const UserController = {
 
     // Generate a reset token
     const { token } = issueJWT(user);
-    const resetLink = `${req.protocol}://${req.get("host")}/api/user/reset-password?token=${encodeURI(token)}`;
+    const host = req.get("host");
+
+    const resetLink = `${req.protocol}://${host}/api/user/reset-password?token=${encodeURI(token)}`;
+
+    const lastPreferences = await prisma.preferences.findFirst({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
 
     // Send reset link via email
-    await sendResetEmail(resetLink, email);
+    await sendResetEmail(resetLink, email, lastPreferences?.creator);
 
     res.status(200).json({
       success: true,

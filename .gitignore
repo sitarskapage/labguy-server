@@ -132,4 +132,4 @@ dist
 # labguy
 .env
 /prisma/migrations
-.pem
+*.pem

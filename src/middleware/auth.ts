@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { readFileSync } from "fs";
-import jsonwebtoken from "jsonwebtoken";
+import jsonwebtoken, { JwtPayload } from "jsonwebtoken";
 import path from "path";
 import asyncHandler from "express-async-handler";
 
@@ -15,15 +15,11 @@ function getPublicKey(): string {
 }
 
 function getTokenFromHeader(authHeader: string | undefined): string {
-  if (!authHeader) {
-    throw new Error("Authorization header missing");
-  }
+  if (!authHeader) throw new Error("Authorization header missing");
 
-  const token = authHeader.split(" ")[1];
+  const token = authHeader.split(" ")[1]; //incase starts with "Bearer "
 
-  if (!token) {
-    throw new Error("No auth token");
-  }
+  if (!token) throw new Error("No auth token");
 
   return token;
 }
@@ -31,25 +27,28 @@ function getTokenFromHeader(authHeader: string | undefined): string {
 function verifyToken(token: string): Promise<UserPayload> {
   const publicKey = getPublicKey();
 
+  function isPayloadValid(decoded?: JwtPayload | string) {
+    return (
+      typeof decoded !== "object" ||
+      !("sub" in decoded) ||
+      !("email" in decoded)
+    );
+  }
+
   return new Promise((resolve, reject) => {
     jsonwebtoken.verify(
       token,
       publicKey,
       { algorithms: ["RS256"] },
       (err, decoded) => {
+        // err?
         if (err) {
           return reject(new Error(err.message));
         }
         // Check if decoded data includes the necessary fields
-        if (
-          typeof decoded !== "object" ||
-          !("sub" in decoded) ||
-          !("email" in decoded)
-        ) {
-          console.log("decoded", decoded);
+        if (isPayloadValid(decoded)) {
           return reject(new Error("Invalid token payload"));
         }
-
         // Extract user info from the decoded payload
         const userPayload: UserPayload = {
           id: (decoded as any).sub,
@@ -72,12 +71,10 @@ function isProtectedReq(req: Request): boolean {
 
 const authVerify = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    if (isProtectedReq(req)) {
-      const token = getTokenFromHeader(req.headers.authorization);
-      //verify
-      await verifyToken(token);
-    }
-    next();
+    if (!isProtectedReq(req)) next();
+    //verify
+    const token = getTokenFromHeader(req.headers.authorization);
+    await verifyToken(token);
   },
 );
 
