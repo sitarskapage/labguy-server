@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
 import crypto from "crypto";
 import { env } from "process";
-
-const prisma = new PrismaClient();
+import { prisma } from "../src/client";
 
 // ANSI escape codes for styling
 export const styles = {
