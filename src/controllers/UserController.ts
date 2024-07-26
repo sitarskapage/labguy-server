@@ -29,7 +29,7 @@ const UserController = {
     // Validate password
     validPassword(password, user.hash, user.salt);
 
-    const { token, expires } = issueJWT(user);
+    const { token, expires } = issueJWT(user, 60000*15);
 
     res.status(200).json({
       success: true,

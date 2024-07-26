@@ -31,10 +31,9 @@ function signToken(
   });
 }
 
-export function issueJWT(user: User) {
+export function issueJWT(user: User, expiresIn: number = 60000 * 60) {
   const privateKey = getPrivateKey();
   const payload = createPayload(user);
-  const expiresIn = 60000 * 60; // 1 hour in milliseconds, 60000 = 1min
 
   const signedToken = signToken(payload, privateKey, expiresIn);
 
