@@ -27,7 +27,7 @@ const UserController = {
     // Validate password
     validPassword(password, user.hash, user.salt);
 
-    const { token, expires } = issueJWT(user, 60000 * 15);
+    const { token, expires } = issueJWT(user);
 
     res.status(200).json({
       success: true,
@@ -39,7 +39,7 @@ const UserController = {
 
   //FORGOT
   forgot: asyncHandler(async (req: Request, res: Response) => {
-    const { email } = req.body;
+    const { email} = req.body;
 
     validEmail(email);
 
@@ -53,7 +53,7 @@ const UserController = {
     }
 
     // Generate a reset token
-    const { token } = issueJWT(user);
+    const { token, expires} = issueJWT(user, 60000*15);
     const host = req.get("host");
 
     const resetLink = `${
@@ -73,6 +73,7 @@ const UserController = {
       success: true,
       message: "Password reset email sent",
       link: resetLink,
+expiresIn: expires
     });
   }),
 
