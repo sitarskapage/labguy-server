@@ -8,5 +8,5 @@ TODO:
 
 3. Details
 + MediaController: upsert for yt
-+ install and use Prompts for postinstall
++ postinstall: remove variable prompts. Should only generate keypair and seed. 
 
