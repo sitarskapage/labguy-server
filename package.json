@@ -1,5 +1,5 @@
 {
-  "name": "labguy-server",
+  "name": "labguy-server",  "private": true,
   "version": "1.0.0",
   "description": "Express Server featuring: JWT Authentication and Authorization, Prisma (posgresql db connection), Cloudinary, Routing, Controllers and standard middlewares like Helmet; Limitter; Morgan",
   "main": "app.ts",
