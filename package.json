@@ -1,7 +1,7 @@
 {
   "name": "labguy-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Node.js powered Express server featuring: JWT Authentication and Authorization, ",
   "main": "app.ts",
   "scripts": {
     "build": "tsc",
