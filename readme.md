@@ -5,6 +5,7 @@ TODO:
 
 2. General
 + Cascade delete
++ Add tags route
 
 3. Details
 + MediaController: upsert for yt
