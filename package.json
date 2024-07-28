@@ -1,7 +1,7 @@
 {
   "name": "labguy-server",
   "version": "1.0.0",
-  "description": "Node.js powered Express server featuring: JWT Authentication and Authorization, ",
+  "description": "Express Server featuring: JWT Authentication and Authorization, Prisma (posgresql db connection), Cloudinary, Routing, Controllers and standard middlewares like Helmet; Limitter; Morgan",
   "main": "app.ts",
   "scripts": {
     "build": "tsc",
