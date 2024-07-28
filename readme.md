@@ -10,5 +10,6 @@ TODO:
 3. Details
 + MediaController: upsert for yt
 + VideoRef: add vimeo_url, player_loop, player_muted
-+ postinstall: remove variable prompts. Should only generate keypair and seed. 
++ postinstall: remove variable prompts. Should only generate keypair and seed.
++ ImageRef: rename alt to description
 
