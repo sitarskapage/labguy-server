@@ -1,10 +1,7 @@
 import path from "path";
 import sanitize from "sanitize-filename";
 
-export default function sanitizeFilename(file: File) {
-  // Get the original filename and extension
-  const originalname = file.name;
-
+export default function sanitizeFilename(originalname: string) {
   // Parse the file name and extension
   const parsed = path.parse(originalname);
 

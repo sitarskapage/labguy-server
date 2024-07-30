@@ -7,6 +7,10 @@ import { MediaType } from "@prisma/client";
 import { successResponse } from "../utils/responses";
 import { MediaController } from "./MediaController";
 
+export interface MulterFile extends Express.Multer.File {
+  buffer: Buffer; // Only necessary if using memoryStorage
+}
+
 export class ImageController extends MediaController {
   constructor() {
     super("imageRef");
@@ -17,22 +21,22 @@ export class ImageController extends MediaController {
       req: Request<unknown, unknown, { files: File[] }>,
       res: Response,
     ) => {
-      const images = req.body.files;
+      const images = req.files as MulterFile[];
+
       if (images.length < 1) throw new Error("No files received");
 
       // Process each image file
       const references = await Promise.all(
-        images.map(async (image: File) => {
-          const { name: sanitizedFileName } = sanitizeFilename(image);
+        images.map(async (image) => {
+          const { name: sanitizedFileName } = sanitizeFilename(
+            image.originalname,
+          );
 
           // Upload file to Cloudinary
-          const cldRes = await cloudinary.uploader.upload(
-            image.webkitRelativePath,
-            {
-              public_id: sanitizedFileName,
-              overwrite: true,
-            },
-          );
+          const cldRes = await cloudinary.uploader.upload(image.path, {
+            public_id: sanitizedFileName,
+            overwrite: true,
+          });
 
           // Process tags
           const tagUpserts = cldRes.tags.map((tagName) =>
