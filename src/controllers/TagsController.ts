@@ -8,10 +8,9 @@ export default class TagsController {
   // Get all tags with related data
   get = asyncHandler(async (req, res) => {
     const tags = await prisma.tag.findMany({
-      include: {
-        images: true, // Fetch related images if needed
-        videos: true, // Fetch related videos if needed
-        general: true, // Fetch related general sections if needed
+      select: {
+        id: true,
+        name: true,
       },
     });
     successResponse(res, tags);

@@ -3,7 +3,7 @@ import asyncHandler from "express-async-handler";
 import { v2 as cloudinary } from "cloudinary";
 import sanitizeFilename from "../utils/sanitizeFilename";
 import { prisma } from "../client";
-import { MediaType, Prisma } from "@prisma/client";
+import { MediaType } from "@prisma/client";
 import { successResponse } from "../utils/responses";
 import { MediaController } from "./MediaController";
 
@@ -17,12 +17,10 @@ export class ImageController extends MediaController {
       req: Request<unknown, unknown, { files: File[] }>,
       res: Response,
     ) => {
-      /* Function to upload file to cld, and save reference in database. It overwrites data by default. */
-
       const images = req.body.files;
-
       if (images.length < 1) throw new Error("No files received");
 
+      // Process each image file
       const references = await Promise.all(
         images.map(async (image: File) => {
           const { name: sanitizedFileName } = sanitizeFilename(image);
@@ -36,7 +34,18 @@ export class ImageController extends MediaController {
             },
           );
 
-          // define imageRef
+          // Process tags
+          const tagUpserts = cldRes.tags.map((tagName) =>
+            prisma.tag.upsert({
+              where: { name: tagName },
+              update: {},
+              create: { name: tagName },
+            }),
+          );
+
+          const createdTags = await Promise.all(tagUpserts);
+
+          // Define imageRef
           const reference = {
             public_id: cldRes.public_id,
             etag: cldRes.etag,
@@ -48,7 +57,9 @@ export class ImageController extends MediaController {
             description: "",
             width: cldRes.width,
             height: cldRes.height,
-            tags: cldRes.tags,
+            tags: {
+              connect: createdTags.map((tag) => ({ id: tag.id })),
+            },
             createdAt: cldRes.created_at,
           };
 
@@ -76,12 +87,12 @@ export class ImageController extends MediaController {
     for (const image of selectedImgArr) {
       const { public_id } = image;
 
-      //  Delete from Cloudinary
+      // Delete from Cloudinary
       await cloudinary.uploader.destroy(public_id);
 
       // Delete the image reference from the database
       await prisma.imageRef.delete({ where: { public_id: public_id } });
     }
-    res.status(200);
+    res.status(200).json({ message: "Images deleted successfully" });
   });
 }

@@ -13,8 +13,8 @@ model ImageRef {
     format      String?
     bytes       Int?
     description String?
-    width       String?
-    height      String?
+    width       Int?
+    height      Int?
     tags        Tag[]     @relation("ImageTags")
 
     createdAt DateTime  @default(now())
@@ -30,12 +30,15 @@ model ImageRef {
 model VideoRef {
     etag        String    @id @unique
     type        MediaType @default(VIDEO)
+    id          String?
     vimeo_url   String?   @unique
+    sc_url      String?   @unique
     yt_url      String?   @unique
-    title       String?
+    title       String    @default("Untitled")
     duration    String?
     definition  String?
     description String?
+    thumbnail   String?
     tags        Tag[]     @relation("VideoTags")
 
     player_loop  Boolean @default(true)

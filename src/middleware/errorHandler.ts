@@ -11,6 +11,6 @@ export default function errorHandler(
   console.error(err.stack);
 
   // Send a 500 Internal Server Error response
-  res.status(500).json({ error: "Internal Server Error" });
+  res.status(500).json({ error: { message: "Internal Server Error" } });
   next();
 }

@@ -7,3 +7,10 @@ generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["prismaSchemaFolder"]
 }
+
+generator jsonSchema {
+  provider                 = "prisma-json-schema-generator"
+  output                   = "./json"
+  keepRelationScalarFields = "true" // default is "false"
+  keepRelationFields       = "false" // default is "true"
+}

@@ -38,7 +38,7 @@ export function issueJWT(user: User, expiresIn: number = 60000 * 60) {
   const signedToken = signToken(payload, privateKey, expiresIn);
 
   return {
-    token: signedToken,
+    token: "Bearer " + signedToken,
     expires: expiresIn,
   };
 }

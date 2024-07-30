@@ -2,9 +2,10 @@ import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import { verifyToken } from "../middleware/auth";
 import { issueJWT } from "../utils/auth";
-import { validEmail, validPassword, genPassword } from "../utils/credentials";
+import { validPassword, genPassword } from "../utils/credentials";
 import { sendResetEmail } from "../utils/email";
 import { prisma } from "../client";
+import validator from "validator";
 
 const UserController = {
   //LOGIN
@@ -12,7 +13,7 @@ const UserController = {
     const { email, password } = req.body;
 
     // Validate email
-    validEmail(email);
+    validator.isEmail(email);
 
     // Find user by email
     const user = await prisma.user.findUnique({
@@ -25,7 +26,11 @@ const UserController = {
     }
 
     // Validate password
-    validPassword(password, user.hash, user.salt);
+    try {
+      validPassword(password, user.hash, user.salt);
+    } catch (err) {
+      res.status(401).json({ error: { message: (err as Error).message } });
+    }
 
     const { token, expires } = issueJWT(user);
 
@@ -39,9 +44,9 @@ const UserController = {
 
   //FORGOT
   forgot: asyncHandler(async (req: Request, res: Response) => {
-    const { email} = req.body;
+    const { email } = req.body;
 
-    validEmail(email);
+    validator.isEmail(email);
 
     const user = await prisma.user.findUnique({
       where: { email },
@@ -53,7 +58,7 @@ const UserController = {
     }
 
     // Generate a reset token
-    const { token, expires} = issueJWT(user, 60000*15);
+    const { token, expires } = issueJWT(user, 60000 * 15);
     const host = req.get("host");
 
     const resetLink = `${
@@ -73,7 +78,7 @@ const UserController = {
       success: true,
       message: "Password reset email sent",
       link: resetLink,
-expiresIn: expires
+      expiresIn: expires,
     });
   }),
 

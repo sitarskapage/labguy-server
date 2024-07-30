@@ -1,13 +1,4 @@
 import { randomBytes, pbkdf2Sync, BinaryLike } from "crypto";
-import validator from "validator";
-
-export function validEmail(email: string) {
-  if (validator.isEmail(email)) {
-    return true;
-  } else {
-    throw new Error("Invalid email or password");
-  }
-}
 
 export function genPassword(password: BinaryLike) {
   const salt = randomBytes(32).toString("hex");

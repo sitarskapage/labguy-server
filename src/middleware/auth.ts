@@ -17,7 +17,7 @@ function getPublicKey(): string {
 function getTokenFromHeader(authHeader: string | undefined): string {
   if (!authHeader) throw new Error("Authorization header missing");
 
-  const token = authHeader.split(" ")[1]; //incase starts with "Bearer "
+  const token = authHeader.split(" ")[1]; //token starts with "Bearer "
 
   if (!token) throw new Error("No auth token");
 
@@ -77,6 +77,7 @@ const authVerify = asyncHandler(
     //verify
     const token = getTokenFromHeader(req.headers.authorization);
     await verifyToken(token);
+    next();
   },
 );
 
