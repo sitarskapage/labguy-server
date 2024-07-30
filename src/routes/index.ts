@@ -1,13 +1,14 @@
 import { Router } from "express";
 import userRouter from "./routers/default/UserRouter";
-import workRouter from "./routers/post/WorkRouter";
-import projectRouter from "./routers/post/ProjectRouter";
 import preferencesRouter from "./routers/default/PreferencesRouter";
-import postRouter from "./routers/post/PostRouter";
 import videoRouter from "./routers/custom/VideoRouter";
 import profileRouter from "./routers/custom/ProfileRouter";
 import imageRouter from "./routers/custom/ImageRouter";
 import mediaRouter from "./routers/custom/MediaRouter";
+import postRouter from "./routers/default/PostRouter";
+import projectRouter from "./routers/default/ProjectRouter";
+import workRouter from "./routers/default/WorkRouter";
+import tagsRouter from "./routers/default/TagsRouter";
 
 //New Router instance
 const router = Router();
@@ -28,5 +29,6 @@ router.use("/profiles", profileRouter);
 router.use("/videos", videoRouter);
 router.use("/images", imageRouter);
 router.use("/media", mediaRouter);
+router.use("/tags", tagsRouter);
 
 export default router;

@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import { prisma } from "../client";
 import { Prisma } from "@prisma/client";
+import { successResponse } from "../utils/responses";
 
 // Type to lowercase the first letter of a string
 type LowercaseFirstLetter<S extends string> =
@@ -28,15 +29,13 @@ export class Controller {
       update: req.body,
     });
 
-    res.status(201).json(newRecord);
-
-    return newRecord;
+    successResponse(res, newRecord);
   });
 
   //READ
   get = asyncHandler(async (req: Request, res: Response) => {
     const records = await this.delegate.findMany();
-    res.status(200).json(records);
+    successResponse(res, records);
   });
 
   //CREATE
@@ -44,7 +43,7 @@ export class Controller {
     const reqBody = req.body;
     const newRecord = await this.delegate.create({ data: reqBody });
 
-    res.status(201).json(newRecord);
+    successResponse(res, newRecord);
   });
 
   //UPDATE SINGLE
@@ -58,7 +57,7 @@ export class Controller {
       data: updatedItem,
     });
 
-    res.status(200).json(updated);
+    successResponse(res, updated);
   });
 
   //DELETE SINGLE
@@ -69,7 +68,7 @@ export class Controller {
       where: { id: id },
     });
 
-    res.status(200).json(deleted);
+    successResponse(res, deleted);
   });
 
   //DELETE MANY
@@ -80,7 +79,7 @@ export class Controller {
       where: { id: { in: ids } },
     });
 
-    res.status(200).json(deleted);
+    successResponse(res, deleted);
   });
 
   //UPDATE MANY
@@ -97,7 +96,7 @@ export class Controller {
       ),
     );
 
-    res.status(200).json(updatedItems);
+    successResponse(res, updatedItems);
   });
 
   //CREATE MANY

@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { MediaController } from "../../../controllers/MediaController";
+import { ImageController } from "../../../controllers/ImageController";
 
-const imageController = new MediaController("imageRef");
+const imageController = new ImageController();
 const imageRouter = Router();
 
-imageRouter.get("/", imageController.getManyMedia);
+imageRouter.get("/", imageController.get);
 imageRouter.post("/update/:etag", imageController.updateMedia);
 imageRouter.post("/update", imageController.upsertMedia);
 

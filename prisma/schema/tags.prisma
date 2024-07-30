@@ -1,0 +1,10 @@
+model Tag {
+    id   Int    @id @default(autoincrement())
+    name String @unique
+
+    images  ImageRef[]       @relation("ImageTags")
+    videos  VideoRef[]       @relation("VideoTags")
+    general GeneralSection[] @relation("GeneralTags")
+
+    @@index([name])
+}

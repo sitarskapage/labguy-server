@@ -1,12 +1,10 @@
-model Project {
+model Work {
     id         Int        @id @default(autoincrement())
-    subtitle   String
-    start_date DateTime
-    end_date   DateTime
-    venue      String
+    dimensions String?
+    year       Int?
     images     ImageRef[]
     videos     VideoRef[]
-    works      Work[]     @relation("ProjectWorks")
+    projects   Project[]  @relation("ProjectWorks")
 
     general   GeneralSection @relation(fields: [generalId], references: [id])
     generalId Int

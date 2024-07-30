@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { MediaController } from "../../../controllers/MediaController";
+import { VideoController } from "../../../controllers/VideoController";
 
-const videoController = new MediaController("videoRef");
+const videoController = new VideoController();
 const videoRouter = Router();
 
-videoRouter.get("/", videoController.getManyMedia);
+videoRouter.get("/", videoController.get);
 videoRouter.post("/update/:etag", videoController.updateMedia);
 videoRouter.post("/update", videoController.upsertMedia);
 videoRouter.post("/delete", videoController.deleteManyMedia);

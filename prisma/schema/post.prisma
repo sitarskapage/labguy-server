@@ -1,8 +1,9 @@
 model Post {
-  id                 Int             @id @default(autoincrement())
-  general            GeneralSection? @relation(fields: [generalSectionSlug], references: [slug])
-  generalSectionSlug String?
-  html               String
-  author             User            @relation(fields: [userId], references: [id])
-  userId             Int
+  id   Int    @id @default(autoincrement())
+  html String
+
+  general   GeneralSection @relation(fields: [generalId], references: [id])
+  generalId Int
+  author    User           @relation(fields: [authorId], references: [id])
+  authorId  Int
 }

@@ -3,9 +3,9 @@ model GeneralSection {
 
     title       String
     description String?
-    published   Boolean  @default(false)
-    slug        String   @unique
-    tags        String[] @unique
+    published   Boolean @default(false)
+    slug        String  @unique
+    tags        Tag[]   @relation("GeneralTags")
 
     createdAt DateTime  @default(now())
     updatedAt DateTime? @updatedAt

@@ -5,28 +5,30 @@ import { generateSlug } from "../utils/generateSlug";
 import { successResponse } from "../utils/responses";
 import { prisma } from "../client";
 
-export class PostController extends Controller {
+export class ProjectController extends Controller {
   constructor() {
-    super("post");
+    super("project");
   }
 
   get = asyncHandler(async (req: Request, res: Response) => {
-    const posts = await prisma.post.findMany({
+    const projects = await prisma.project.findMany({
       include: {
         general: true,
+        images: true,
+        videos: true,
       },
     });
-    successResponse(res, posts);
+    successResponse(res, projects);
   });
 
   create = asyncHandler(async (req: Request, res: Response) => {
-    const createdRecord = await prisma.post.create({
+    const createdRecord = await prisma.project.create({
       data: {
         ...req.body,
         general: {
           create: {
             ...req.body.general,
-            slug: generateSlug(req.body.general.title, prisma.post),
+            slug: generateSlug(req.body.general.title, prisma.project),
           },
         },
       },
@@ -36,13 +38,25 @@ export class PostController extends Controller {
 
   update = asyncHandler(async (req: Request, res: Response) => {
     const postId: number = parseInt(req.params.id, 10);
-    const updatedRecord = await prisma.post.update({
+    const updatedRecord = await prisma.project.update({
       where: { id: postId },
       data: { ...req.body, general: { update: req.body.general } },
       include: {
         general: true,
+        images: true,
+        videos: true,
       },
     });
     successResponse(res, updatedRecord);
+  });
+
+  delete = asyncHandler(async (req: Request, res: Response) => {
+    const postId: number = parseInt(req.params.id, 10);
+
+    const deleted = await prisma.project.delete({
+      where: { id: postId },
+    });
+
+    successResponse(res, deleted);
   });
 }

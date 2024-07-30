@@ -71,7 +71,9 @@ function isProtectedReq(req: Request): boolean {
 
 const authVerify = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    if (!isProtectedReq(req)) next();
+    if (!isProtectedReq(req)) {
+      return next();
+    }
     //verify
     const token = getTokenFromHeader(req.headers.authorization);
     await verifyToken(token);
