@@ -69,6 +69,7 @@ function isProtectedReq(req: Request): boolean {
   return false;
 }
 
+//main
 const authVerify = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     if (!isProtectedReq(req)) {

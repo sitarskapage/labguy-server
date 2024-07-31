@@ -10,12 +10,12 @@ model ImageRef {
     type        MediaType @default(IMAGE)
     cld_url     String    @unique
     path        String    @unique
-    filename    String?   @unique
-    format      String?
-    bytes       Int?
-    description String?   @default("")
-    width       Int?
-    height      Int?
+    filename    String    @unique
+    format      String
+    bytes       Int
+    description String    @default("")
+    width       Int
+    height      Int
     tags        Tag[]     @relation("ImageTags")
 
     createdAt DateTime  @default(now())

@@ -61,40 +61,23 @@
           "type": "string"
         },
         "filename": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": "string"
         },
         "format": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": "string"
         },
         "bytes": {
-          "type": [
-            "integer",
-            "null"
-          ]
+          "type": "integer"
         },
         "description": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": "string",
+          "default": ""
         },
         "width": {
-          "type": [
-            "integer",
-            "null"
-          ]
+          "type": "integer"
         },
         "height": {
-          "type": [
-            "integer",
-            "null"
-          ]
+          "type": "integer"
         },
         "createdAt": {
           "type": "string",
