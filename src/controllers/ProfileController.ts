@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
-import { prisma } from "../client";
+import { prisma } from "../prismaclient";
 import { Prisma } from "@prisma/client";
 
 export class ProfileController {
@@ -88,6 +88,6 @@ export class ProfileController {
     updateProfile();
     updateContact();
 
-    res.status(200);
+    res.status(200).send({});
   });
 }

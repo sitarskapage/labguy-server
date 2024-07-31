@@ -22,6 +22,6 @@ export default class TagsController {
     const tag = await prisma.tag.delete({
       where: { id: parseInt(id, 10) },
     });
-    res.status(200);
+    res.status(200).send({});
   });
 }

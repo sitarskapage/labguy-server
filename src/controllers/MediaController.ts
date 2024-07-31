@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
-import { prisma } from "../client";
+import { prisma } from "../prismaclient";
 import { successResponse } from "../utils/responses";
 
 export class MediaController {
@@ -11,70 +11,20 @@ export class MediaController {
   }
 
   get = asyncHandler(async (req: Request, res: Response) => {
-    try {
-      const media = await prisma.$queryRaw`
-      SELECT 
-        "etag", 
-        "type", 
-        NULL AS "id", 
-        NULL AS "vimeo_url", 
-        NULL AS "sc_url", 
-        NULL AS "yt_url", 
-        NULL AS "title", 
-        NULL AS "duration", 
-        NULL AS "definition", 
-        "description", 
-        NULL AS "thumbnail", 
-        "width", 
-        "height", 
-        NULL AS "player_loop", 
-        NULL AS "player_muted", 
-        "cld_url", 
-        "filename", 
-        "format", 
-        "bytes", 
-        "createdAt", 
-        "updatedAt", 
-        "preferencesId"
-      FROM "ImageRef"
-      
-      UNION ALL
-      
-      SELECT 
-        "etag", 
-        "type", 
-        "id", 
-        "vimeo_url", 
-        "sc_url", 
-        "yt_url", 
-        "title", 
-        "duration", 
-        "definition", 
-        "description", 
-        "thumbnail", 
-        NULL AS "width", 
-        NULL AS "height", 
-        "player_loop", 
-        "player_muted", 
-        NULL AS "cld_url", 
-        NULL AS "filename", 
-        NULL AS "format", 
-        NULL AS "bytes", 
-        "createdAt", 
-        "updatedAt", 
-        "preferencesId"
-      FROM "VideoRef"
-      
-      ORDER BY "createdAt" DESC
-    `;
+    // Fetch all images
+    const images = await prisma.imageRef.findMany({});
 
-      // Send successful response
-      successResponse(res, media as any);
-    } catch (error) {
-      // Handle and log the error appropriately
-      console.error("Error fetching media:", error);
-      res.status(500).json({ error: { message: "Internal server error" } });
-    }
+    // Fetch all videos
+    const videos = await prisma.videoRef.findMany({});
+
+    // Combine the results
+    const media = [...images, ...videos];
+
+    // Sort combined results by createdAt. It's slow but good enough for now.
+    media.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+
+    // Send successful response
+    res.json(media);
   });
 
   update = asyncHandler(async (req, res) => {

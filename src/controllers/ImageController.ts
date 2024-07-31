@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import sanitizeFilename from "../utils/sanitizeFilename";
-import { prisma } from "../client";
+import { prisma } from "../prismaclient";
 import { MediaType } from "@prisma/client";
 import { successResponse } from "../utils/responses";
 import { MediaController } from "./MediaController";
@@ -99,6 +99,6 @@ export class ImageController extends MediaController {
       // Delete the image reference from the database
       await prisma.imageRef.delete({ where: { public_id: public_id } });
     }
-    res.status(200);
+    res.status(200).send({}).send({});
   });
 }

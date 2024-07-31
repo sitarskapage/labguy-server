@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
-import { prisma } from "../client";
+import { prisma } from "../prismaclient";
 import { Prisma } from "@prisma/client";
 import { successResponse } from "../utils/responses";
 

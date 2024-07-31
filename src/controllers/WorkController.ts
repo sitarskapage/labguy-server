@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import { generateSlug } from "../utils/generateSlug";
 import { successResponse } from "../utils/responses";
-import { prisma } from "../client";
+import { prisma } from "../prismaclient";
 import { Controller } from "./Controller";
 
 export class WorkController extends Controller {

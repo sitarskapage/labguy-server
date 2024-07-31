@@ -3,7 +3,7 @@ import asyncHandler from "express-async-handler";
 import { Controller } from "./Controller";
 import { generateSlug } from "../utils/generateSlug";
 import { successResponse } from "../utils/responses";
-import { prisma } from "../client";
+import { prisma } from "../prismaclient";
 
 export class ProjectController extends Controller {
   constructor() {

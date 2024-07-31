@@ -4,7 +4,7 @@ import { badRequestResponse, successResponse } from "../utils/responses";
 import getYouTubeID from "get-youtube-id";
 import { getYoutubeData } from "../utils/getYoutubeData";
 import { Request, Response } from "express";
-import { prisma } from "../client";
+import { prisma } from "../prismaclient";
 
 async function getVideoData(req: Request, res: Response): Promise<any> {
   const { youtube_url, soundcloud_url, vimeo_url } = req.body;

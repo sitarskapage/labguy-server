@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { prisma } from "../../../client";
+import { prisma } from "../../../prismaclient";
 import { MediaController } from "../../../controllers/MediaController";
 
 const mediaRouter = Router();

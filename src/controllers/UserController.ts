@@ -4,7 +4,7 @@ import { verifyToken } from "../middleware/auth";
 import { issueJWT } from "../utils/auth";
 import { validPassword, genPassword } from "../utils/credentials";
 import { sendResetEmail } from "../utils/email";
-import { prisma } from "../client";
+import { prisma } from "../prismaclient";
 import validator from "validator";
 
 const UserController = {

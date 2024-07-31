@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import { env } from "process";
-import { prisma } from "../src/client";
+import { prisma } from "../src/prismaclient";
 
 // ANSI escape codes for styling
 export const styles = {
