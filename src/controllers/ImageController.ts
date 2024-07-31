@@ -6,6 +6,7 @@ import { MediaType } from "@prisma/client";
 import { successResponse } from "../utils/responses";
 import { MediaController } from "./MediaController";
 import { cloudinary } from "../cloudinary";
+import fs from "fs";
 
 export class ImageController extends MediaController {
   constructor() {
@@ -49,6 +50,7 @@ export class ImageController extends MediaController {
                 etag: cldRes.etag,
                 type: MediaType.IMAGE,
                 cld_url: cldRes.url,
+                path: image.path,
                 filename: cldRes.original_filename,
                 format: cldRes.format,
                 bytes: cldRes.bytes,
@@ -71,7 +73,7 @@ export class ImageController extends MediaController {
                 `Error processing image ${image.originalname}:`,
                 error,
               );
-              throw error; // Propagate the error to be caught by outer try-catch
+              throw error;
             }
           }),
         );
@@ -92,10 +94,11 @@ export class ImageController extends MediaController {
 
       // Delete from Cloudinary
       await cloudinary.uploader.destroy(public_id);
-
+      // Delete local copy
+      if (fs.existsSync(image.path)) fs.unlinkSync(image.path);
       // Delete the image reference from the database
       await prisma.imageRef.delete({ where: { public_id: public_id } });
     }
-    res.status(200).json({ message: "Images deleted successfully" });
+    res.status(200);
   });
 }

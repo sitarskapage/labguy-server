@@ -25,12 +25,12 @@ async function createAdmin(email: string): Promise<void> {
 
     await prisma.user.upsert({
       where: { email },
-      update: { salt, hash },
+      update: {},
       create: { email, salt, hash },
     });
 
     console.debug(
-      `${styles.green}Admin user created with ${styles.yellow} Email: ${email}, Password: "admin".${styles.reset}`,
+      `${styles.green}Admin user created with ${styles.blue} Email: "${email}", Password: "admin".${styles.reset}`,
     );
   } catch (error: any) {
     console.error(
@@ -53,3 +53,5 @@ export async function seed(): Promise<void> {
     process.exit(1);
   }
 }
+
+seed();

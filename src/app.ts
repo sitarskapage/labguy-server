@@ -6,6 +6,7 @@ import router from "./routes";
 import errorHandler from "./middleware/errorHandler";
 import { limiter } from "./middleware/config/limiter";
 import { authVerify } from "./middleware/auth";
+import path from "path";
 
 // init
 const app = express();
@@ -16,6 +17,9 @@ app.use(cors());
 app.use(helmet());
 app.use(morgan("dev"));
 app.use(limiter);
+
+// serving static files
+// app.use(express.static(path.join(__dirname, "public")));
 
 //auth
 app.use(authVerify);

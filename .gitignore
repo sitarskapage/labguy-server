@@ -133,3 +133,4 @@ dist
 .env
 /prisma/migrations
 *.pem
+public

@@ -57,6 +57,9 @@
         "cld_url": {
           "type": "string"
         },
+        "path": {
+          "type": "string"
+        },
         "filename": {
           "type": [
             "string",
@@ -152,10 +155,8 @@
           ]
         },
         "title": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": "string",
+          "default": "Untitled"
         },
         "duration": {
           "type": [
