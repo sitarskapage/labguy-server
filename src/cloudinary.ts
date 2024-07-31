@@ -6,3 +6,5 @@ cloudinary.config({
   api_key: env.CLD_API_KEY,
   api_secret: env.CLD_API_SECRET,
 });
+
+export { cloudinary };

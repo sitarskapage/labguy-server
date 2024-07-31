@@ -1,15 +1,11 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
-import { v2 as cloudinary } from "cloudinary";
 import sanitizeFilename from "../utils/sanitizeFilename";
 import { prisma } from "../client";
 import { MediaType } from "@prisma/client";
 import { successResponse } from "../utils/responses";
 import { MediaController } from "./MediaController";
-
-export interface MulterFile extends Express.Multer.File {
-  buffer: Buffer; // Only necessary if using memoryStorage
-}
+import { cloudinary } from "../cloudinary";
 
 export class ImageController extends MediaController {
   constructor() {
@@ -21,67 +17,70 @@ export class ImageController extends MediaController {
       req: Request<unknown, unknown, { files: File[] }>,
       res: Response,
     ) => {
-      const images = req.files as MulterFile[];
+      try {
+        const images = req.files as Express.Multer.File[];
 
-      if (images.length < 1) throw new Error("No files received");
+        if (!images || images.length < 1) throw new Error("No files received");
 
-      // Process each image file
-      const references = await Promise.all(
-        images.map(async (image) => {
-          const { name: sanitizedFileName } = sanitizeFilename(
-            image.originalname,
-          );
+        const references = await Promise.all(
+          images.map(async (image) => {
+            try {
+              const { name: sanitizedFileName } = sanitizeFilename(
+                image.originalname,
+              );
 
-          // Upload file to Cloudinary
-          const cldRes = await cloudinary.uploader.upload(image.path, {
-            public_id: sanitizedFileName,
-            overwrite: true,
-          });
+              const cldRes = await cloudinary.uploader.upload(image.path, {
+                public_id: sanitizedFileName,
+                overwrite: true,
+              });
 
-          // Process tags
-          const tagUpserts = cldRes.tags.map((tagName) =>
-            prisma.tag.upsert({
-              where: { name: tagName },
-              update: {},
-              create: { name: tagName },
-            }),
-          );
+              const tagUpserts = cldRes.tags.map((tagName) =>
+                prisma.tag.upsert({
+                  where: { name: tagName },
+                  update: {},
+                  create: { name: tagName },
+                }),
+              );
 
-          const createdTags = await Promise.all(tagUpserts);
+              const createdTags = await Promise.all(tagUpserts);
 
-          // Define imageRef
-          const reference = {
-            public_id: cldRes.public_id,
-            etag: cldRes.etag,
-            type: MediaType.IMAGE,
-            cld_url: cldRes.url,
-            filename: cldRes.original_filename,
-            format: cldRes.format,
-            bytes: cldRes.bytes,
-            description: "",
-            width: cldRes.width,
-            height: cldRes.height,
-            tags: {
-              connect: createdTags.map((tag) => ({ id: tag.id })),
-            },
-            createdAt: cldRes.created_at,
-          };
+              const reference = {
+                public_id: cldRes.public_id,
+                etag: cldRes.etag,
+                type: MediaType.IMAGE,
+                cld_url: cldRes.url,
+                filename: cldRes.original_filename,
+                format: cldRes.format,
+                bytes: cldRes.bytes,
+                description: "",
+                width: cldRes.width,
+                height: cldRes.height,
+                tags: {
+                  connect: createdTags.map((tag) => ({ id: tag.id })),
+                },
+                createdAt: cldRes.created_at,
+              };
 
-          // Upsert imageRef
-          const imageRefs = await prisma.imageRef.upsert({
-            where: {
-              public_id: reference.public_id,
-            },
-            create: reference,
-            update: reference,
-          });
+              return prisma.imageRef.upsert({
+                where: { public_id: reference.public_id },
+                create: reference,
+                update: reference,
+              });
+            } catch (error) {
+              console.error(
+                `Error processing image ${image.originalname}:`,
+                error,
+              );
+              throw error; // Propagate the error to be caught by outer try-catch
+            }
+          }),
+        );
 
-          // Return references
-          return imageRefs;
-        }),
-      );
-
-      successResponse(res, references);
+        successResponse(res, references);
+      } catch (error) {
+        console.error("Error in uploadImages handler:", error);
+        res.status(500).json({ error: (error as Error).message });
+      }
     },
   );
 

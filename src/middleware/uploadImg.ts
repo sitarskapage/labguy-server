@@ -1,15 +1,16 @@
 import { NextFunction, Request, Response } from "express";
-import { uploadImages } from "./config/multer";
+import { processImages } from "./config/multer";
+import { optimizeAndSaveImgs } from "./optimizeImg";
 
 export default function uploadImgFiles(
   req: Request,
   res: Response,
   next: NextFunction,
 ) {
-  uploadImages.array("files")(req, res, (err) => {
+  processImages.array("files")(req, res, (err) => {
     if (err) {
       return res.status(400).json({ error: err.message });
     }
-    next();
+    optimizeAndSaveImgs(req, res, next);
   });
 }

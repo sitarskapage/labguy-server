@@ -7,7 +7,7 @@ const imgMimTypeWhitelist = [
   "image/webp",
 ];
 
-export const uploadImages = multer({
+export const processImages = multer({
   storage: multer.memoryStorage(), // Store files in memory
   limits: { fileSize: 10 * 1024 * 1024 }, // Limit file size to 10MB
   fileFilter: (req, file, cb) => {
