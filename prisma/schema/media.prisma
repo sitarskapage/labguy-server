@@ -24,8 +24,7 @@ model ImageRef {
     Preferences   Preferences? @relation(fields: [preferencesId], references: [id])
     preferencesId Int?         @unique
 
-    Work    Work[]
-    Project Project[]
+
 }
 
 model VideoRef {
@@ -51,6 +50,5 @@ model VideoRef {
     Preferences   Preferences? @relation(fields: [preferencesId], references: [id])
     preferencesId Int?         @unique
 
-    Work    Work[]
-    Project Project[]
+
 }
