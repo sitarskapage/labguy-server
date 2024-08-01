@@ -5,5 +5,5 @@ model Post {
   general   GeneralSection @relation(fields: [generalId], references: [id], onDelete: Cascade)
   generalId Int @unique
   author    User           @relation(fields: [authorId], references: [id])
-  authorId  Int @unique
+  authorId  Int
 }
