@@ -19,13 +19,15 @@ model Contact {
 }
 
 model Profile {
+  id          Int           @id @default(autoincrement())
+
   html_statement  String?
   html_additional String?
   portfolio_pdf   String?   @default("https://archive.org/details/jakubkanna_PORTFOLIO_2024")
 
 contact         Contact[]
 user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-userId Int @unique @id
+userId Int @unique 
 }
 
 model User {
