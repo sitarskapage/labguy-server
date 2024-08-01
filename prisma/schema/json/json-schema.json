@@ -199,7 +199,10 @@
           "type": "integer"
         },
         "html": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "generalId": {
           "type": "integer"
@@ -270,32 +273,33 @@
           "type": "integer"
         },
         "subtitle": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "start_date": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "end_date": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "venue": {
-          "type": "string"
-        },
-        "generalId": {
-          "type": "integer"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updatedAt": {
           "type": [
             "string",
             "null"
           ],
           "format": "date-time"
+        },
+        "end_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "venue": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "generalId": {
+          "type": "integer"
         }
       }
     },

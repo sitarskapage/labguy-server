@@ -22,13 +22,16 @@ export class PostController extends Controller {
   create = asyncHandler(async (req: Request, res: Response) => {
     const createdRecord = await prisma.post.create({
       data: {
-        ...req.body,
+        author: { connect: { email: req.user?.email } },
         general: {
           create: {
-            ...req.body.general,
-            slug: generateSlug(req.body.general.title, prisma.post),
+            title: req.body.general.title,
+            slug: await generateSlug(req.body.general.title, prisma.post),
           },
         },
+      },
+      include: {
+        general: true,
       },
     });
     successResponse(res, createdRecord);

@@ -1,8 +1,8 @@
 model Post {
-  id   Int    @id @default(autoincrement())
-  html String
+  id   Int     @id @default(autoincrement())
+  html String?
 
-  general   GeneralSection @relation(fields: [generalId], references: [id])
+  general   GeneralSection @relation(fields: [generalId], references: [id], onDelete: Cascade)
   generalId Int
   author    User           @relation(fields: [authorId], references: [id])
   authorId  Int

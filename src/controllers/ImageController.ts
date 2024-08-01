@@ -99,6 +99,6 @@ export class ImageController extends MediaController {
       // Delete the image reference from the database
       await prisma.imageRef.delete({ where: { public_id: public_id } });
     }
-    res.status(200).send({}).send({});
+    res.status(200).send({});
   });
 }

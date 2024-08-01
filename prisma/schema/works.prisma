@@ -6,7 +6,7 @@ model Work {
     videos     VideoRef[]
     projects   Project[]  @relation("ProjectWorks")
 
-    general   GeneralSection @relation(fields: [generalId], references: [id])
+    general   GeneralSection @relation(fields: [generalId], references: [id], onDelete: Cascade)
     generalId Int
     createdAt DateTime       @default(now())
     updatedAt DateTime?      @updatedAt

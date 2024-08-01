@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from "express";
 import { readFileSync } from "fs";
 import jsonwebtoken, { JwtPayload } from "jsonwebtoken";
 import path from "path";
 import asyncHandler from "express-async-handler";
+import { Request } from "express";
 
 interface UserPayload {
   id: string;
@@ -70,16 +70,17 @@ function isProtectedReq(req: Request): boolean {
 }
 
 //main
-const authVerify = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    if (!isProtectedReq(req)) {
-      return next();
-    }
-    //verify
-    const token = getTokenFromHeader(req.headers.authorization);
-    await verifyToken(token);
-    next();
-  },
-);
+const authVerify = asyncHandler(async (req: Request, res, next) => {
+  if (!isProtectedReq(req)) {
+    return next();
+  }
+  //verify
+  const token = getTokenFromHeader(req.headers.authorization);
+  const user = await verifyToken(token);
+  //attach user to request
+  req.user = user;
+  //next
+  next();
+});
 
 export { authVerify, verifyToken };

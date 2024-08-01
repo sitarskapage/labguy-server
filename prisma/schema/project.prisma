@@ -1,15 +1,13 @@
 model Project {
     id         Int        @id @default(autoincrement())
-    subtitle   String
-    start_date DateTime
-    end_date   DateTime
-    venue      String
+    subtitle   String?
+    start_date DateTime?
+    end_date   DateTime?
+    venue      String?
     images     ImageRef[]
     videos     VideoRef[]
     works      Work[]     @relation("ProjectWorks")
 
-    general   GeneralSection @relation(fields: [generalId], references: [id])
+    general   GeneralSection @relation(fields: [generalId], references: [id], onDelete: Cascade)
     generalId Int
-    createdAt DateTime       @default(now())
-    updatedAt DateTime?      @updatedAt
 }

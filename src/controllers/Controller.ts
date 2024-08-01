@@ -10,7 +10,7 @@ type LowercaseFirstLetter<S extends string> =
 
 // LowercaseModelName ensures that the first letter of Prisma.ModelName is lowercase
 // This is necessary because Prisma.ModelName's start with a capital letter, but we need lowercase names to use with Prisma client.
-type LowercaseModelName = LowercaseFirstLetter<Prisma.ModelName>;
+export type LowercaseModelName = LowercaseFirstLetter<Prisma.ModelName>;
 
 export class Controller {
   delegate: any;
