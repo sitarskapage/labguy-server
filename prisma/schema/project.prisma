@@ -4,9 +4,10 @@ model Project {
     start_date DateTime?
     end_date   DateTime?
     venue      String?
-    images     ImageRef[]
+    
+images     ImageRef[]
     videos     VideoRef[]
-    works      Work[]     @relation("ProjectWorks")
+    works      Work[]    
 
     general   GeneralSection @relation(fields: [generalId], references: [id], onDelete: Cascade)
     generalId Int
