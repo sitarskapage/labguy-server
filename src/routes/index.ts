@@ -1,6 +1,6 @@
 import { Router } from "express";
-import userRouter from "./routers/default/UserRouter";
-import preferencesRouter from "./routers/default/PreferencesRouter";
+import signupRouter from "./routers/default/SignupRouter";
+import preferencesRouter from "./routers/custom/PreferencesRouter";
 import videoRouter from "./routers/custom/VideoRouter";
 import profileRouter from "./routers/custom/ProfileRouter";
 import imageRouter from "./routers/custom/ImageRouter";
@@ -15,16 +15,14 @@ const router = Router();
 
 // /api/
 
-// default paths
-router.use("/preferences", preferencesRouter);
-
 // post paths
 router.use("/works", workRouter);
 router.use("/projects", projectRouter);
 router.use("/posts", postRouter);
 
 // custom paths
-router.use("/user", userRouter);
+router.use("/preferences", preferencesRouter);
+router.use("/signup", signupRouter);
 router.use("/profiles", profileRouter);
 router.use("/videos", videoRouter);
 router.use("/images", imageRouter);

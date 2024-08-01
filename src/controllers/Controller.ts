@@ -33,13 +33,25 @@ export class Controller {
   });
 
   //READ
-  get = asyncHandler(async (req: Request, res: Response) => {
+  get = asyncHandler(async (req, res) => {
     const records = await this.delegate.findMany();
     successResponse(res, records);
   });
 
+  getOneLatest = asyncHandler(async (req: Request, res: Response) => {
+    const record = await this.delegate.findFirst({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    if (!record) throw new Error("Record not found");
+
+    successResponse(res, record);
+  });
+
   //CREATE
-  create = asyncHandler(async (req: Request, res: Response) => {
+  create = asyncHandler(async (req, res) => {
     const reqBody = req.body;
     const newRecord = await this.delegate.create({ data: reqBody });
 

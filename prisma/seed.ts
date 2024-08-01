@@ -17,26 +17,41 @@ export const styles = {
 };
 
 async function createAdmin(email: string): Promise<void> {
-  try {
-    const salt = crypto.randomBytes(32).toString("hex");
-    const hash = crypto
-      .pbkdf2Sync("admin", salt, 10000, 64, "sha512")
-      .toString("hex");
+  const salt = crypto.randomBytes(32).toString("hex");
+  const hash = crypto
+    .pbkdf2Sync("admin", salt, 10000, 64, "sha512")
+    .toString("hex");
 
-    await prisma.user.upsert({
-      where: { email },
-      update: {},
-      create: { email, salt, hash },
-    });
+  await prisma.user.upsert({
+    where: { email },
+    update: {},
+    create: { email, salt, hash },
+  });
 
-    console.debug(
-      `${styles.green}Admin user created with ${styles.blue} Email: "${email}", Password: "admin".${styles.reset}`,
-    );
-  } catch (error: any) {
-    console.error(
-      `${styles.red}Error creating admin user: ${error.message}${styles.reset}`,
-    );
+  console.log(
+    `${styles.green}Admin user created with ${styles.blue} Email: "${email}", Password: "admin".${styles.reset}`,
+  );
+}
+
+async function createPreferences(): Promise<void> {
+  // Check if preferences already exist
+  const existingPreferences = await prisma.preferences.findFirst();
+  if (existingPreferences) {
+    console.log("Preferences already exist. Skipping seed.");
+    return;
   }
+
+  // Create default preferences
+  await prisma.preferences.create({
+    data: {
+      creator: "Creator Name",
+      domain: "ilovedogs.com",
+      homepage_heading: "Homepage",
+      homepage_subheading: "Sub-Heading",
+      enable_dashboard_darkmode: false,
+      enable_portfolio_pdf: false,
+    },
+  });
 }
 
 export async function seed(): Promise<void> {
@@ -46,8 +61,12 @@ export async function seed(): Promise<void> {
     if (adminEmail) {
       await createAdmin(adminEmail);
     } else {
-      throw new Error("No admin email provided.");
+      console.error(
+        `${styles.red}No admin email provided. Skipping admin creation.${styles.reset}`,
+      );
     }
+
+    await createPreferences();
   } catch (error: any) {
     console.error(`${styles.red}Error: ${error.message}${styles.reset}`);
     process.exit(1);

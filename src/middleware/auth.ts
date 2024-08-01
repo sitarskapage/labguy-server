@@ -60,17 +60,26 @@ function verifyToken(token: string): Promise<UserPayload> {
   });
 }
 
+// Define a variable with custom unprotected paths
+const UNPROTECTED_PATHS = ["/signup"];
+
+/**
+ * Determines if a request is protected based on the method and path.
+ *
+ * @param req - The HTTP request object.
+ * @returns boolean - True if the request is protected, otherwise false.
+ */
+
 function isProtectedReq(req: Request): boolean {
   if (req.method === "POST") {
-    if (!req.path.includes("/user")) {
+    if (!UNPROTECTED_PATHS.some((path) => req.path.includes(path))) {
       return true;
     }
   }
   return false;
 }
 
-//main
-const authVerify = asyncHandler(async (req: Request, res, next) => {
+const authVerifyPOST = asyncHandler(async (req: Request, res, next) => {
   if (!isProtectedReq(req)) {
     return next();
   }
@@ -83,4 +92,12 @@ const authVerify = asyncHandler(async (req: Request, res, next) => {
   next();
 });
 
-export { authVerify, verifyToken };
+const authVerify = asyncHandler(async (req: Request, res, next) => {
+  //verify
+  const token = getTokenFromHeader(req.headers.authorization);
+  await verifyToken(token);
+  //next
+  next();
+});
+
+export { authVerify, authVerifyPOST, verifyToken };

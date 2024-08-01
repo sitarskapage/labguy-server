@@ -5,7 +5,7 @@ import morgan from "morgan";
 import router from "./routes";
 import errorHandler from "./middleware/errorHandler";
 import { limiter } from "./middleware/config/limiter";
-import { authVerify } from "./middleware/auth";
+import { authVerify, authVerifyPOST } from "./middleware/auth";
 import path from "path";
 
 // init
@@ -21,8 +21,8 @@ app.use(limiter);
 // serving static files
 // app.use(express.static(path.join(__dirname, "public")));
 
-//auth
-app.use(authVerify);
+//verify all post requests
+app.use(authVerifyPOST);
 
 // routes
 app.use("/api/", router);

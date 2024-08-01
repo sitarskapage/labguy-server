@@ -7,7 +7,7 @@ import { sendResetEmail } from "../utils/email";
 import { prisma } from "../prismaclient";
 import validator from "validator";
 
-const UserController = {
+const SignupController = {
   //LOGIN
   login: asyncHandler(async (req: Request, res: Response) => {
     const { email, password } = req.body;
@@ -63,7 +63,7 @@ const UserController = {
 
     const resetLink = `${
       req.protocol
-    }://${host}/api/user/reset-password?token=${encodeURI(token)}`;
+    }://${host}/api/signup/reset-password?token=${encodeURI(token)}`;
 
     const lastPreferences = await prisma.preferences.findFirst({
       orderBy: {
@@ -120,4 +120,4 @@ const UserController = {
   }),
 };
 
-export default UserController;
+export default SignupController;

@@ -1,7 +1,7 @@
 model Preferences {
     id      Int    @id @default(autoincrement())
-    creator String @unique @default("Creator Name")
-    domain  String @unique
+    creator String @default("Creator Name")
+    domain  String @default("ilovedogs.com")
 
     homepage_heading          String    @default("Homepage")
     homepage_subheading       String    @default("Sub-Heading")

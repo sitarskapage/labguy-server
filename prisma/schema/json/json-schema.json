@@ -223,7 +223,8 @@
           "default": "Creator Name"
         },
         "domain": {
-          "type": "string"
+          "type": "string",
+          "default": "ilovedogs.com"
         },
         "homepage_heading": {
           "type": "string",
