@@ -10,7 +10,7 @@ model GeneralSection {
     createdAt DateTime  @default(now())
     updatedAt DateTime? @updatedAt
 
-    Project Project[]
-    Work    Work[]
-    Post    Post[]
+    project Project
+    work    Work
+    post    Post
 }
