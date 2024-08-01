@@ -19,7 +19,6 @@ model Contact {
 }
 
 model Profile {
-  id          Int           @id @default(autoincrement())
 
   html_statement  String?
   html_additional String?
@@ -27,7 +26,7 @@ model Profile {
 
 contact         Contact[]
 user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-userId Int @unique 
+userId Int @unique @id
 }
 
 model User {
