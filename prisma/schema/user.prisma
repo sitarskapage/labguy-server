@@ -3,24 +3,29 @@ model SocialMedia {
   platform   String?
   profileUrl String?
   username   String?
-  contactId  Int
+
   Contact    Contact? @relation(fields: [contactId], references: [id])
+  contactId  Int
+
 }
 
 model Contact {
   id          Int           @id @default(autoincrement())
   email       String?
   socialmedia SocialMedia[]
-  userId      Int
-  Profile     Profile?      @relation(fields: [userId], references: [userId])
+
+  Profile     Profile?      @relation(fields: [profileId], references: [userId])
+  profileId      Int 
 }
 
 model Profile {
-  userId          Int       @id @unique
   html_statement  String?
   html_additional String?
   portfolio_pdf   String?   @default("https://archive.org/details/jakubkanna_PORTFOLIO_2024")
-  contact         Contact[]
+
+contact         Contact[]
+user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+userId Int @unique @id
 }
 
 model User {
@@ -29,4 +34,5 @@ model User {
   hash  String
   salt  String
   posts Post[]
+profile Profile?
 }
