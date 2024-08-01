@@ -3,7 +3,7 @@ model Post {
   html String?
 
   general   GeneralSection @relation(fields: [generalId], references: [id], onDelete: Cascade)
-  generalId Int
+  generalId Int @unique
   author    User           @relation(fields: [authorId], references: [id])
-  authorId  Int
+  authorId  Int @unique
 }
