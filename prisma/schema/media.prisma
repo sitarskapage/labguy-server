@@ -16,7 +16,7 @@ model ImageRef {
     description String    @default("")
     width       Int
     height      Int
-    tags        Tag[]     @relation("ImageTags")
+    tags        Tag[]    
 
     createdAt DateTime  @default(now())
     updatedAt DateTime? @updatedAt
@@ -40,7 +40,7 @@ model VideoRef {
     definition  String?
     description String?
     thumbnail   String?
-    tags        Tag[]     @relation("VideoTags")
+    tags        Tag[]     
 
     player_loop  Boolean @default(true)
     player_muted Boolean @default(false)
