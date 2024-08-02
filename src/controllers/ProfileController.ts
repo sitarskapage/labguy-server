@@ -47,12 +47,12 @@ export class ProfileController {
         await prisma.contact.upsert({
           where: {
             id: cItem.id,
-            userId: 1,
+            profileId: 1,
           },
           update: {
             id: cItem.id,
             email: cItem.email,
-            userId: userId,
+            profileId: userId,
             socialmedia: {
               connectOrCreate: cItem.socialmedia.map(
                 (smItem: Prisma.SocialMediaCreateManyInput) => ({
@@ -70,7 +70,7 @@ export class ProfileController {
           },
           create: {
             email: cItem.email,
-            userId: userId,
+            profileId: userId,
             socialmedia: {
               create: cItem.socialmedia.map(
                 (smItem: Prisma.SocialMediaCreateManyInput) => ({

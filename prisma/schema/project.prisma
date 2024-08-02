@@ -7,7 +7,8 @@ model Project {
 
     images ImageRef[]
     videos VideoRef[]
+    works  Work[]
 
     general   GeneralSection @relation(fields: [generalId], references: [id], onDelete: Cascade)
-    generalId Int
+    generalId Int            @unique
 }

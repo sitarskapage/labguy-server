@@ -23,6 +23,12 @@
         "slug": {
           "type": "string"
         },
+        "tags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Tag"
+          }
+        },
         "createdAt": {
           "type": "string",
           "format": "date-time"
@@ -34,29 +40,35 @@
           ],
           "format": "date-time"
         },
-        "tags": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Tag"
-          }
+        "project": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Project"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
-        "Project": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Project"
-          }
+        "work": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Work"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
-        "Work": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Work"
-          }
-        },
-        "Post": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Post"
-          }
+        "post": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Post"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       }
     },
@@ -103,6 +115,12 @@
         "height": {
           "type": "integer"
         },
+        "tags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Tag"
+          }
+        },
         "createdAt": {
           "type": "string",
           "format": "date-time"
@@ -114,28 +132,26 @@
           ],
           "format": "date-time"
         },
-        "Work": {
+        "preferences": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Preferences"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "works": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Work"
           }
         },
-        "Project": {
+        "projects": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Project"
-          }
-        },
-        "tags": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Tag"
-          }
-        },
-        "Preferences": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Preferences"
           }
         }
       }
@@ -207,6 +223,12 @@
             "null"
           ]
         },
+        "tags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Tag"
+          }
+        },
         "player_loop": {
           "type": "boolean",
           "default": true
@@ -226,28 +248,26 @@
           ],
           "format": "date-time"
         },
-        "Work": {
+        "preferences": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Preferences"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "works": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Work"
           }
         },
-        "Project": {
+        "projects": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Project"
-          }
-        },
-        "tags": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Tag"
-          }
-        },
-        "Preferences": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Preferences"
           }
         }
       }
@@ -375,6 +395,12 @@
             "$ref": "#/definitions/VideoRef"
           }
         },
+        "works": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Work"
+          }
+        },
         "general": {
           "$ref": "#/definitions/GeneralSection"
         }
@@ -389,35 +415,23 @@
         "name": {
           "type": "string"
         },
-        "ImageRef": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ImageRef"
-            },
-            {
-              "type": "null"
-            }
-          ]
+        "images": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ImageRef"
+          }
         },
-        "VideoRef": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/VideoRef"
-            },
-            {
-              "type": "null"
-            }
-          ]
+        "videos": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VideoRef"
+          }
         },
-        "GeneralSection": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/GeneralSection"
-            },
-            {
-              "type": "null"
-            }
-          ]
+        "general": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GeneralSection"
+          }
         }
       }
     },
@@ -502,12 +516,12 @@
             "null"
           ]
         },
-        "portfolio_pdf_url": {
+        "portfolio_pdf": {
           "type": [
             "string",
             "null"
           ],
-          "default": "https://archive.org/download/jakubkanna_PORTFOLIO_2024/jakubkanna_PORTFOLIO_2024.pdf"
+          "default": "https://archive.org/details/jakubkanna_PORTFOLIO_2024"
         },
         "contact": {
           "type": "array",
@@ -515,7 +529,7 @@
             "$ref": "#/definitions/Contact"
           }
         },
-        "User": {
+        "user": {
           "$ref": "#/definitions/User"
         }
       }
@@ -541,11 +555,15 @@
             "$ref": "#/definitions/Post"
           }
         },
-        "Profile": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Profile"
-          }
+        "profile": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Profile"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       }
     },
@@ -577,6 +595,12 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/VideoRef"
+          }
+        },
+        "projects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Project"
           }
         },
         "general": {

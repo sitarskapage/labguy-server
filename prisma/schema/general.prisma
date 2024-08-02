@@ -5,12 +5,12 @@ model GeneralSection {
     description String?
     published   Boolean @default(false)
     slug        String  @unique
+    tags        Tag[]
 
     createdAt DateTime  @default(now())
     updatedAt DateTime? @updatedAt
 
-    tags    Tag[]
-    Project Project[]
-    Work    Work[]
-    Post    Post[]
+    project Project?
+    work    Work?
+    post    Post?
 }

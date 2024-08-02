@@ -16,14 +16,14 @@ model ImageRef {
     description String    @default("")
     width       Int
     height      Int
+    tags        Tag[]
 
     createdAt DateTime  @default(now())
     updatedAt DateTime? @updatedAt
 
-    Work        Work[]
-    Project     Project[]
-    tags        Tag[]
-    Preferences Preferences[]
+    preferences Preferences?
+    works       Work[]
+    projects    Project[]
 }
 
 model VideoRef {
@@ -38,6 +38,7 @@ model VideoRef {
     definition  String?
     description String?
     thumbnail   String?
+    tags        Tag[]
 
     player_loop  Boolean @default(true)
     player_muted Boolean @default(false)
@@ -45,8 +46,7 @@ model VideoRef {
     createdAt DateTime  @default(now())
     updatedAt DateTime? @updatedAt
 
-    Work        Work[]
-    Project     Project[]
-    tags        Tag[]
-    Preferences Preferences[]
+    preferences Preferences?
+    works       Work[]
+    projects    Project[]
 }

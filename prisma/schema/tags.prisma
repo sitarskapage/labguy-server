@@ -2,12 +2,9 @@ model Tag {
     id   Int    @id @default(autoincrement())
     name String @unique
 
-    ImageRef         ImageRef?       @relation(fields: [imageRefEtag], references: [etag])
-    imageRefEtag     String?
-    VideoRef         VideoRef?       @relation(fields: [videoRefEtag], references: [etag])
-    videoRefEtag     String?
-    GeneralSection   GeneralSection? @relation(fields: [generalSectionId], references: [id])
-    generalSectionId Int?
+    images  ImageRef[]
+    videos  VideoRef[]
+    general GeneralSection[]
 
     @@index([name])
 }

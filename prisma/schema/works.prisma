@@ -3,9 +3,10 @@ model Work {
     dimensions String?
     year       Int?
 
-    images ImageRef[]
-    videos VideoRef[]
+    images   ImageRef[]
+    videos   VideoRef[]
+    projects Project[]
 
     general   GeneralSection @relation(fields: [generalId], references: [id], onDelete: Cascade)
-    generalId Int
+    generalId Int            @unique
 }
