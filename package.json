@@ -42,7 +42,8 @@
     "prisma-json-schema-generator": "^5.1.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.3",
-    "typescript-eslint": "^7.16.1"
+    "typescript-eslint": "^7.16.1",
+    "@apidevtools/json-schema-ref-parser": "^11.6.4"
   },
   "dependencies": {
     "@prisma/client": "^5.17.0",

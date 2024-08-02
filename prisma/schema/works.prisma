@@ -1,13 +1,11 @@
 model Work {
-    id         Int        @id @default(autoincrement())
+    id         Int     @id @default(autoincrement())
     dimensions String?
     year       Int?
-    images     ImageRef[]
-    videos     VideoRef[]
-    projects   Project[]  @relation("ProjectWorks")
+
+    images ImageRef[]
+    videos VideoRef[]
 
     general   GeneralSection @relation(fields: [generalId], references: [id], onDelete: Cascade)
     generalId Int
-    createdAt DateTime       @default(now())
-    updatedAt DateTime?      @updatedAt
 }

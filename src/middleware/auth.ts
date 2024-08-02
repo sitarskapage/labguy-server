@@ -4,8 +4,8 @@ import path from "path";
 import asyncHandler from "express-async-handler";
 import { Request } from "express";
 
-interface UserPayload {
-  id: string;
+export interface UserPayload {
+  id: number;
   email: string;
 }
 
@@ -96,6 +96,7 @@ const authVerify = asyncHandler(async (req: Request, res, next) => {
   //verify
   const token = getTokenFromHeader(req.headers.authorization);
   await verifyToken(token);
+
   //next
   next();
 });

@@ -28,7 +28,7 @@ export class ProfileController {
     const p = req.body;
     const cArr = p.contact;
 
-    if (!Array.isArray(cArr)) throw new Error("Invalid request");
+    if (!Array.isArray(cArr)) throw new Error("Contact field is not an array");
 
     async function updateProfile() {
       delete p.contact;

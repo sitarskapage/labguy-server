@@ -23,7 +23,7 @@ router.use("/posts", postRouter);
 // custom paths
 router.use("/preferences", preferencesRouter);
 router.use("/signup", signupRouter);
-router.use("/profiles", profileRouter);
+router.use("/profile", profileRouter);
 router.use("/videos", videoRouter);
 router.use("/images", imageRouter);
 router.use("/media", mediaRouter);

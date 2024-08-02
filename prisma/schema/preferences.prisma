@@ -1,12 +1,11 @@
 model Preferences {
-    id      Int    @id @default(autoincrement())
-    creator String @default("Creator Name")
-    domain  String @default("ilovedogs.com")
+    id           Int    @id @default(autoincrement())
+    creator_name String @default("Creator Name")
 
     homepage_heading          String    @default("Homepage")
     homepage_subheading       String    @default("Sub-Heading")
-    homepage_background_image ImageRef?
-    homepage_background_video VideoRef?
+    homepage_background_image ImageRef? @relation(fields: [imageRefEtag], references: [etag])
+    homepage_background_video VideoRef? @relation(fields: [videoRefEtag], references: [etag])
 
     enable_dashboard_darkmode Boolean @default(false)
     enable_portfolio_pdf      Boolean @default(false)

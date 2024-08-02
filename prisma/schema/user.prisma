@@ -4,7 +4,7 @@ model SocialMedia {
   profileUrl String?
   username   String?
   contactId  Int
-  Contact    Contact? @relation(fields: [contactId], references: [id])
+  Contact    Contact? @relation(fields: [contactId], references: [id], onDelete: Cascade)
 }
 
 model Contact {
@@ -12,21 +12,23 @@ model Contact {
   email       String?
   socialmedia SocialMedia[]
   userId      Int
-  Profile     Profile?      @relation(fields: [userId], references: [userId])
+  Profile     Profile?      @relation(fields: [userId], references: [userId], onDelete: Cascade)
 }
 
 model Profile {
-  userId          Int       @id @unique
-  html_statement  String?
-  html_additional String?
-  portfolio_pdf   String?   @default("https://archive.org/details/jakubkanna_PORTFOLIO_2024")
-  contact         Contact[]
+  userId            Int       @id @unique
+  html_statement    String?
+  html_additional   String?
+  portfolio_pdf_url String?   @default("https://archive.org/download/jakubkanna_PORTFOLIO_2024/jakubkanna_PORTFOLIO_2024.pdf")
+  contact           Contact[]
+  User              User      @relation(fields: [userId], references: [id])
 }
 
 model User {
-  id    Int    @id @default(autoincrement())
-  email String @unique
-  hash  String
-  salt  String
-  posts Post[]
+  id      Int       @id @default(autoincrement())
+  email   String    @unique
+  hash    String
+  salt    String
+  posts   Post[]
+  Profile Profile[]
 }

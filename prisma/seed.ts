@@ -29,7 +29,7 @@ async function createAdmin(email: string): Promise<void> {
   });
 
   console.log(
-    `${styles.green}Admin user created with ${styles.blue} Email: "${email}", Password: "admin".${styles.reset}`,
+    `${styles.green}Admin user upsert with ${styles.blue} Email: "${email}", Password: "admin".${styles.reset}`,
   );
 }
 
@@ -44,8 +44,7 @@ async function createPreferences(): Promise<void> {
   // Create default preferences
   await prisma.preferences.create({
     data: {
-      creator: "Creator Name",
-      domain: "ilovedogs.com",
+      creator_name: "Creator Name",
       homepage_heading: "Homepage",
       homepage_subheading: "Sub-Heading",
       enable_dashboard_darkmode: false,

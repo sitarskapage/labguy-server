@@ -16,16 +16,14 @@ model ImageRef {
     description String    @default("")
     width       Int
     height      Int
-    tags        Tag[]     @relation("ImageTags")
 
     createdAt DateTime  @default(now())
     updatedAt DateTime? @updatedAt
 
-    Preferences   Preferences? @relation(fields: [preferencesId], references: [id])
-    preferencesId Int?         @unique
-
-    Work    Work[]
-    Project Project[]
+    Work        Work[]
+    Project     Project[]
+    tags        Tag[]
+    Preferences Preferences[]
 }
 
 model VideoRef {
@@ -40,7 +38,6 @@ model VideoRef {
     definition  String?
     description String?
     thumbnail   String?
-    tags        Tag[]     @relation("VideoTags")
 
     player_loop  Boolean @default(true)
     player_muted Boolean @default(false)
@@ -48,9 +45,8 @@ model VideoRef {
     createdAt DateTime  @default(now())
     updatedAt DateTime? @updatedAt
 
-    Preferences   Preferences? @relation(fields: [preferencesId], references: [id])
-    preferencesId Int?         @unique
-
-    Work    Work[]
-    Project Project[]
+    Work        Work[]
+    Project     Project[]
+    tags        Tag[]
+    Preferences Preferences[]
 }

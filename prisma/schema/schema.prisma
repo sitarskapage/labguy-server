@@ -11,6 +11,6 @@ generator client {
 generator jsonSchema {
   provider                 = "prisma-json-schema-generator"
   output                   = "./json"
-  keepRelationScalarFields = "true" // default is "false"
-  keepRelationFields       = "false" // default is "true"
+  keepRelationScalarFields = "false" // default is "false"
+  keepRelationFields       = "true" // default is "true"
 }

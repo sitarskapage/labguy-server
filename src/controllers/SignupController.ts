@@ -63,7 +63,7 @@ const SignupController = {
 
     const resetLink = `${
       req.protocol
-    }://${host}/api/signup/reset-password?token=${encodeURI(token)}`;
+    }://${host}/api/user/reset-password?token=${encodeURI(token)}`;
 
     const lastPreferences = await prisma.preferences.findFirst({
       orderBy: {
@@ -72,7 +72,7 @@ const SignupController = {
     });
 
     // Send reset link via email
-    await sendResetEmail(resetLink, email, lastPreferences?.creator);
+    await sendResetEmail(resetLink, email, lastPreferences?.creator_name);
 
     res.status(200).json({
       success: true,

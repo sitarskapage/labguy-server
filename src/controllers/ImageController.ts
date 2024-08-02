@@ -49,7 +49,7 @@ export class ImageController extends MediaController {
                 public_id: cldRes.public_id,
                 etag: cldRes.etag,
                 type: MediaType.IMAGE,
-                cld_url: cldRes.url,
+                cld_url: cldRes.secure_url,
                 path: image.path,
                 filename: cldRes.original_filename,
                 format: cldRes.format,

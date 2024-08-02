@@ -1,12 +1,12 @@
 model Project {
-    id         Int        @id @default(autoincrement())
+    id         Int       @id @default(autoincrement())
     subtitle   String?
     start_date DateTime?
     end_date   DateTime?
     venue      String?
-    images     ImageRef[]
-    videos     VideoRef[]
-    works      Work[]     @relation("ProjectWorks")
+
+    images ImageRef[]
+    videos VideoRef[]
 
     general   GeneralSection @relation(fields: [generalId], references: [id], onDelete: Cascade)
     generalId Int

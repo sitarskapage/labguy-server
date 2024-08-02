@@ -2,11 +2,12 @@
 
 import { Prisma } from "@prisma/client";
 import * as express from "express";
+import { UserPayload } from "../src/middleware/auth";
 
 declare global {
   namespace Express {
     interface Request {
-      user?: { email: string };
+      user?: UserPayload;
     }
   }
 }
