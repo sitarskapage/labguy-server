@@ -4,7 +4,7 @@ model SocialMedia {
   profileUrl String?
   username   String?
 
-  Contact   Contact? @relation(fields: [contactId], references: [id])
+  Contact   Contact? @relation(fields: [contactId], references: [id], onDelete: Cascade)
   contactId Int
 }
 
@@ -13,7 +13,7 @@ model Contact {
   email       String?
   socialmedia SocialMedia[]
 
-  Profile   Profile? @relation(fields: [profileId], references: [userId])
+  Profile   Profile? @relation(fields: [profileId], references: [userId], onDelete: Cascade)
   profileId Int
 }
 

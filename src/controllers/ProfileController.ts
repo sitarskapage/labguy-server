@@ -24,7 +24,7 @@ export class ProfileController {
   // UPDATE SINGLE
   updateProfile = asyncHandler(async (req: Request, res: Response) => {
     const userId: number = parseInt(req.params.id, 10);
-
+    console.log("BODY:", req.body);
     const p = req.body;
     const cArr = p.contact;
 
@@ -41,25 +41,43 @@ export class ProfileController {
     async function updateContact() {
       console.log("Received contact array:", cArr);
 
+      // Ensure we delete contacts that are not in the received array
+      await prisma.contact.deleteMany({
+        where: {
+          profileId: userId,
+          NOT: cArr.map((cItem: Prisma.ContactWhereUniqueInput) => ({
+            id: cItem.id,
+          })),
+        },
+      });
+
+      // overwrite
       for (const cItem of cArr) {
         console.log("Processing contact with ID:", cItem.id);
 
         await prisma.contact.upsert({
-          where: {
-            id: cItem.id,
-            profileId: 1,
-          },
+          where: { id: cItem.id || 0 },
           update: {
-            id: cItem.id,
             email: cItem.email,
             profileId: userId,
             socialmedia: {
-              connectOrCreate: cItem.socialmedia.map(
-                (smItem: Prisma.SocialMediaCreateManyInput) => ({
-                  where: {
+              deleteMany: {
+                contactId: cItem.id,
+                NOT: cItem.socialmedia.map(
+                  (smItem: Prisma.SocialMediaWhereUniqueInput) => ({
                     id: smItem.id,
-                  },
+                  }),
+                ),
+              },
+              upsert: cItem.socialmedia.map(
+                (smItem: Prisma.SocialMediaCreateManyInput) => ({
+                  where: { id: smItem.id || 0 },
                   create: {
+                    platform: smItem.platform,
+                    profileUrl: smItem.profileUrl,
+                    username: smItem.username,
+                  },
+                  update: {
                     platform: smItem.platform,
                     profileUrl: smItem.profileUrl,
                     username: smItem.username,
@@ -85,8 +103,8 @@ export class ProfileController {
       }
     }
 
-    updateProfile();
-    updateContact();
+    await updateProfile();
+    await updateContact();
 
     res.status(200).send({});
   });

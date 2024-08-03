@@ -53,6 +53,64 @@ async function createPreferences(): Promise<void> {
   });
 }
 
+async function createProfile(): Promise<void> {
+  const userId = 1;
+
+  // Check if the profile already exists
+  const existingProfile = await prisma.profile.findUnique({
+    where: { userId },
+  });
+
+  if (existingProfile) {
+    console.log(`Profile for user ${userId} already exists. Skipping seed.`);
+    return;
+  }
+
+  // Create profile first
+  const profile = await prisma.profile.create({
+    data: {
+      html_statement: "This is a sample HTML statement.",
+      html_additional: "Additional HTML content here.",
+      portfolio_pdf: "https://example.com/portfolio.pdf",
+      userId: userId, // Set the userId
+    },
+  });
+
+  // Create contact and social media
+  const contact = await prisma.contact.create({
+    data: {
+      email: "example@example.com",
+      socialmedia: {
+        create: [
+          {
+            platform: "Twitter",
+            profileUrl: "https://twitter.com/example",
+            username: "example",
+          },
+          {
+            platform: "LinkedIn",
+            profileUrl: "https://linkedin.com/in/example",
+            username: "example",
+          },
+        ],
+      },
+      profileId: profile.userId, // Link contact to the created profile
+    },
+  });
+
+  // Update profile to link it to the contact
+  await prisma.profile.update({
+    where: { userId: profile.userId },
+    data: {
+      contact: {
+        connect: { id: contact.id }, // Connect the contact
+      },
+    },
+  });
+
+  console.log(`Profile for user ${userId} created successfully.`);
+}
+
 export async function seed(): Promise<void> {
   try {
     let adminEmail = env.ADMIN_EMAIL;
@@ -66,6 +124,7 @@ export async function seed(): Promise<void> {
     }
 
     await createPreferences();
+    await createProfile();
   } catch (error: any) {
     console.error(`${styles.red}Error: ${error.message}${styles.reset}`);
     process.exit(1);

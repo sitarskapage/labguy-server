@@ -7,7 +7,7 @@ enum MediaType {
 model ImageRef {
     etag        String    @id @unique
     public_id   String    @unique
-    type        MediaType @default(IMAGE)
+    mediaType   MediaType @default(IMAGE)
     cld_url     String    @unique
     path        String    @unique
     filename    String    @unique
@@ -28,7 +28,7 @@ model ImageRef {
 
 model VideoRef {
     etag        String    @id @unique
-    type        MediaType @default(VIDEO)
+    mediaType   MediaType @default(VIDEO)
     id          String?
     vimeo_url   String?   @unique
     sc_url      String?   @unique
@@ -36,7 +36,7 @@ model VideoRef {
     title       String    @default("Untitled")
     duration    String?
     definition  String?
-    description String?
+    description String    @default("")
     thumbnail   String?
     tags        Tag[]
 
