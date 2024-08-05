@@ -15,9 +15,8 @@ export default [
       },
     },
     plugins: {
-      "@typescript-eslint": tseslint,
+      "@typescript-eslint": tseslint, 
     },
   },
-  pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
+
 ];

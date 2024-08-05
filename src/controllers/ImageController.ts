@@ -48,7 +48,7 @@ export class ImageController extends MediaController {
               const reference = {
                 public_id: cldRes.public_id,
                 etag: cldRes.etag,
-                type: MediaType.IMAGE,
+                mediaType: MediaType.IMAGE,
                 cld_url: cldRes.secure_url,
                 path: image.path,
                 filename: cldRes.original_filename,

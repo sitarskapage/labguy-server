@@ -64,6 +64,7 @@ export class Controller {
 
     const updatedItem: { [key: string]: unknown } = req.body;
 
+
     const updated = await this.delegate.update({
       where: { id: id },
       data: updatedItem,
