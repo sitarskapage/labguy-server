@@ -27,6 +27,16 @@ export abstract class ProjectWorkController extends Controller {
     successResponse(res, items);
   });
 
+  getOne = asyncHandler(async (req, res) => {
+    const id: number = parseInt(req.params.id, 10);
+
+    const records = await this.delegate.findUnique({
+      where: { id: id },
+      include: { general: true },
+    });
+    successResponse(res, records);
+  });
+
   create = asyncHandler(async (req: Request, res: Response) => {
     const data = await this.createData(req);
 

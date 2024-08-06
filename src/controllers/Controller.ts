@@ -38,6 +38,15 @@ export class Controller {
     successResponse(res, records);
   });
 
+  getOne = asyncHandler(async (req, res) => {
+    const id: number = parseInt(req.params.id, 10);
+
+    const records = await this.delegate.findMany({
+      where: { id: id },
+    });
+    successResponse(res, records);
+  });
+
   getOneLatest = asyncHandler(async (req: Request, res: Response) => {
     const record = await this.delegate.findFirst({
       orderBy: {
@@ -63,7 +72,6 @@ export class Controller {
     const id: number = parseInt(req.params.id, 10);
 
     const updatedItem: { [key: string]: unknown } = req.body;
-
 
     const updated = await this.delegate.update({
       where: { id: id },
@@ -105,8 +113,8 @@ export class Controller {
         this.delegate.update({
           where: { id: update.id },
           data: update.data,
-        }),
-      ),
+        })
+      )
     );
 
     successResponse(res, updatedItems);
