@@ -28,7 +28,7 @@ async function getVideoData(req: Request, res: Response): Promise<any> {
     }
     default:
       badRequestResponse(res, "No valid URL provided");
-      return; // Exit early
+      return;
   }
 
   return videoData;

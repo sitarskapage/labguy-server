@@ -16,7 +16,7 @@ export class ImageController extends MediaController {
   uploadImages = asyncHandler(
     async (
       req: Request<unknown, unknown, { files: File[] }>,
-      res: Response,
+      res: Response
     ) => {
       try {
         const images = req.files as Express.Multer.File[];
@@ -27,7 +27,7 @@ export class ImageController extends MediaController {
           images.map(async (image) => {
             try {
               const { name: sanitizedFileName } = sanitizeFilename(
-                image.originalname,
+                image.originalname
               );
 
               const cldRes = await cloudinary.uploader.upload(image.path, {
@@ -37,10 +37,10 @@ export class ImageController extends MediaController {
 
               const tagUpserts = cldRes.tags.map((tagName) =>
                 prisma.tag.upsert({
-                  where: { name: tagName },
+                  where: { title: tagName },
                   update: {},
-                  create: { name: tagName },
-                }),
+                  create: { title: tagName },
+                })
               );
 
               const createdTags = await Promise.all(tagUpserts);
@@ -71,11 +71,11 @@ export class ImageController extends MediaController {
             } catch (error) {
               console.error(
                 `Error processing image ${image.originalname}:`,
-                error,
+                error
               );
               throw error;
             }
-          }),
+          })
         );
 
         successResponse(res, references);
@@ -83,7 +83,7 @@ export class ImageController extends MediaController {
         console.error("Error in uploadImages handler:", error);
         res.status(500).json({ error: (error as Error).message });
       }
-    },
+    }
   );
 
   destroyImages = asyncHandler(async (req, res) => {

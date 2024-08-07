@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import { prisma } from "../prismaclient";
 import { Prisma } from "@prisma/client";
-import { successResponse } from "../utils/responses";
+import { notFoundResponse, successResponse } from "../utils/responses";
 
 // Type to lowercase the first letter of a string
 type LowercaseFirstLetter<S extends string> =
@@ -41,10 +41,13 @@ export class Controller {
   getOne = asyncHandler(async (req, res) => {
     const id: number = parseInt(req.params.id, 10);
 
-    const records = await this.delegate.findMany({
+    const record = await this.delegate.findUnique({
       where: { id: id },
     });
-    successResponse(res, records);
+
+    if (!record) return notFoundResponse(res, "Record not found");
+
+    successResponse(res, record);
   });
 
   getOneLatest = asyncHandler(async (req: Request, res: Response) => {

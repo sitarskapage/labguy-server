@@ -4,6 +4,13 @@ import { generateSlug } from "../utils/generateSlug";
 import { successResponse } from "../utils/responses";
 import { prisma } from "../prismaclient";
 import { Controller, LowercaseModelName } from "./Controller";
+import { Prisma, Tag } from "@prisma/client";
+import { disconnect } from "process";
+import TagsController from "./TagsController";
+
+function notEmptyArray(arr: unknown): boolean {
+  return Array.isArray(arr) && arr.length > 0;
+}
 
 export abstract class ProjectWorkController extends Controller {
   delegate: any;
@@ -13,8 +20,56 @@ export abstract class ProjectWorkController extends Controller {
     this.delegate = prisma[model];
   }
 
-  abstract createData(req: Request): any;
-  abstract updateData(req: Request): any;
+  async createData(req: Request) {
+    return {
+      general: {
+        create: {
+          title: req.body.general.title,
+          slug: await generateSlug(req.body.general.title, this.delegate),
+        },
+      },
+    };
+  }
+
+  async updateData(req: Request) {
+    const { general, images, videos, projects } = req.body;
+    const { tags } = general;
+    const tagsController = new TagsController();
+    const upsertedTags = await tagsController.upsert(tags);
+
+    const updateData = {
+      general: {
+        update: {
+          tags: {},
+        },
+      },
+      images: {},
+      videos: {},
+      projects: {},
+    };
+
+    if (general) {
+      updateData.general = { update: general };
+    }
+
+    updateData.images = images && {
+      set: images.map((img: any) => ({ etag: img.etag })),
+    };
+
+    updateData.videos = videos && {
+      set: videos.map((video: any) => ({ etag: video.etag })),
+    };
+
+    updateData.projects = projects && {
+      set: projects.map((project: any) => ({ id: project.id })),
+    };
+
+    updateData.general.update.tags = upsertedTags && {
+      set: upsertedTags.map((tag) => ({ title: tag.title })),
+    };
+
+    return updateData;
+  }
 
   get = asyncHandler(async (req: Request, res: Response) => {
     const items = await this.delegate.findMany({
@@ -27,13 +82,22 @@ export abstract class ProjectWorkController extends Controller {
     successResponse(res, items);
   });
 
-  getOne = asyncHandler(async (req, res) => {
+  getOne = asyncHandler(async (req: Request, res: Response) => {
     const id: number = parseInt(req.params.id, 10);
 
     const records = await this.delegate.findUnique({
       where: { id: id },
-      include: { general: true },
+      include: {
+        general: {
+          include: {
+            tags: true,
+          },
+        },
+        images: true,
+        videos: true,
+      },
     });
+
     successResponse(res, records);
   });
 
@@ -44,32 +108,10 @@ export abstract class ProjectWorkController extends Controller {
       data,
       include: {
         general: true,
-        images: true,
-        videos: true,
       },
     });
 
     successResponse(res, createdRecord);
-  });
-
-  update = asyncHandler(async (req: Request, res: Response) => {
-    const postId: number = parseInt(req.params.id, 10);
-    delete req.body.id;
-    delete req.body.generalId;
-
-    const updateData = this.updateData(req);
-
-    const updatedRecord = await this.delegate.update({
-      where: { id: postId },
-      data: updateData,
-      include: {
-        general: true,
-        images: true,
-        videos: true,
-      },
-    });
-
-    successResponse(res, updatedRecord);
   });
 
   delete = asyncHandler(async (req: Request, res: Response) => {

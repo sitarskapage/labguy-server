@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Tag } from "@prisma/client";
 import asyncHandler from "express-async-handler";
 import { successResponse } from "../utils/responses";
 
@@ -10,11 +10,30 @@ export default class TagsController {
     const tags = await prisma.tag.findMany({
       select: {
         id: true,
-        name: true,
+        title: true,
       },
     });
     successResponse(res, tags);
   });
+
+  upsert = async (tags: (Tag | string)[]) => {
+    return await Promise.all(
+      tags.map(async (tag) => {
+        if (typeof tag !== "string") {
+          const title = tag.title;
+          tag = title;
+        }
+
+        const upsertedTag = await prisma.tag.upsert({
+          where: { title: tag },
+          update: { title: tag },
+          create: { title: tag },
+        });
+
+        return upsertedTag;
+      })
+    );
+  };
 
   // Delete a tag by ID
   delete = asyncHandler(async (req, res) => {

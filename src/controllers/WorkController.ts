@@ -1,6 +1,6 @@
-import { Request } from "express";
 import { ProjectWorkController } from "./ProjectWorkController";
-import { generateSlug } from "../utils/generateSlug";
+import expressAsyncHandler from "express-async-handler";
+import { successResponse } from "../utils/responses";
 import { prisma } from "../prismaclient";
 
 export class WorkController extends ProjectWorkController {
@@ -8,42 +8,24 @@ export class WorkController extends ProjectWorkController {
     super("work");
   }
 
-  async createData(req: Request) {
-    return {
-      general: {
-        create: {
-          title: req.body.general.title,
-          slug: await generateSlug(req.body.general.title, prisma.work),
-        },
+  update = expressAsyncHandler(async (req, res) => {
+    const postId: number = parseInt(req.params.id, 10);
+    delete req.body.id;
+    delete req.body.generalId;
+
+    const updateData = await this.updateData(req);
+
+    const updatedRecord = await prisma.work.update({
+      where: { id: postId },
+      data: updateData,
+      include: {
+        general: { include: { tags: true } },
+        images: true,
+        videos: true,
+        projects: true,
       },
-    };
-  }
+    });
 
-  updateData(req: Request) {
-    const updateData: any = { ...req.body };
-
-    if (req.body.general) {
-      updateData.general = { update: req.body.general };
-    }
-
-    if (Array.isArray(req.body.images)) {
-      updateData.images = {
-        update: req.body.images.map((image: any) => ({
-          id: image.id,
-          ...image,
-        })),
-      };
-    }
-
-    if (Array.isArray(req.body.videos)) {
-      updateData.videos = {
-        update: req.body.videos.map((video: any) => ({
-          id: video.id,
-          ...video,
-        })),
-      };
-    }
-
-    return updateData;
-  }
+    successResponse(res, updatedRecord);
+  });
 }

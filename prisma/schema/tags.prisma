@@ -1,10 +1,10 @@
 model Tag {
     id   Int    @id @default(autoincrement())
-    name String @unique
+    title String @unique
 
     images  ImageRef[]
     videos  VideoRef[]
     general GeneralSection[]
 
-    @@index([name])
+    @@index([title])
 }
