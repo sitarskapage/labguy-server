@@ -6,6 +6,7 @@ import { validPassword, genPassword } from "../utils/credentials";
 import { sendResetEmail } from "../utils/email";
 import { prisma } from "../prismaclient";
 import validator from "validator";
+import { env } from "process";
 
 const SignupController = {
   //LOGIN
@@ -53,17 +54,18 @@ const SignupController = {
     });
 
     if (!user) {
-      res.status(404).json({ error: { message: "User not found" } });
+      res.status(200).json({});
       return;
     }
 
     // Generate a reset token
-    const { token, expires } = issueJWT(user, 60000 * 15);
-    const host = req.get("host");
+    let { token, expires } = issueJWT(user, 60000 * 15);
 
-    const resetLink = `${
-      req.protocol
-    }://${host}/api/user/reset-password?token=${encodeURI(token)}`;
+    token = token.slice(7);
+
+    const ref = req.get("referer");
+
+    const resetLink = `${ref}${env.DASHBOARD_ADMIN_PATH}/reset?token=${encodeURI(token)}`;
 
     const lastPreferences = await prisma.preferences.findFirst({
       orderBy: {
@@ -87,7 +89,7 @@ const SignupController = {
     let token = req.query.token as string;
 
     token = decodeURI(token);
-
+    console.log(token);
     const { password } = req.body;
 
     if (!token) {

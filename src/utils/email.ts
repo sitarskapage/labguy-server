@@ -8,11 +8,11 @@ import { env } from "process";
 export async function sendResetEmail(
   resetLink: string,
   to: any,
-  creatorName: any,
+  creatorName: any
 ) {
   const templatePath = path.join(
     __dirname,
-    "/templates/password-reset-email.ejs",
+    "../templates/password-reset-email.ejs"
   );
   const template = fs.readFileSync(templatePath, "utf8");
   const message = ejs.render(template, { resetLink, creatorName });
@@ -28,7 +28,7 @@ export async function sendResetEmail(
   const mailOptions = {
     from: env.EMAIL_USER,
     to,
-    subject: "Password Reset Request",
+    subject: `Password Reset Request – ${creatorName} `,
     html: message,
   };
 
@@ -36,7 +36,6 @@ export async function sendResetEmail(
     await transporter.sendMail(mailOptions);
     console.log(`Password reset email sent to ${to}`);
   } catch (error) {
-    console.error(`Failed to send password reset email to ${to}:`, error);
-    throw new Error("Failed to send password reset email.");
+    throw error;
   }
 }
