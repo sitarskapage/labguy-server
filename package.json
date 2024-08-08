@@ -2,7 +2,7 @@
   "name": "labguy-server",
   "private": true,
   "version": "1.0.0",
-  "description": "Express Server featuring: JWT Authentication and Authorization, Prisma (posgresql db connection), Cloudinary, Routing, Controllers and standard middlewares like Helmet; Limitter; Morgan",
+  "description": "Express REST Server featuring: JWT Authentication and Authorization, Prisma (posgresql db connection), Cloudinary and standard middlewares like Helmet; Limitter; Morgan",
   "main": "app.ts",
   "scripts": {
     "build": "tsc",
@@ -39,7 +39,6 @@
     "globals": "^15.8.0",
     "prettier-plugin-prisma": "^5.0.0",
     "prisma": "^5.17.0",
-    "prisma-json-schema-generator": "^5.1.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.3",
     "typescript-eslint": "^7.16.1"
