@@ -20,7 +20,7 @@ model Contact {
 model Profile {
   html_statement  String?
   html_additional String?
-  portfolio_pdf   String? @default("https://archive.org/details/jakubkanna_PORTFOLIO_2024")
+  portfolio_pdf_url   String? 
 
   contact Contact[]
   user    User      @relation(fields: [userId], references: [id], onDelete: Cascade)

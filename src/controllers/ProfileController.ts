@@ -18,15 +18,24 @@ export class ProfileController {
         },
       },
     });
-    res.status(200).json(profile);
+
+    let html_additional;
+
+    if (profile && typeof profile.html_additional === "string") {
+      html_additional = JSON.parse(profile.html_additional);
+    } else {
+      throw new Error("html field is not a string");
+    }
+
+    res.status(200).json({ ...profile, html_additional });
   });
 
   // UPDATE SINGLE
   updateProfile = asyncHandler(async (req: Request, res: Response) => {
     const userId: number = parseInt(req.params.id, 10);
-    console.log("BODY:", req.body);
     const p = req.body;
     const cArr = p.contact;
+    const html_additional = JSON.stringify(req.body.html_additional);
 
     if (!Array.isArray(cArr)) throw new Error("Contact field is not an array");
 
@@ -34,13 +43,11 @@ export class ProfileController {
       delete p.contact;
       await prisma.profile.update({
         where: { userId: userId },
-        data: p,
+        data: { ...p, html_additional },
       });
     }
 
     async function updateContact() {
-      console.log("Received contact array:", cArr);
-
       // Ensure we delete contacts that are not in the received array
       await prisma.contact.deleteMany({
         where: {
@@ -53,8 +60,6 @@ export class ProfileController {
 
       // overwrite
       for (const cItem of cArr) {
-        console.log("Processing contact with ID:", cItem.id);
-
         await prisma.contact.upsert({
           where: { id: cItem.id || 0 },
           update: {
@@ -66,7 +71,7 @@ export class ProfileController {
                 NOT: cItem.socialmedia.map(
                   (smItem: Prisma.SocialMediaWhereUniqueInput) => ({
                     id: smItem.id,
-                  }),
+                  })
                 ),
               },
               upsert: cItem.socialmedia.map(
@@ -82,7 +87,7 @@ export class ProfileController {
                     profileUrl: smItem.profileUrl,
                     username: smItem.username,
                   },
-                }),
+                })
               ),
             },
           },
@@ -95,7 +100,7 @@ export class ProfileController {
                   platform: smItem.platform,
                   profileUrl: smItem.profileUrl,
                   username: smItem.username,
-                }),
+                })
               ),
             },
           },
