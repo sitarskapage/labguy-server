@@ -130,9 +130,8 @@ dist
 .pnp.*
 
 # labguy
-.env
 /prisma/migrations
-/prisma/schema/json
+.env
 *.pem
 public
 .code-workspace

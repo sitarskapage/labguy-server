@@ -49,8 +49,6 @@ export default class PreferencesController extends Controller {
           : undefined,
     };
 
-    console.log(updateData);
-
     // Perform the update operation
     const updated = await prisma.preferences.update({
       where: { id },

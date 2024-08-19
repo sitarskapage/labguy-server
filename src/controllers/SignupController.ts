@@ -74,7 +74,7 @@ const SignupController = {
     });
 
     // Send reset link via email
-    await sendResetEmail(resetLink, email, lastPreferences?.creator_name);
+    await sendResetEmail(resetLink, email, lastPreferences?.artists_name);
 
     res.status(200).json({
       success: true,

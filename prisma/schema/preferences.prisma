@@ -1,6 +1,6 @@
 model Preferences {
     id           Int    @id @default(autoincrement())
-    creator_name String @default("Creator Name")
+    artists_name String @default("Artist Name")
 
     homepage_heading          String    @default("Homepage")
     homepage_subheading       String    @default("Sub-Heading")

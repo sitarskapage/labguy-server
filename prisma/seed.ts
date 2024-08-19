@@ -29,7 +29,7 @@ async function createAdmin(email: string): Promise<void> {
   });
 
   console.log(
-    `${styles.green}Admin user upsert with ${styles.blue} Email: "${email}", Password: "admin".${styles.reset}`,
+    `${styles.green}Admin user upsert with ${styles.blue} Email: "${email}", Password: "admin".${styles.reset}`
   );
 }
 
@@ -44,7 +44,7 @@ async function createPreferences(): Promise<void> {
   // Create default preferences
   await prisma.preferences.create({
     data: {
-      creator_name: "Creator Name",
+      artists_name: "Artist's Name",
       homepage_heading: "Homepage",
       homepage_subheading: "Sub-Heading",
       enable_dashboard_darkmode: false,
@@ -71,7 +71,7 @@ async function createProfile(): Promise<void> {
     data: {
       html_statement: "This is a sample HTML statement.",
       html_additional: "Additional HTML content here.",
-      portfolio_pdf: "https://example.com/portfolio.pdf",
+      portfolio_pdf_url: "https://example.com/portfolio.pdf",
       userId: userId, // Set the userId
     },
   });
@@ -119,7 +119,7 @@ export async function seed(): Promise<void> {
       await createAdmin(adminEmail);
     } else {
       console.error(
-        `${styles.red}No admin email provided. Skipping admin creation.${styles.reset}`,
+        `${styles.red}No admin email provided. Skipping admin creation.${styles.reset}`
       );
     }
 
