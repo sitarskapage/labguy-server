@@ -12,11 +12,9 @@ export class ProjectController extends ProjectWorkController {
     const postId: number = parseInt(req.params.id, 10);
     delete req.body.id;
     delete req.body.generalId;
-    console.log("RECEIVED DATA:", req.body);
 
     const updateData = await this.updateData(req);
 
-    console.log("updateData:", updateData);
     const updatedRecord = await prisma.project.update({
       where: { id: postId },
       data: updateData,

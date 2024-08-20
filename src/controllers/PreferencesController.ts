@@ -27,8 +27,9 @@ export default class PreferencesController extends Controller {
 
   update = expressAsyncHandler(async (req, res) => {
     const id = parseInt(req.params.id, 10);
-    const background = req.body.background && req.body.background[0];
     const data = req.body;
+    const bgVideo = data.homepage_background_video[0];
+    const bgImage = data.homepage_background_image[0];
 
     // Clean up the data object
     delete data.background;
@@ -36,23 +37,25 @@ export default class PreferencesController extends Controller {
     delete data.videoRefEtag;
     delete data.imageRefEtag;
 
-    // Prepare the update data object
+    // Prepare the update data object with conditional logic
     const updateData = {
       ...data,
-      homepage_background_image:
-        background && background.mediaType == "IMAGE"
-          ? { connect: { etag: background.etag } }
-          : undefined,
-      homepage_background_video:
-        background && background.mediaType == "VIDEO"
-          ? { connect: { etag: background.etag } }
-          : undefined,
+      homepage_background_image: bgImage?.etag
+        ? { connect: { etag: bgImage.etag } }
+        : { disconnect: true },
+      homepage_background_video: bgVideo?.etag
+        ? { connect: { etag: bgVideo.etag } }
+        : { disconnect: true },
     };
 
     // Perform the update operation
     const updated = await prisma.preferences.update({
       where: { id },
       data: updateData,
+      include: {
+        homepage_background_image: true,
+        homepage_background_video: true,
+      },
     });
 
     successResponse(res, updated);

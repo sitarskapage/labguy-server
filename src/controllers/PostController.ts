@@ -81,6 +81,7 @@ export class PostController extends Controller {
       html,
       general: {
         update: {
+          ...general,
           tags: upsertedTags && {
             set: upsertedTags.map((tag) => ({ title: tag.title })),
           },

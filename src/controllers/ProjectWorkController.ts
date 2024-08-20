@@ -4,8 +4,6 @@ import { generateSlug } from "../utils/generateSlug";
 import { successResponse } from "../utils/responses";
 import { prisma } from "../prismaclient";
 import { Controller, LowercaseModelName } from "./Controller";
-import { Prisma, Tag } from "@prisma/client";
-import { disconnect } from "process";
 import TagsController from "./TagsController";
 
 function notEmptyArray(arr: unknown): boolean {
