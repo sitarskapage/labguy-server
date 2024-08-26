@@ -19,15 +19,13 @@ export class ProfileController {
       },
     });
 
-    let html_additional;
+    let additional;
 
-    if (profile && typeof profile.html_additional === "string") {
-      html_additional = JSON.parse(profile.html_additional);
-    } else {
-      throw new Error("html field is not a string");
+    if (profile && typeof profile.additional === "string") {
+      additional = JSON.parse(profile.additional);
     }
 
-    res.status(200).json({ ...profile, html_additional });
+    res.status(200).json({ ...profile, additional });
   });
 
   // UPDATE SINGLE
@@ -35,7 +33,7 @@ export class ProfileController {
     const userId: number = parseInt(req.params.id, 10);
     const p = req.body;
     const cArr = p.contact;
-    const html_additional = JSON.stringify(req.body.html_additional);
+    const additional = JSON.stringify(req.body.additional);
 
     if (!Array.isArray(cArr)) throw new Error("Contact field is not an array");
 
@@ -43,7 +41,7 @@ export class ProfileController {
       delete p.contact;
       await prisma.profile.update({
         where: { userId: userId },
-        data: { ...p, html_additional },
+        data: { ...p, additional },
       });
     }
 
