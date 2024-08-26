@@ -62,14 +62,21 @@ export class ProjectController extends ProjectWorkController {
 
   update = expressAsyncHandler(async (req, res) => {
     const postId: number = parseInt(req.params.id, 10);
-    delete req.body.id;
-    delete req.body.generalId;
+
+    const reqBody = req.body;
 
     const updateData = await this.updateData(req);
 
+    delete req.body.id;
+    delete req.body.generalId;
+    delete req.body.works;
+
+    console.log("BODY", reqBody);
+    console.log("DATA", updateData);
+
     const updatedRecord = await prisma.project.update({
       where: { id: postId },
-      data: updateData,
+      data: { ...reqBody, ...updateData },
       include: {
         general: { include: { tags: true } },
         images: true,
@@ -78,7 +85,6 @@ export class ProjectController extends ProjectWorkController {
       },
     });
 
-    console.log(updatedRecord);
     successResponse(res, updatedRecord);
   });
 }

@@ -89,7 +89,6 @@ const SignupController = {
     let token = req.query.token as string;
 
     token = decodeURI(token);
-    console.log(token);
     const { password } = req.body;
 
     if (!token) {

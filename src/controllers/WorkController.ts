@@ -60,10 +60,9 @@ export class WorkController extends ProjectWorkController {
 
   update = expressAsyncHandler(async (req, res) => {
     const postId: number = parseInt(req.params.id, 10);
+    const updateData = await this.updateData(req);
     delete req.body.id;
     delete req.body.generalId;
-
-    const updateData = await this.updateData(req);
 
     const updatedRecord = await prisma.work.update({
       where: { id: postId },

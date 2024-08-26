@@ -5,7 +5,7 @@ import { successResponse } from "../utils/responses";
 import { prisma } from "../prismaclient";
 import { Controller, LowercaseModelName } from "./Controller";
 import TagsController from "./TagsController";
-import { Url } from "@prisma/client";
+import { Project, Url } from "@prisma/client";
 
 function notEmptyArray(arr: unknown): boolean {
   return Array.isArray(arr) && arr.length > 0;
@@ -65,7 +65,7 @@ export abstract class ProjectWorkController extends Controller {
     };
 
     updateData.projects = projects && {
-      set: projects.map((project: any) => ({ id: project.id })),
+      set: projects.map((project: Project) => ({ id: project.id })),
     };
 
     updateData.general.update.tags = upsertedTags && {
