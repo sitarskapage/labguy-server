@@ -18,9 +18,9 @@ model Contact {
 }
 
 model Profile {
-  html_statement  String?
-  html_additional String?
-  portfolio_pdf_url   String? 
+  statement         String?
+  additional        String?
+  portfolio_pdf_url String?
 
   contact Contact[]
   user    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
