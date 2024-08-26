@@ -9,7 +9,7 @@ model Preferences {
     homepage_urls             Url[]
 
     enable_dashboard_darkmode Boolean @default(false)
-    enable_portfolio_pdf      Boolean @default(false)
+    enable_portfolio_pdf      Boolean @default(true)
 
     createdAt DateTime  @default(now())
     updatedAt DateTime? @updatedAt

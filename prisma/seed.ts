@@ -47,7 +47,7 @@ async function createPreferences(): Promise<void> {
       artists_name: "Artist's Name",
       homepage_heading: "Homepage",
       homepage_subheading: "Sub-Heading",
-      enable_dashboard_darkmode: false,
+      enable_dashboard_darkmode: true,
       enable_portfolio_pdf: false,
     },
   });
