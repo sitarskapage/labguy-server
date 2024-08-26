@@ -1,5 +1,6 @@
 model Work {
     id         Int     @id @default(autoincrement())
+    medium     String?
     dimensions String?
     year       Int?
 

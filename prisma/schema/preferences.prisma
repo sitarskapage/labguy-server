@@ -1,9 +1,9 @@
 model Preferences {
     id           Int    @id @default(autoincrement())
-    artists_name String @default("Artist Name")
+    artists_name String @default("Artist's Name")
 
-    homepage_heading          String    @default("Homepage")
-    homepage_subheading       String    @default("Sub-Heading")
+    homepage_heading          String?   @default("Homepage")
+    homepage_subheading       String?   @default("Sub-Heading")
     homepage_background_image ImageRef? @relation(fields: [imageRefEtag], references: [etag])
     homepage_background_video VideoRef? @relation(fields: [videoRefEtag], references: [etag])
     homepage_urls             Url[]

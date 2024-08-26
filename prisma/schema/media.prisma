@@ -6,16 +6,16 @@ enum MediaType {
 
 model ImageRef {
     etag        String    @id @unique
-    public_id   String    @unique
+    public_id   String?   @unique
     mediaType   MediaType @default(IMAGE)
-    cld_url     String    @unique
-    path        String    @unique
-    filename    String    @unique
-    format      String
-    bytes       Int
-    description String    @default("")
-    width       Int
-    height      Int
+    cld_url     String?   @unique
+    path        String?   @unique
+    filename    String?   @unique
+    format      String?
+    bytes       Int?
+    description String?   @default("")
+    width       Int?
+    height      Int?
     tags        Tag[]
 
     createdAt DateTime  @default(now())
@@ -33,10 +33,10 @@ model VideoRef {
     vimeo_url   String?   @unique
     sc_url      String?   @unique
     yt_url      String?   @unique
-    title       String    @default("Untitled")
+    title       String?   @default("Untitled")
     duration    String?
     definition  String?
-    description String    @default("")
+    description String?   @default("")
     thumbnail   String?
     tags        Tag[]
 

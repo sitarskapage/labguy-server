@@ -1,9 +1,10 @@
 model Project {
-    id         Int       @id @default(autoincrement())
-    subtitle   String?
-    start_date DateTime?
-    end_date   DateTime?
-    venue      String?
+    id          Int       @id @default(autoincrement())
+    subtitle    String?
+    start_date  DateTime?
+    end_date    DateTime?
+    description String?
+    venue       String?
 
     images ImageRef[]
     videos VideoRef[]
