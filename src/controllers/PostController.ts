@@ -5,6 +5,7 @@ import { generateSlug } from "../utils/generateSlug";
 import { notFoundResponse, successResponse } from "../utils/responses";
 import { prisma } from "../prismaclient";
 import TagsController from "./TagsController";
+import { parseId } from "../utils/helpers";
 
 export class PostController extends Controller {
   constructor() {
@@ -21,34 +22,54 @@ export class PostController extends Controller {
   });
 
   getOne = asyncHandler(async (req, res) => {
-    const id: number = parseInt(req.params.id, 10);
+    const parsedId = parseId(req.params.id);
 
-    // Fetch the record from the database
-    const record = await prisma.post.findUnique({
-      where: { id: id },
-      include: {
-        general: { include: { tags: true } },
-      },
-    });
+    let record;
+
+    if (typeof parsedId === "string") {
+      // If parsedId is a string, treat it as a slug and look up the generalSection
+      const generalRecord = await prisma.generalSection.findUnique({
+        where: { slug: parsedId },
+      });
+
+      if (!generalRecord) {
+        return notFoundResponse(res, "Record not found");
+      }
+
+      // Use generalId from generalRecord to find the post
+      record = await prisma.post.findUnique({
+        where: { generalId: generalRecord.id },
+        include: {
+          general: { include: { tags: true } },
+        },
+      });
+    } else {
+      // If parsedId is a number, use it as the id to directly find the post
+      record = await prisma.post.findUnique({
+        where: { id: parsedId },
+        include: {
+          general: { include: { tags: true } },
+        },
+      });
+    }
 
     // Check if the record exists
     if (!record) {
       return notFoundResponse(res, "Post not found");
     }
 
-    // Initialize the HTML variable
-    let html;
+    // Initialize the content variable
+    let content;
 
-    // Parse the HTML JSON string if it is indeed a string
-
-    if (record && typeof record.html === "string") {
-      html = JSON.parse(record.html);
+    // Parse the content JSON string if it is indeed a string
+    if (record && typeof record.content === "string") {
+      content = JSON.parse(record.content);
     } else {
-      throw new Error("html field is not a string");
+      throw new Error("content field is not a string");
     }
 
-    // Send the successful response with parsed HTML
-    successResponse(res, { ...record, html });
+    // Send the successful response with parsed content
+    successResponse(res, { ...record, content });
   });
 
   create = asyncHandler(async (req: Request, res: Response) => {
@@ -75,10 +96,10 @@ export class PostController extends Controller {
     const postId: number = parseInt(req.params.id, 10);
     const tagsController = new TagsController();
     const upsertedTags = await tagsController.upsert(tags);
-    const html = JSON.stringify(req.body.html);
+    const content = JSON.stringify(req.body.content);
 
     const updateData = {
-      html,
+      content,
       general: {
         update: {
           ...general,
