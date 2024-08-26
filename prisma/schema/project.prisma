@@ -8,6 +8,7 @@ model Project {
     images ImageRef[]
     videos VideoRef[]
     works  Work[]
+    urls   Url[]
 
     general   GeneralSection @relation(fields: [generalId], references: [id], onDelete: Cascade)
     generalId Int            @unique

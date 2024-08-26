@@ -5,6 +5,7 @@ import getYouTubeID from "get-youtube-id";
 import { getYoutubeData } from "../utils/getYoutubeData";
 import { Request, Response } from "express";
 import { prisma } from "../prismaclient";
+import { VideoRef } from "@prisma/client";
 
 async function getVideoData(req: Request, res: Response): Promise<any> {
   const { youtube_url, soundcloud_url, vimeo_url } = req.body;
@@ -38,6 +39,11 @@ export class VideoController extends MediaController {
   constructor() {
     super("videoRef");
   }
+  get = expressAsyncHandler(async (req, res) => {
+    const videoArray = await prisma.videoRef.findMany();
+
+    successResponse(res, videoArray);
+  });
 
   upsert = expressAsyncHandler(async (req: Request, res: Response) => {
     const videoData = await getVideoData(req, res);

@@ -12,6 +12,11 @@ export class ImageController extends MediaController {
   constructor() {
     super("imageRef");
   }
+  get = asyncHandler(async (req, res) => {
+    const videoArray = await prisma.imageRef.findMany();
+
+    successResponse(res, videoArray);
+  });
 
   uploadImages = asyncHandler(
     async (

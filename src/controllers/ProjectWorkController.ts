@@ -5,6 +5,7 @@ import { successResponse } from "../utils/responses";
 import { prisma } from "../prismaclient";
 import { Controller, LowercaseModelName } from "./Controller";
 import TagsController from "./TagsController";
+import { Url } from "@prisma/client";
 
 function notEmptyArray(arr: unknown): boolean {
   return Array.isArray(arr) && arr.length > 0;
@@ -30,7 +31,7 @@ export abstract class ProjectWorkController extends Controller {
   }
 
   async updateData(req: Request) {
-    const { general, images, videos, projects } = req.body;
+    const { general, images, videos, projects, urls } = req.body;
     const { tags } = general;
     const tagsController = new TagsController();
     const upsertedTags = await tagsController.upsert(tags);
@@ -44,6 +45,7 @@ export abstract class ProjectWorkController extends Controller {
       images: {},
       videos: {},
       projects: {},
+      urls: {},
     };
 
     if (general) {
@@ -58,6 +60,10 @@ export abstract class ProjectWorkController extends Controller {
       set: videos.map((video: any) => ({ etag: video.etag })),
     };
 
+    updateData.urls = urls && {
+      set: urls.map((url: Url) => ({ url: url.url })),
+    };
+
     updateData.projects = projects && {
       set: projects.map((project: any) => ({ id: project.id })),
     };
@@ -65,7 +71,6 @@ export abstract class ProjectWorkController extends Controller {
     updateData.general.update.tags = upsertedTags && {
       set: upsertedTags.map((tag) => ({ title: tag.title })),
     };
-
     return updateData;
   }
 
