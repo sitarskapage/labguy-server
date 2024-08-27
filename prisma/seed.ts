@@ -17,31 +17,34 @@ export const styles = {
 };
 
 async function createAdmin(email: string): Promise<void> {
+  const password = "admin";
   const salt = crypto.randomBytes(32).toString("hex");
   const hash = crypto
-    .pbkdf2Sync("admin", salt, 10000, 64, "sha512")
+    .pbkdf2Sync(password, salt, 10000, 64, "sha512")
     .toString("hex");
 
-  await prisma.user.upsert({
-    where: { email },
-    update: {},
-    create: { email, salt, hash },
+  let user = await prisma.user.findFirst();
+
+  if (user) {
+    return console.log(`Admin ${user.id} already exist. Skipping seed.`);
+  }
+
+  user = await prisma.user.create({
+    data: { email, salt, hash },
   });
 
   console.log(
-    `${styles.green}Admin user upsert with ${styles.blue} Email: "${email}", Password: "admin".${styles.reset}`
+    `${styles.green}Admin ${user.id} created with ${styles.blue} Email: "${user.email}", Password: "${password}".${styles.reset}`
   );
 }
 
 async function createPreferences(): Promise<void> {
-  // Check if preferences already exist
-  const existingPreferences = await prisma.preferences.findFirst();
-  if (existingPreferences) {
-    console.log("Preferences already exist. Skipping seed.");
-    return;
+  const preferences = await prisma.preferences.findFirst();
+
+  if (preferences) {
+    return console.log("Preferences already exist. Skipping seed.");
   }
 
-  // Create default preferences
   await prisma.preferences.create({
     data: {
       artists_name: "Artist's Name",
@@ -51,6 +54,8 @@ async function createPreferences(): Promise<void> {
       enable_portfolio_pdf: false,
     },
   });
+
+  console.log(`Preferences created.`);
 }
 
 async function createProfile(): Promise<void> {
@@ -69,10 +74,10 @@ async function createProfile(): Promise<void> {
   // Create profile first
   const profile = await prisma.profile.create({
     data: {
-      html_statement: "This is a sample HTML statement.",
-      html_additional: "Additional HTML content here.",
+      statement: "This is a sample statement.",
+      additional: JSON.stringify({ html: "" }),
       portfolio_pdf_url: "https://example.com/portfolio.pdf",
-      userId: userId, // Set the userId
+      userId: userId,
     },
   });
 
@@ -94,7 +99,7 @@ async function createProfile(): Promise<void> {
           },
         ],
       },
-      profileId: profile.userId, // Link contact to the created profile
+      profileId: profile.userId,
     },
   });
 
@@ -103,12 +108,12 @@ async function createProfile(): Promise<void> {
     where: { userId: profile.userId },
     data: {
       contact: {
-        connect: { id: contact.id }, // Connect the contact
+        connect: { id: contact.id },
       },
     },
   });
 
-  console.log(`Profile for user ${userId} created successfully.`);
+  console.log(`Profile for user ${userId} created.`);
 }
 
 export async function seed(): Promise<void> {

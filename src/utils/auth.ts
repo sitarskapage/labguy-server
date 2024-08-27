@@ -8,7 +8,7 @@ interface User {
 }
 
 function getPrivateKey(): string {
-  const pathToKey = path.join(__dirname, "..", "..", "id_rsa_priv.pem");
+  const pathToKey = path.resolve("./id_rsa_priv.pem");
   const privateKey = readFileSync(pathToKey, "utf8");
 
   if (!privateKey) throw new Error("Server configuration error");
@@ -23,7 +23,7 @@ function createPayload(user: User) {
 function signToken(
   payload: object,
   privateKey: string,
-  expiresIn: number,
+  expiresIn: number
 ): string {
   return jsonwebtoken.sign(payload, privateKey, {
     expiresIn,
