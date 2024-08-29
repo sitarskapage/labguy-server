@@ -18,79 +18,70 @@ export class ImageController extends MediaController {
     successResponse(res, videoArray);
   });
 
-  uploadImages = asyncHandler(
-    async (
-      req: Request<unknown, unknown, { files: File[] }>,
-      res: Response
-    ) => {
-      try {
-        const images = req.files as Express.Multer.File[];
+  async uploadImageFile(image: Express.Multer.File) {
+    try {
+      const { name: sanitizedFileName } = sanitizeFilename(image.originalname);
 
-        if (!images || images.length < 1) throw new Error("No files received");
+      const cldRes = await cloudinary.uploader.upload(image.path, {
+        public_id: sanitizedFileName,
+        overwrite: true,
+      });
 
-        const references = await Promise.all(
-          images.map(async (image) => {
-            try {
-              const { name: sanitizedFileName } = sanitizeFilename(
-                image.originalname
-              );
+      const tagUpserts = cldRes.tags.map((tagName) =>
+        prisma.tag.upsert({
+          where: { title: tagName },
+          update: {},
+          create: { title: tagName },
+        })
+      );
 
-              const cldRes = await cloudinary.uploader.upload(image.path, {
-                public_id: sanitizedFileName,
-                overwrite: true,
-              });
+      const createdTags = await Promise.all(tagUpserts);
 
-              const tagUpserts = cldRes.tags.map((tagName) =>
-                prisma.tag.upsert({
-                  where: { title: tagName },
-                  update: {},
-                  create: { title: tagName },
-                })
-              );
+      const reference = {
+        public_id: cldRes.public_id,
+        etag: cldRes.etag,
+        mediaType: MediaType.IMAGE,
+        cld_url: cldRes.secure_url,
+        path: image.path,
+        filename: cldRes.original_filename,
+        format: cldRes.format,
+        bytes: cldRes.bytes,
+        description: "",
+        width: cldRes.width,
+        height: cldRes.height,
+        tags: {
+          connect: createdTags.map((tag) => ({ id: tag.id })),
+        },
+        createdAt: cldRes.created_at,
+      };
 
-              const createdTags = await Promise.all(tagUpserts);
-
-              const reference = {
-                public_id: cldRes.public_id,
-                etag: cldRes.etag,
-                mediaType: MediaType.IMAGE,
-                cld_url: cldRes.secure_url,
-                path: image.path,
-                filename: cldRes.original_filename,
-                format: cldRes.format,
-                bytes: cldRes.bytes,
-                description: "",
-                width: cldRes.width,
-                height: cldRes.height,
-                tags: {
-                  connect: createdTags.map((tag) => ({ id: tag.id })),
-                },
-                createdAt: cldRes.created_at,
-              };
-
-              return prisma.imageRef.upsert({
-                where: { public_id: reference.public_id },
-                create: reference,
-                update: reference,
-              });
-            } catch (error) {
-              console.error(
-                `Error processing image ${image.originalname}:`,
-                error
-              );
-              throw error;
-            }
-          })
-        );
-
-        successResponse(res, references);
-      } catch (error) {
-        console.error("Error in uploadImages handler:", error);
-        res.status(500).json({ error: (error as Error).message });
-      }
+      return prisma.imageRef.upsert({
+        where: { public_id: reference.public_id },
+        create: reference,
+        update: reference,
+      });
+    } catch (error) {
+      console.error(`Error processing image ${image.originalname}:`, error);
+      throw error;
     }
-  );
+  }
 
+  uploadImages = asyncHandler(async (req: Request, res: Response) => {
+    try {
+      const images = req.files as Express.Multer.File[];
+
+      if (!images || images.length < 1) throw new Error("No files received");
+
+      const references = await Promise.all(
+        images.map(async (image) => this.uploadImageFile(image))
+      );
+
+      successResponse(res, references);
+    } catch (error) {
+      console.error("Error in uploadImages handler:", error);
+      res.status(500).json({ error: (error as Error).message });
+    }
+  });
   destroyImages = asyncHandler(async (req, res) => {
     const selectedImgArr = req.body;
 

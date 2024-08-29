@@ -16,22 +16,24 @@ export default class TagsController {
     successResponse(res, tags);
   });
 
-  upsert = async (tags: (Tag | string)[]) => {
+  upsert = async (tags: (Tag | string)[] | undefined) => {
     return await Promise.all(
-      tags.map(async (tag) => {
-        if (typeof tag !== "string") {
-          const title = tag.title;
-          tag = title;
-        }
+      tags
+        ? tags.map(async (tag) => {
+            if (typeof tag !== "string") {
+              const title = tag.title;
+              tag = title;
+            }
 
-        const upsertedTag = await prisma.tag.upsert({
-          where: { title: tag },
-          update: { title: tag },
-          create: { title: tag },
-        });
+            const upsertedTag = await prisma.tag.upsert({
+              where: { title: tag },
+              update: { title: tag },
+              create: { title: tag },
+            });
 
-        return upsertedTag;
-      })
+            return upsertedTag;
+          })
+        : []
     );
   };
 
