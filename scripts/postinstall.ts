@@ -1,10 +1,10 @@
-import { seed } from "./prisma/seed"; // Import seed but do not invoke it here
+import { seed } from "../prisma/seed"; // Import seed but do not invoke it here
 import crypto from "crypto";
 import fs from "fs";
 import path from "path";
 
-const PUBLIC_KEY_PATH = path.join(__dirname, "id_rsa_pub.pem");
-const PRIVATE_KEY_PATH = path.join(__dirname, "id_rsa_priv.pem");
+const PUBLIC_KEY_PATH = path.join(__dirname, "../src/id_rsa_pub.pem");
+const PRIVATE_KEY_PATH = path.join(__dirname, "../src/id_rsa_priv.pem");
 
 function genKeyPair(): Promise<void> {
   return new Promise((resolve, reject) => {

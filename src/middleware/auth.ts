@@ -10,7 +10,7 @@ export interface UserPayload {
 }
 
 function getPublicKey(): string {
-  const pathToKey = path.join(__dirname, "..", "..", "id_rsa_pub.pem");
+  const pathToKey = path.join(__dirname, "../id_rsa_pub.pem");
   return readFileSync(pathToKey, "utf8");
 }
 
@@ -55,7 +55,7 @@ function verifyToken(token: string): Promise<UserPayload> {
           email: (decoded as any).email,
         };
         resolve(userPayload);
-      },
+      }
     );
   });
 }
