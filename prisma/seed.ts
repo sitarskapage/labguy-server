@@ -84,7 +84,7 @@ async function createPreferences(): Promise<void> {
       },
       homepage_heading: "Homepage",
       homepage_subheading: "Sub-Heading",
-      homepage_urls: { create: urls },
+      homepage_urls: urls,
       enable_dashboard_darkmode: true,
       enable_portfolio_pdf: false,
     },
