@@ -33,7 +33,6 @@ export class ProjectController extends ProjectWorkController {
           },
           images: true,
           videos: true,
-          urls: true,
           works: { include: { general: true, images: true, videos: true } },
         },
       });
@@ -49,7 +48,6 @@ export class ProjectController extends ProjectWorkController {
           },
           images: true,
           videos: true,
-          urls: true,
           works: { include: { general: true, images: true, videos: true } },
         },
       });
@@ -71,9 +69,6 @@ export class ProjectController extends ProjectWorkController {
     delete req.body.generalId;
     delete req.body.works;
 
-    console.log("BODY", reqBody);
-    console.log("DATA", updateData);
-
     const updatedRecord = await prisma.project.update({
       where: { id: postId },
       data: { ...reqBody, ...updateData },
@@ -81,7 +76,6 @@ export class ProjectController extends ProjectWorkController {
         general: { include: { tags: true } },
         images: true,
         videos: true,
-        urls: true,
       },
     });
 

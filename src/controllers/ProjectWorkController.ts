@@ -5,7 +5,7 @@ import { successResponse } from "../utils/responses";
 import { prisma } from "../prismaclient";
 import { Controller, LowercaseModelName } from "./Controller";
 import TagsController from "./TagsController";
-import { Project, Url } from "@prisma/client";
+import { Project } from "@prisma/client";
 
 function notEmptyArray(arr: unknown): boolean {
   return Array.isArray(arr) && arr.length > 0;
@@ -58,10 +58,6 @@ export abstract class ProjectWorkController extends Controller {
 
     updateData.videos = videos && {
       set: videos.map((video: any) => ({ etag: video.etag })),
-    };
-
-    updateData.urls = urls && {
-      set: urls.map((url: Url) => ({ url: url.url })),
     };
 
     updateData.projects = projects && {

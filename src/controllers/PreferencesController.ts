@@ -2,7 +2,6 @@ import expressAsyncHandler from "express-async-handler";
 import { Controller } from "./Controller";
 import { successResponse } from "../utils/responses";
 import { prisma } from "../prismaclient";
-import { Url } from "@prisma/client";
 
 export default class PreferencesController extends Controller {
   constructor() {
@@ -16,7 +15,6 @@ export default class PreferencesController extends Controller {
       include: {
         homepage_background_image: true,
         homepage_background_video: true,
-        homepage_urls: true,
       },
     });
 
@@ -56,12 +54,9 @@ export default class PreferencesController extends Controller {
       homepage_background_video: bgVideo?.etag
         ? { connect: { etag: bgVideo.etag } }
         : { disconnect: true },
-      homepage_urls: {
-        set: urls.map((url: Url) => ({
-          url: url.url,
-        })),
-      },
     };
+
+    console.log(updateQuery.homepage_urls);
 
     // Perform the update operation
     const updated = await prisma.preferences.update({
@@ -70,7 +65,6 @@ export default class PreferencesController extends Controller {
       include: {
         homepage_background_image: true,
         homepage_background_video: true,
-        homepage_urls: true,
       },
     });
 
