@@ -86,7 +86,7 @@ async function createPreferences(): Promise<void> {
       homepage_subheading: "Sub-Heading",
       homepage_urls: urls,
       enable_dashboard_darkmode: true,
-      enable_portfolio_pdf: false,
+      enable_portfolio_pdf: true,
     },
   });
 
