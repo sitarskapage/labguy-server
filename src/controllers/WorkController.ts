@@ -61,12 +61,18 @@ export class WorkController extends ProjectWorkController {
   update = expressAsyncHandler(async (req, res) => {
     const postId: number = parseInt(req.params.id, 10);
     const updateData = await this.updateData(req);
+
+    // Make sure to remove ID fields to avoid updating primary keys
     delete req.body.id;
     delete req.body.generalId;
 
+    // Add missing props
+    const newData = { ...updateData };
+
+    // Update the work entry
     const updatedRecord = await prisma.work.update({
       where: { id: postId },
-      data: updateData,
+      data: newData,
       include: {
         general: { include: { tags: true } },
         images: true,
@@ -75,6 +81,7 @@ export class WorkController extends ProjectWorkController {
       },
     });
 
+    // Return a success response
     successResponse(res, updatedRecord);
   });
 }

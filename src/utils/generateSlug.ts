@@ -1,8 +1,6 @@
 export async function generateSlug(title: string, client: any) {
   try {
-    const count = await client.count();
-    const uniqueId = count < 1 ? null : count + 1;
-
+    // Format the title into a slug
     const formattedTitle = title
       .toLowerCase()
       .split(" ")
@@ -10,7 +8,22 @@ export async function generateSlug(title: string, client: any) {
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "");
 
-    const slug = uniqueId ? `${formattedTitle}-${uniqueId}` : formattedTitle;
+    // Check how many records already exist with the same slug (or a similar one)
+    const existingRecords = await client.count({
+      where: {
+        general: {
+          slug: {
+            startsWith: formattedTitle, // Find slugs that start with the same base title
+          },
+        },
+      },
+    });
+
+    // If there are existing records, append the count to make the slug unique
+    const slug =
+      existingRecords > 0
+        ? `${formattedTitle}-${existingRecords + 1}`
+        : formattedTitle;
 
     return slug;
   } catch (error) {

@@ -20,18 +20,20 @@ export abstract class ProjectWorkController extends Controller {
   }
 
   async createData(req: Request) {
+    console.log(req.body);
     return {
       general: {
         create: {
           title: req.body.general.title,
           slug: await generateSlug(req.body.general.title, this.delegate),
+          fracIndex: req.body.general.fracIndex,
         },
       },
     };
   }
 
   async updateData(req: Request) {
-    const { general, images, videos, projects, urls } = req.body;
+    const { general, images, videos, projects } = req.body;
     const { tags } = general;
     const tagsController = new TagsController();
     const upsertedTags = await tagsController.upsert(tags);
@@ -39,13 +41,16 @@ export abstract class ProjectWorkController extends Controller {
     const updateData = {
       general: {
         update: {
+          title: general.title,
+          fIndex: general.fIndex,
+          slug: general.slug,
+
           tags: {},
         },
       },
       images: {},
       videos: {},
       projects: {},
-      urls: {},
     };
 
     if (general) {
@@ -67,6 +72,7 @@ export abstract class ProjectWorkController extends Controller {
     updateData.general.update.tags = upsertedTags && {
       set: upsertedTags.map((tag) => ({ title: tag.title })),
     };
+
     return updateData;
   }
 
@@ -76,6 +82,11 @@ export abstract class ProjectWorkController extends Controller {
         general: true,
         images: true,
         videos: true,
+      },
+      orderBy: {
+        general: {
+          fIndex: "asc", // Order by fIndex in ascending order
+        },
       },
     });
     successResponse(res, items);
@@ -102,6 +113,7 @@ export abstract class ProjectWorkController extends Controller {
 
   create = asyncHandler(async (req: Request, res: Response) => {
     const data = await this.createData(req);
+    console.log("body" + req.body);
 
     const createdRecord = await this.delegate.create({
       data,
@@ -114,10 +126,10 @@ export abstract class ProjectWorkController extends Controller {
   });
 
   delete = asyncHandler(async (req: Request, res: Response) => {
-    const postId: number = parseInt(req.params.id, 10);
+    const generalId: number = parseInt(req.params.id, 10);
 
-    const deleted = await this.delegate.delete({
-      where: { id: postId },
+    const deleted = await prisma.generalSection.delete({
+      where: { id: generalId },
     });
 
     successResponse(res, deleted);

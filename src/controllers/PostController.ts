@@ -18,6 +18,11 @@ export class PostController extends Controller {
       include: {
         general: true,
       },
+      orderBy: {
+        general: {
+          fIndex: "asc",
+        },
+      },
     });
     successResponse(res, posts);
   });
@@ -84,6 +89,7 @@ export class PostController extends Controller {
           create: {
             title: req.body.general.title,
             slug: await generateSlug(req.body.general.title, prisma.post),
+            fIndex: req.body.general.fIndex,
           },
         },
       },
@@ -123,5 +129,15 @@ export class PostController extends Controller {
     });
 
     successResponse(res, updatedRecord);
+  });
+
+  delete = asyncHandler(async (req: Request, res: Response) => {
+    const generalId: number = parseInt(req.params.id, 10);
+
+    const deleted = await prisma.generalSection.delete({
+      where: { id: generalId },
+    });
+
+    successResponse(res, deleted);
   });
 }

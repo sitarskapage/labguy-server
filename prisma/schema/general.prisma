@@ -1,5 +1,6 @@
 model GeneralSection {
-    id Int @id @default(autoincrement())
+    id     Int    @id @default(autoincrement())
+    fIndex String @unique
 
     title       String
     description String?
