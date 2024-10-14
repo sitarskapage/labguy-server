@@ -20,7 +20,7 @@ export class PostController extends Controller {
       },
       orderBy: {
         general: {
-          fIndex: "asc",
+          fIndex: "desc",
         },
       },
     });
@@ -82,6 +82,7 @@ export class PostController extends Controller {
   });
 
   create = asyncHandler(async (req: Request, res: Response) => {
+    console.log("create post", req.body);
     const createdRecord = await prisma.post.create({
       data: {
         author: { connect: { email: req.user?.email } },

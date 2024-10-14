@@ -33,7 +33,7 @@ export abstract class ProjectWorkController extends Controller {
   }
 
   async updateData(req: Request) {
-    const { general, images, videos, projects } = req.body;
+    const { general, projects } = req.body;
     const { tags } = general;
     const tagsController = new TagsController();
     const upsertedTags = await tagsController.upsert(tags);
@@ -44,26 +44,16 @@ export abstract class ProjectWorkController extends Controller {
           title: general.title,
           fIndex: general.fIndex,
           slug: general.slug,
-
           tags: {},
         },
       },
-      images: {},
-      videos: {},
+
       projects: {},
     };
 
     if (general) {
       updateData.general = { update: general };
     }
-
-    updateData.images = images && {
-      set: images.map((img: any) => ({ etag: img.etag })),
-    };
-
-    updateData.videos = videos && {
-      set: videos.map((video: any) => ({ etag: video.etag })),
-    };
 
     updateData.projects = projects && {
       set: projects.map((project: Project) => ({ id: project.id })),
@@ -80,12 +70,10 @@ export abstract class ProjectWorkController extends Controller {
     const items = await this.delegate.findMany({
       include: {
         general: true,
-        images: true,
-        videos: true,
       },
       orderBy: {
         general: {
-          fIndex: "asc", // Order by fIndex in ascending order
+          fIndex: "desc",
         },
       },
     });

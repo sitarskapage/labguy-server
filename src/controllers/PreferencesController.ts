@@ -37,7 +37,6 @@ export default class PreferencesController extends Controller {
     const data = req.body;
     const bgVideo = data.homepage_background_video[0];
     const bgImage = data.homepage_background_image[0];
-    const urls = data.homepage_urls;
 
     // Clean up the data object
     delete data.background;

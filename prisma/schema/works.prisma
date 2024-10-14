@@ -5,8 +5,7 @@ model Work {
     dimensions String?
     year       Int?
 
-    images   ImageRef[]
-    videos   VideoRef[]
+    media    Json?
     projects Project[]
 
     general   GeneralSection @relation(fields: [generalId], references: [id], onDelete: Cascade)

@@ -6,10 +6,9 @@ model Project {
     text       String?
     venue      String?
     urls       Json?
+    media      Json?
 
-    images ImageRef[]
-    videos VideoRef[]
-    works  Work[]
+    works Work[]
 
     general   GeneralSection @relation(fields: [generalId], references: [id], onDelete: Cascade)
     generalId Int            @unique

@@ -22,8 +22,6 @@ model ImageRef {
     updatedAt DateTime? @updatedAt
 
     preferences Preferences?
-    works       Work[]
-    projects    Project[]
 }
 
 model VideoRef {
@@ -47,6 +45,4 @@ model VideoRef {
     updatedAt DateTime? @updatedAt
 
     preferences Preferences?
-    works       Work[]
-    projects    Project[]
 }

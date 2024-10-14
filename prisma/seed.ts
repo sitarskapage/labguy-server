@@ -204,13 +204,13 @@ async function createProject(): Promise<number | void> {
     start_date: new Date("2024-01-01"),
     text: "<p>This is the first project description.</p>",
     venue: "Art Gallery, City Name",
-    images: { connect: [{ etag: "b56c2b37f0e3b6172757972a330402ed" }] },
     general: {
       create: {
         title: tile,
         description: "Description of a new project.",
         slug: await generateSlug(tile, prisma.project),
         published: true,
+        fIndex: "",
       },
     },
   };
@@ -241,7 +241,7 @@ async function createWork(projectId: number): Promise<void> {
   const dimensions = "24x36";
   const year = 2024;
 
-  const video: Prisma.VideoRefCreateWithoutWorksInput = {
+  const video: Prisma.VideoRefCreateWithoutTagsInput = {
     etag: "SEFX1oqb8UAnI8g7Z9ov22gJ6fc",
     mediaType: "VIDEO",
     id: "z70z6BS4CfE",
@@ -269,11 +269,10 @@ async function createWork(projectId: number): Promise<void> {
         description: "Description of a new work.",
         slug: await generateSlug(title, prisma.work),
         published: true,
+        fIndex: "",
       },
     },
-    videos: {
-      create: video,
-    },
+
     projects: {
       connect: [{ id: projectId }],
     },

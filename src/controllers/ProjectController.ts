@@ -31,9 +31,8 @@ export class ProjectController extends ProjectWorkController {
               tags: true,
             },
           },
-          images: true,
-          videos: true,
-          works: { include: { general: true, images: true, videos: true } },
+
+          works: { include: { general: true } },
         },
       });
     } else {
@@ -46,9 +45,8 @@ export class ProjectController extends ProjectWorkController {
               tags: true,
             },
           },
-          images: true,
-          videos: true,
-          works: { include: { general: true, images: true, videos: true } },
+
+          works: { include: { general: true } },
         },
       });
     }
@@ -74,8 +72,6 @@ export class ProjectController extends ProjectWorkController {
       data: { ...reqBody, ...updateData },
       include: {
         general: { include: { tags: true } },
-        images: true,
-        videos: true,
       },
     });
 
