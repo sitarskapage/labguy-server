@@ -18,11 +18,6 @@ export class PostController extends Controller {
       include: {
         general: true,
       },
-      orderBy: {
-        general: {
-          fIndex: "desc",
-        },
-      },
     });
     successResponse(res, posts);
   });
@@ -90,7 +85,6 @@ export class PostController extends Controller {
           create: {
             title: req.body.general.title,
             slug: await generateSlug(req.body.general.title, prisma.post),
-            fIndex: req.body.general.fIndex,
           },
         },
       },

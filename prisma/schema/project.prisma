@@ -8,8 +8,8 @@ model Project {
     urls       Json?
     media      Json?
 
-    works Work[]
-
     general   GeneralSection @relation(fields: [generalId], references: [id], onDelete: Cascade)
     generalId Int            @unique
+
+    ProjectsOnWorks ProjectsOnWorks[]
 }

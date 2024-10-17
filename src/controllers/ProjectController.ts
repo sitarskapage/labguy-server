@@ -31,8 +31,6 @@ export class ProjectController extends ProjectWorkController {
               tags: true,
             },
           },
-
-          works: { include: { general: true } },
         },
       });
     } else {
@@ -45,8 +43,6 @@ export class ProjectController extends ProjectWorkController {
               tags: true,
             },
           },
-
-          works: { include: { general: true } },
         },
       });
     }

@@ -5,9 +5,10 @@ model Work {
     dimensions String?
     year       Int?
 
-    media    Json?
-    projects Project[]
+    media Json?
 
     general   GeneralSection @relation(fields: [generalId], references: [id], onDelete: Cascade)
     generalId Int            @unique
+
+    ProjectsOnWorks ProjectsOnWorks[]
 }

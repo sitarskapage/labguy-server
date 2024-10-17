@@ -26,14 +26,14 @@ export abstract class ProjectWorkController extends Controller {
         create: {
           title: req.body.general.title,
           slug: await generateSlug(req.body.general.title, this.delegate),
-          fracIndex: req.body.general.fracIndex,
+          fIndex: req.body.general.fIndex,
         },
       },
     };
   }
 
   async updateData(req: Request) {
-    const { general, projects } = req.body;
+    const { general } = req.body;
     const { tags } = general;
     const tagsController = new TagsController();
     const upsertedTags = await tagsController.upsert(tags);
@@ -42,22 +42,15 @@ export abstract class ProjectWorkController extends Controller {
       general: {
         update: {
           title: general.title,
-          fIndex: general.fIndex,
           slug: general.slug,
           tags: {},
         },
       },
-
-      projects: {},
     };
 
     if (general) {
       updateData.general = { update: general };
     }
-
-    updateData.projects = projects && {
-      set: projects.map((project: Project) => ({ id: project.id })),
-    };
 
     updateData.general.update.tags = upsertedTags && {
       set: upsertedTags.map((tag) => ({ title: tag.title })),
@@ -70,11 +63,6 @@ export abstract class ProjectWorkController extends Controller {
     const items = await this.delegate.findMany({
       include: {
         general: true,
-      },
-      orderBy: {
-        general: {
-          fIndex: "desc",
-        },
       },
     });
     successResponse(res, items);
@@ -101,7 +89,6 @@ export abstract class ProjectWorkController extends Controller {
 
   create = asyncHandler(async (req: Request, res: Response) => {
     const data = await this.createData(req);
-    console.log("body" + req.body);
 
     const createdRecord = await this.delegate.create({
       data,
