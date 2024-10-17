@@ -11,7 +11,7 @@ function notEmptyArray(arr: unknown): boolean {
   return Array.isArray(arr) && arr.length > 0;
 }
 
-export abstract class ProjectWorkController extends Controller {
+export abstract class ProjectsOnWorksController extends Controller {
   delegate: any;
 
   constructor(model: LowercaseModelName) {
@@ -59,7 +59,7 @@ export abstract class ProjectWorkController extends Controller {
     return updateData;
   }
 
-  get = asyncHandler(async (req: Request, res: Response) => {
+  get = asyncHandler(async (req, res) => {
     const items = await this.delegate.findMany({
       include: {
         general: true,
@@ -68,7 +68,7 @@ export abstract class ProjectWorkController extends Controller {
     successResponse(res, items);
   });
 
-  getOne = asyncHandler(async (req: Request, res: Response) => {
+  getOne = asyncHandler(async (req, res) => {
     const id: number = parseInt(req.params.id, 10);
 
     const records = await this.delegate.findUnique({
@@ -79,15 +79,13 @@ export abstract class ProjectWorkController extends Controller {
             tags: true,
           },
         },
-        images: true,
-        videos: true,
       },
     });
 
     successResponse(res, records);
   });
 
-  create = asyncHandler(async (req: Request, res: Response) => {
+  create = asyncHandler(async (req, res) => {
     const data = await this.createData(req);
 
     const createdRecord = await this.delegate.create({
@@ -100,7 +98,9 @@ export abstract class ProjectWorkController extends Controller {
     successResponse(res, createdRecord);
   });
 
-  delete = asyncHandler(async (req: Request, res: Response) => {
+  update = asyncHandler(async (req, res) => {});
+
+  delete = asyncHandler(async (req, res) => {
     const generalId: number = parseInt(req.params.id, 10);
 
     const deleted = await prisma.generalSection.delete({

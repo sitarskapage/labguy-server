@@ -1,10 +1,10 @@
-import { ProjectWorkController } from "./ProjectWorkController";
+import { ProjectsOnWorksController } from "./ProjectsOnWorksController";
 import expressAsyncHandler from "express-async-handler";
 import { notFoundResponse, successResponse } from "../utils/responses";
 import { prisma } from "../prismaclient";
 import { parseId } from "../utils/helpers";
 
-export class WorkController extends ProjectWorkController {
+export class WorkController extends ProjectsOnWorksController {
   constructor() {
     super("work");
   }
