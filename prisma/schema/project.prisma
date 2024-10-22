@@ -1,8 +1,8 @@
 model Project {
-    id         Int       @id @default(autoincrement())
+    id         Int     @id @default(autoincrement())
     subtitle   String?
-    start_date DateTime?
-    end_date   DateTime?
+    start_date Json?
+    end_date   Json?
     text       String?
     venue      String?
     urls       Json?
