@@ -38,7 +38,9 @@ export class ProfileController {
     if (!Array.isArray(cArr)) throw new Error("Contact field is not an array");
 
     async function updateProfile() {
+      delete req.body.userId;
       delete p.contact;
+
       await prisma.profile.update({
         where: { userId: userId },
         data: { ...p, additional },

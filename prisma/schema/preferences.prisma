@@ -2,18 +2,14 @@ model Preferences {
     id           Int    @id @default(autoincrement())
     artists_name String @default("Artist's Name")
 
-    homepage_heading          String?   @default("Homepage")
-    homepage_subheading       String?   @default("Sub-Heading")
-    homepage_background_image ImageRef? @relation(fields: [imageRefEtag], references: [etag])
-    homepage_background_video VideoRef? @relation(fields: [videoRefEtag], references: [etag])
-    homepage_urls             Json?
+    homepage_heading    String? @default("Homepage")
+    homepage_subheading String? @default("Sub-Heading")
+    homepage_media      Json?
+    homepage_urls       Json?
 
     enable_dashboard_darkmode Boolean @default(false)
     enable_portfolio_pdf      Boolean @default(true)
 
     createdAt DateTime  @default(now())
     updatedAt DateTime? @updatedAt
-
-    videoRefEtag String? @unique
-    imageRefEtag String? @unique
 }

@@ -12,22 +12,13 @@ export default class PreferencesController extends Controller {
       orderBy: {
         createdAt: "desc",
       },
-      include: {
-        homepage_background_image: true,
-        homepage_background_video: true,
-      },
     });
 
     if (!record) {
       throw new Error("Record not found");
     }
 
-    // Ensure homepage_background_image and homepage_background_video are arrays
-    const response = {
-      ...record,
-      homepage_background_image: [record.homepage_background_image],
-      homepage_background_video: [record.homepage_background_video],
-    };
+    const response = record;
 
     successResponse(res, response);
   });
@@ -35,8 +26,6 @@ export default class PreferencesController extends Controller {
   update = expressAsyncHandler(async (req, res) => {
     const id = parseInt(req.params.id, 10);
     const data = req.body;
-    const bgVideo = data.homepage_background_video[0];
-    const bgImage = data.homepage_background_image[0];
 
     // Clean up the data object
     delete data.background;
@@ -45,33 +34,15 @@ export default class PreferencesController extends Controller {
     delete data.imageRefEtag;
 
     // Prepare the update data object with conditional logic
-    const updateQuery = {
-      ...data,
-      homepage_background_image: bgImage?.etag
-        ? { connect: { etag: bgImage.etag } }
-        : { disconnect: true },
-      homepage_background_video: bgVideo?.etag
-        ? { connect: { etag: bgVideo.etag } }
-        : { disconnect: true },
-    };
-
-    console.log(updateQuery.homepage_urls);
+    const updateQuery = data;
 
     // Perform the update operation
     const updated = await prisma.preferences.update({
       where: { id },
       data: updateQuery,
-      include: {
-        homepage_background_image: true,
-        homepage_background_video: true,
-      },
     });
 
-    const response = {
-      ...updated,
-      homepage_background_image: [updated.homepage_background_image],
-      homepage_background_video: [updated.homepage_background_video],
-    };
+    const response = updated;
 
     successResponse(res, response);
   });

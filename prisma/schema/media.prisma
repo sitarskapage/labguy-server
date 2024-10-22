@@ -20,8 +20,6 @@ model ImageRef {
 
     createdAt DateTime  @default(now())
     updatedAt DateTime? @updatedAt
-
-    preferences Preferences?
 }
 
 model VideoRef {
@@ -43,6 +41,4 @@ model VideoRef {
 
     createdAt DateTime  @default(now())
     updatedAt DateTime? @updatedAt
-
-    preferences Preferences?
 }

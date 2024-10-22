@@ -19,6 +19,7 @@ model Contact {
 }
 
 model Profile {
+  picture           Json?
   statement         String?
   additional        String?
   portfolio_pdf_url String?
