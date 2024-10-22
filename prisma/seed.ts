@@ -79,9 +79,7 @@ async function createPreferences(): Promise<void> {
   await prisma.preferences.create({
     data: {
       artists_name: "Artist's Name",
-      homepage_background_image: {
-        connect: { etag: uploadedImage.etag },
-      },
+      homepage_media: uploadedImage,
       homepage_heading: "Homepage",
       homepage_subheading: "Sub-Heading",
       homepage_urls: urls,
@@ -210,7 +208,6 @@ async function createProject(): Promise<number | void> {
         description: "Description of a new project.",
         slug: await generateSlug(tile, prisma.project),
         published: true,
-        fIndex: "",
       },
     },
   };
@@ -269,12 +266,7 @@ async function createWork(projectId: number): Promise<void> {
         description: "Description of a new work.",
         slug: await generateSlug(title, prisma.work),
         published: true,
-        fIndex: "",
       },
-    },
-
-    projects: {
-      connect: [{ id: projectId }],
     },
   };
 
