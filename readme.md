@@ -4,8 +4,8 @@
 
 1. Create/add variables in `.env` file in root directory.
    ```js
-    DIRECT_URL="postgres://abcd:000000@localhost:5432/abcd?schema=public" #connect to db
-    DATABASE_URL="postgres://abcd:000000@localhost:5432/abcd?schema=public" #connect to db
+    DIRECT_URL="mysql://USER:PASSWORD@HOST:PORT/DATABASE" #connect to db
+    DATABASE_URL="mysql://USER:PASSWORD@HOST:PORT/DATABASE" #connect to db
     ADMIN_EMAIL="abcd@gmail.com" #send Email
     ADMIN_EMAIL_PASSWORD="abcd abcd abcd abcd" #send Email
     CLD_CLOUD_NAME="abcd" #upload Images
@@ -24,17 +24,33 @@
    ```
 3. `npm i`
 
-4. After complete install change password via Dashboard's "forgot password" option.
+4. You are good to go!
 
-5. You are good to go!
+## Deployment
+
+1. Shared hosting (cheap)
+
+   1. Connect to the server via SSH.
+   2. Navigate to the root directory using `cd <dir>`
+   3. Ensure that the `.htaccess` file is configured correctly.
+   4. Execute:
+      ```
+      mkdir ~/.npm-global
+      npm config set prefix '~/.npm-global'
+      echo 'export PATH=~/.npm-global/bin:~/bin:$PATH ' >> $HOME/.bash_profile && source $HOME/.bash_profile
+      ```
+   5. `git clone https://username:token@github.com/username/repo.git`
+   6. Make sure the node version is compatible.
+   7. Follow the steps in the [Installation](#installation) section.
+   8. `npm i pm2 -g`
+   9. `pm2 start bin/www`
+   10. Application should be running in the background now.
 
 ## Todo
 
-1. General
+In the Future
 
-2. Details
-
-3. Future
-
-- Add Vimdeo, Soundcloud support
-- Add 3D support
+- Add Vimdeo, Soundcloud, 3D support
+- Tag update page
+- Dashboard
+- Portfolio generator page
