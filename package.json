@@ -1,6 +1,7 @@
 {
   "name": "labguy-server",
-  "private": true,
+  "author": "jakubkanna",
+  "license": "GPL-3.0-only",
   "version": "1.0.0",
   "engines": {
     "node": ">=22.5.1"
@@ -19,8 +20,6 @@
     "type": "git",
     "url": "git+https://github.com/jakubkanna/labguy-server.git"
   },
-  "author": "jakubkanna",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/jakubkanna/labguy-server/issues"
   },

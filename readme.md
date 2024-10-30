@@ -1,4 +1,4 @@
-# Lab Guy Dashboard
+# Lab Guy REST API
 
 ## Installation
 
