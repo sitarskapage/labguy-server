@@ -21,7 +21,7 @@ model Contact {
 model Profile {
   picture           Json?
   statement         String?
-  additional        String?
+  additional        Json?
   portfolio_pdf_url String?
 
   contact Contact[]

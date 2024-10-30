@@ -2,16 +2,9 @@
 
 ## Installation
 
-1. `npm i`
-2. Create/add in `.gitignore` file in root directory.
+1. Create/add variables in `.env` file in root directory.
    ```js
-   # labguy
-    .env
-    *.pem
-    public
-   ```
-3. Create/add variables in `.env` file in root directory.
-   ```js
+    DIRECT_URL="postgres://abcd:000000@localhost:5432/abcd?schema=public" #connect to db
     DATABASE_URL="postgres://abcd:000000@localhost:5432/abcd?schema=public" #connect to db
     ADMIN_EMAIL="abcd@gmail.com" #send Email
     ADMIN_EMAIL_PASSWORD="abcd abcd abcd abcd" #send Email
@@ -22,6 +15,15 @@
     YT_API_KEY="1a2b3c4d" #get Youtube Video data
     DASHBOARD_ADMIN_PATH="admin" #create Reset Password Link
    ```
+2. Create/add in `.gitignore` file in root directory.
+   ```js
+   # labguy
+    .env
+    *.pem
+    public
+   ```
+3. `npm i`
+
 4. After complete install change password via Dashboard's "forgot password" option.
 
 5. You are good to go!

@@ -1,6 +1,6 @@
 model Post {
-  id      Int     @id @default(autoincrement())
-  content String?
+  id      Int   @id @default(autoincrement())
+  content Json?
 
   general     GeneralSection @relation(fields: [generalId], references: [id], onDelete: Cascade)
   generalId   Int            @unique

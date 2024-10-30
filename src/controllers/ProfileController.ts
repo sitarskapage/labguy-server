@@ -19,13 +19,7 @@ export class ProfileController {
       },
     });
 
-    let additional;
-
-    if (profile && typeof profile.additional === "string") {
-      additional = JSON.parse(profile.additional);
-    }
-
-    res.status(200).json({ ...profile, additional });
+    res.status(200).json({ ...profile });
   });
 
   // UPDATE SINGLE
@@ -33,7 +27,6 @@ export class ProfileController {
     const userId: number = parseInt(req.params.id, 10);
     const p = req.body;
     const cArr = p.contact;
-    const additional = JSON.stringify(req.body.additional);
 
     if (!Array.isArray(cArr)) throw new Error("Contact field is not an array");
 
@@ -43,7 +36,7 @@ export class ProfileController {
 
       await prisma.profile.update({
         where: { userId: userId },
-        data: { ...p, additional },
+        data: p,
       });
     }
 

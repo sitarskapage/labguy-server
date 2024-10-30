@@ -5,7 +5,7 @@
   "engines": {
     "node": ">=22.5.1"
   },
-  "description": "Express REST Server featuring: JWT Authentication and Authorization, Prisma (posgresql db connection), Cloudinary and standard middlewares like Helmet; Limitter; Morgan",
+  "description": "Express REST Server featuring: JWT Auth, Prisma, Cloudinary and standard middlewares like Helmet; Limitter; Morgan",
   "main": "./bin/www",
   "scripts": {
     "prebuild": " ts-node scripts/postinstall && ts-node scripts/copy-assets",
