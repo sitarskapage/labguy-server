@@ -1,0 +1,94 @@
+name: Deploy on Push, Schedule, or Manual Trigger
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'  # Runs once every 24 hours at midnight UTC
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+        with:
+          repository: jakubkanna/labguy-server 
+          ref: main  
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+      - name: Check for updates in upstream
+        id: check_diff
+        run: |
+          # Fetch latest commits from upstream
+          git fetch origin main
+          
+          # Check if there are any changes compared to the current fork's main branch
+          if [ "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)" ]; then
+            echo "No updates found."
+            echo "CHANGES_DETECTED=false" >> $GITHUB_ENV
+          else
+            echo "Updates detected."
+            echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
+          fi
+
+      - name: Set up Nodejs
+        if: env.CHANGES_DETECTED == 'true'
+        uses: actions/setup-node@v2
+        with:
+          node-version: '22.5.1'
+
+      - name: Setup SSH
+        if: env.CHANGES_DETECTED == 'true'
+        env:
+          SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          SSH_HOST: ${{ secrets.SERVER_HOST }}
+          SSH_USER: ${{ secrets.SERVER_USERNAME }}
+          SSH_PORT: ${{ secrets.SERVER_PORT }}
+        run: |
+          echo "Creating .ssh directory..."
+          mkdir -p $HOME/.ssh/
+          
+          echo "Writing SSH key to staging.key..."
+          echo "$SSH_KEY" > $HOME/.ssh/staging.key
+          chmod 600 $HOME/.ssh/staging.key  # Set permissions for the private key
+          
+          echo "Creating SSH config file..."
+          cat >> $HOME/.ssh/config <<EOF
+          Host staging
+              HostName $SSH_HOST
+              User $SSH_USER
+              Port $SSH_PORT
+              IdentityFile $HOME/.ssh/staging.key
+              StrictHostKeyChecking no
+          EOF
+
+      - name: Load environment variables
+        if: env.CHANGES_DETECTED == 'true'
+        run: |
+          ssh staging "cat ~/labguy-server/.env" > .env
+          set -a
+          source .env
+          set +a
+
+      - name: Install dependencies
+        if: env.CHANGES_DETECTED == 'true'
+        run: npm install
+
+      - name: Build the application
+        if: env.CHANGES_DETECTED == 'true'
+        run: npm run build
+
+      - name: Deploy to Server
+        if: env.CHANGES_DETECTED == 'true'
+        run: |
+          ssh staging << 'EOF'
+            cd labguy-server
+            git pull origin main
+            npm install
+            npm run build
+            pm2 restart www
+          EOF
