@@ -45,6 +45,10 @@
    8. `npm i pm2 -g`
    9. `pm2 start bin/www`
    10. Application should be running in the background now.
+  
+## Auto-updates
+
+1. Add secrets to the forked repo
 
 ## Todo
 
