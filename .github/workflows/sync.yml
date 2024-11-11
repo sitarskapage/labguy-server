@@ -15,5 +15,6 @@ jobs:
         with:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           base: main
-          head: main  
+          head: main
+          auto_approve: true
           
