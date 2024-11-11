@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Fork Sync
-        uses: tgymnich/fork-sync@v1.8
+        uses: tgymnich/fork-sync@v2.0.10
         with:
           token: ${{ secrets.PAT }}
           base: main
