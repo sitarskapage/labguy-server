@@ -36,4 +36,4 @@ jobs:
           auto_approve: true
           
           # Provide the personal access token to approve the PR
-          github_token: ${{ secrets.AUTO_APPROVE_TOKEN }}  # Use the PAT stored in GitHub Secrets
+          token: ${{ secrets.AUTO_APPROVE_TOKEN }}  # Use the PAT stored in GitHub Secrets
