@@ -2,8 +2,8 @@ name: Sync Fork
 
 on:
   schedule:
-    - cron: '*/30 * * * *' # Runs every 30 minutes
-  workflow_dispatch: # Triggered by a manual button click
+    - cron: '*/30 * * * *'  # Runs every 30 minutes
+  workflow_dispatch:  # Triggered by manual button click
 
 jobs:
   sync:
@@ -13,7 +13,7 @@ jobs:
       - name: Fork Sync
         uses: tgymnich/fork-sync@v1.8
         with:
-          # Set the owner to the current repository owner
+          # Set the owner of the fork
           owner: ${{ github.repository_owner }}  # Automatically uses your fork's owner
           
           # Set the base branch to the branch in your fork to be updated
@@ -22,12 +22,18 @@ jobs:
           # Set the head branch to the branch in the upstream repository you want to sync from
           head: main  # Replace with the upstream's default branch if it's different (e.g., 'master')
           
-          # Optionally, specify a merge method (merge, squash, rebase)
-          merge_method: merge  # Default is 'merge'. You can change this to 'squash' or 'rebase'
+          # Optional: Specify a merge method (merge, squash, rebase)
+          merge_method: merge  # Default is 'merge', but you can change it to 'squash' or 'rebase'
           
-          # Optional pull request title and message for better tracking
+          # Optional: Title and message for the PR created during the sync process
           pr_title: "Sync Fork with Upstream"
           pr_message: "This PR automatically syncs the fork with the upstream repository."
           
-          # Ignore failures and continue with the sync even if there's an issue
+          # Ignore failures during the sync process
           ignore_fail: true  # Set to true if you want the action to continue even on errors
+          
+          # Enable auto-approval of the PR to avoid manual review
+          auto_approve: true
+          
+          # Provide the personal access token to approve the PR
+          github_token: ${{ secrets.AUTO_APPROVE_TOKEN }}  # Use the PAT stored in GitHub Secrets
