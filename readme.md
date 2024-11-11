@@ -49,6 +49,8 @@
 ## Auto-updates
 
 1. Add secrets to the forked repo
+2. Add default ruleset for the branch main, `Require a pull request before merging` must be disabled
+3. First pull request must be manually approved
 
 ## Todo
 
