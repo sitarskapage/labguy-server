@@ -30,4 +30,4 @@ jobs:
           pr_message: "This PR automatically syncs the fork with the upstream repository."
           
           # Ignore failures during the sync process
-          ignore_fail: true  # Set to true if you want the action to continue even on errors
+          ignore_fail: false  # Set to true if you want the action to continue even on errors
