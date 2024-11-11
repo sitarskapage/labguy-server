@@ -62,7 +62,7 @@ export abstract class ProjectsOnWorksController extends Controller {
   get = asyncHandler(async (req, res) => {
     const items = await this.delegate.findMany({
       include: {
-        general: true,
+        general: { include: { tags: true } },
       },
     });
     successResponse(res, items);

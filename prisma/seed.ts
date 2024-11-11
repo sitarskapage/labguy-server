@@ -279,6 +279,28 @@ async function createWork(projectId: number): Promise<void> {
   );
 }
 
+// Create default tag
+async function createTag() {
+  const exist = await prisma.tag.findUnique({
+    where: { title: "default" },
+  });
+
+  if (!!exist)
+    return console.log(
+      `${styles.grey}Work already exists. Skipping seed.${styles.reset}`
+    );
+
+  const tag = await prisma.tag.create({
+    data: {
+      title: "default",
+    },
+  });
+
+  console.log(
+    `${styles.grey}First tag created successfully with ID: ${tag.id}.${styles.reset}`
+  );
+}
+
 export async function seed(): Promise<void> {
   try {
     if (env.ADMIN_EMAIL) {
@@ -293,6 +315,8 @@ export async function seed(): Promise<void> {
     const projectId = await createProject();
 
     projectId && (await createWork(projectId));
+
+    await createTag();
   } catch (error: any) {
     console.error(`${styles.red}Error: ${error.message}${styles.reset}`);
     process.exit(1);

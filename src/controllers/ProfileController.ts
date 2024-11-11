@@ -25,7 +25,18 @@ export class ProfileController {
   // UPDATE SINGLE
   updateProfile = asyncHandler(async (req: Request, res: Response) => {
     const userId: number = parseInt(req.params.id, 10);
-    const p = req.body;
+
+    const picture = req.body.picture ? req.body.picture : null;
+    const portfolio = req.body.portfolio_pdf_url
+      ? req.body.portfolio_pdf_url
+      : null;
+
+    const p = {
+      ...req.body,
+      picture: picture,
+      portfolio_pdf_url: portfolio,
+    };
+    console.log(p);
     const cArr = p.contact;
 
     if (!Array.isArray(cArr)) throw new Error("Contact field is not an array");
@@ -51,11 +62,13 @@ export class ProfileController {
         },
       });
 
-      // overwrite
+      // Overwrite
       for (const cItem of cArr) {
+        console.log(cItem);
         await prisma.contact.upsert({
           where: { id: cItem.id || 0 },
           update: {
+            name: cItem.name,
             email: cItem.email,
             profileId: userId,
             socialmedia: {
@@ -85,6 +98,7 @@ export class ProfileController {
             },
           },
           create: {
+            name: cItem.name,
             email: cItem.email,
             profileId: userId,
             socialmedia: {
