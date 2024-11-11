@@ -34,17 +34,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
           git push origin main
-
-      - name: Trigger Deployment Workflow
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          script: |
-            const { owner, repo } = context.repo;
-            const workflow_id = "deploy.yml";  // replace with exact name of deploy workflow file
-            await github.actions.createWorkflowDispatch({
-              owner,
-              repo,
-              workflow_id,
-              ref: "main"
-            });
