@@ -1,36 +1,26 @@
-name: Daily Sync Fork with Upstream
-
-on:
-  schedule:
-    - cron: '0 0 * * *'  # Runs once every day at midnight UTC
-  workflow_dispatch:
-
-jobs:
-  sync-fork:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout the forked repository
-        uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-
-      - name: Set up Git config
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Add upstream repository
-        run: git remote add upstream https://github.com/jakubkanna/labguy-server.git
-
-      - name: Fetch and merge changes from upstream
-        run: |
-          git fetch upstream
-          git checkout main
-          git merge upstream/main || true  # Merge changes, ignore errors if up-to-date
-
-      - name: Push changes to forked repository
-        env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-        run: |
-          git push origin main
+- name: Fork Sync
+  uses: tgymnich/fork-sync@v1.2.1
+  with:
+    # Owner of the forked repository
+    owner: ${{ github.repository_owner }}
+    
+    # Token for the GitHub API
+    github_token: ${{ secrets.GITHUB_TOKEN }}
+    
+    # Branch to track from the upstream repository
+    head: main  # Change this if the upstream repo's branch is different
+    
+    # Branch to keep updated in your fork
+    base: main  # Change this if your fork uses a different branch
+    
+    # Merge method to use (merge, squash, or rebase)
+    merge_method: merge  # Optional, can be changed to "squash" or "rebase"
+    
+    # Title of the pull request created by the sync action
+    pr_title: "Automatic Fork Sync"
+    
+    # Message in the pull request
+    pr_message: "This PR merges changes from the upstream repository into this forked repository."
+    
+    # Ignore exceptions and continue if sync fails
+    ignore_fail: true  # Optional; if set to true, the workflow won't fail on sync errors
