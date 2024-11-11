@@ -31,9 +31,3 @@ jobs:
           
           # Ignore failures during the sync process
           ignore_fail: true  # Set to true if you want the action to continue even on errors
-          
-          # Enable auto-approval of the PR to avoid manual review
-          auto_approve: true
-          
-          # Provide the personal access token to approve the PR
-          token: ${{ secrets.AUTO_APPROVE_TOKEN }}  # Use the PAT stored in GitHub Secrets
