@@ -1,26 +1,33 @@
-- name: Fork Sync
-  uses: tgymnich/fork-sync@v1.2.1
-  with:
-    # Owner of the forked repository
-    owner: ${{ github.repository_owner }}
-    
-    # Token for the GitHub API
-    github_token: ${{ secrets.GITHUB_TOKEN }}
-    
-    # Branch to track from the upstream repository
-    head: main  # Change this if the upstream repo's branch is different
-    
-    # Branch to keep updated in your fork
-    base: main  # Change this if your fork uses a different branch
-    
-    # Merge method to use (merge, squash, or rebase)
-    merge_method: merge  # Optional, can be changed to "squash" or "rebase"
-    
-    # Title of the pull request created by the sync action
-    pr_title: "Automatic Fork Sync"
-    
-    # Message in the pull request
-    pr_message: "This PR merges changes from the upstream repository into this forked repository."
-    
-    # Ignore exceptions and continue if sync fails
-    ignore_fail: true  # Optional; if set to true, the workflow won't fail on sync errors
+name: Sync Fork
+
+on:
+  schedule:
+    - cron: '*/30 * * * *' # Runs every 30 minutes
+  workflow_dispatch: # Triggered by a manual button click
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fork Sync
+        uses: tgymnich/fork-sync@v1.8
+        with:
+          # Set the owner to the current repository owner
+          owner: ${{ github.repository_owner }}  # Automatically uses your fork's owner
+          
+          # Set the base branch to the branch in your fork to be updated
+          base: main  # Replace with your fork's default branch if it's different (e.g., 'master')
+          
+          # Set the head branch to the branch in the upstream repository you want to sync from
+          head: main  # Replace with the upstream's default branch if it's different (e.g., 'master')
+          
+          # Optionally, specify a merge method (merge, squash, rebase)
+          merge_method: merge  # Default is 'merge'. You can change this to 'squash' or 'rebase'
+          
+          # Optional pull request title and message for better tracking
+          pr_title: "Sync Fork with Upstream"
+          pr_message: "This PR automatically syncs the fork with the upstream repository."
+          
+          # Ignore failures and continue with the sync even if there's an issue
+          ignore_fail: true  # Set to true if you want the action to continue even on errors
