@@ -13,21 +13,6 @@ jobs:
       - name: Fork Sync
         uses: tgymnich/fork-sync@v1.8
         with:
-          # Set the owner of the fork
-          owner: ${{ github.repository_owner }}  # Automatically uses your fork's owner
+          base: main  
+          head: main  
           
-          # Set the base branch to the branch in your fork to be updated
-          base: main  # Replace with your fork's default branch if it's different (e.g., 'master')
-          
-          # Set the head branch to the branch in the upstream repository you want to sync from
-          head: main  # Replace with the upstream's default branch if it's different (e.g., 'master')
-          
-          # Optional: Specify a merge method (merge, squash, rebase)
-          merge_method: merge  # Default is 'merge', but you can change it to 'squash' or 'rebase'
-          
-          # Optional: Title and message for the PR created during the sync process
-          pr_title: "Sync Fork with Upstream"
-          pr_message: "This PR automatically syncs the fork with the upstream repository."
-          
-          # Ignore failures during the sync process
-          ignore_fail: false  # Set to true if you want the action to continue even on errors
