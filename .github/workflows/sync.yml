@@ -13,7 +13,7 @@ jobs:
       - name: Fork Sync
         uses: tgymnich/fork-sync@v1.8
         with:
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          token: ${{ secrets.PAT }}
           base: main
           head: main
           auto_approve: true
