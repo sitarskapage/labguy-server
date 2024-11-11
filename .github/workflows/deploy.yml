@@ -1,4 +1,4 @@
-name: Deploy on Push, Schedule, or Manual Trigger
+name: Deploy to Sever
 
 on:
   push:
