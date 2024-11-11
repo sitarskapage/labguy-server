@@ -13,6 +13,7 @@ jobs:
       - name: Fork Sync
         uses: tgymnich/fork-sync@v1.8
         with:
-          base: main  
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          base: main
           head: main  
           
