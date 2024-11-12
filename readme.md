@@ -14,6 +14,7 @@
     CLD_PRESET_NAME="abcd" #upload Images
     YT_API_KEY="1a2b3c4d" #get Youtube Video data
     DASHBOARD_ADMIN_PATH="admin" #create Reset Password Link
+    IP="127.0.0.1" #run server
    ```
 2. Create/add in `.gitignore` file in root directory.
    ```js
@@ -45,7 +46,7 @@
    8. `npm i pm2 -g`
    9. `pm2 start bin/www`
    10. Application should be running in the background now.
-  
+
 ## Auto-updates
 
 1. Add secrets to the forked repo

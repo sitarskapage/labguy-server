@@ -1,50 +1,71 @@
-const os = require("os");
-const http = require("http");
-const app = require("../dist/app").default;
+#!/usr/bin/env node
 
-// Function to get the local IP address
-function getLocalIP() {
-  const interfaces = os.networkInterfaces();
-  for (const interfaceKey in interfaces) {
-    for (const network of interfaces[interfaceKey]) {
-      // Check if it is an IPv4 address and is not a loopback address
-      if (network.family === "IPv4" && !network.internal) {
-        return network.address; // Return the first external IP found
-      }
-    }
-  }
-  return "127.0.0.1"; // Fallback to localhost if no external IP found
-}
+/**
+ * Module dependencies.
+ */
 
-// Get the port
-const port = normalizePort(process.env.PORT || "3000");
+require("dotenv").config();
+var app = require("../dist/app").default;
+var debug = require("debug")("server:server");
+var http = require("http");
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
-// Get local IP dynamically
-const ipAddress = getLocalIP();
+/**
+ * Create HTTP server.
+ */
 
-// Create server and bind to the local IP address
-const server = http.createServer(app);
-server.listen(port, ipAddress);
+var server = http.createServer(app);
+
+/**
+ * Get the IP address from the environment or default to "localhost".
+ */
+var ip = process.env.IP || "localhost";
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port, ip);
 server.on("error", onError);
 server.on("listening", onListening);
 
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
 function normalizePort(val) {
-  const port = parseInt(val, 10);
+  var port = parseInt(val, 10);
+
   if (isNaN(port)) {
+    // named pipe
     return val;
   }
+
   if (port >= 0) {
+    // port number
     return port;
   }
+
   return false;
 }
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
 
 function onError(error) {
   if (error.syscall !== "listen") {
     throw error;
   }
-  const bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
+
+  var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
+
+  // handle specific listen errors with friendly messages
   switch (error.code) {
     case "EACCES":
       console.error(bind + " requires elevated privileges");
@@ -59,9 +80,14 @@ function onError(error) {
   }
 }
 
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
 function onListening() {
   const addr = server.address();
-  const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+
+  // Log the address and port where the server is listening
   console.log(
     `Server is running at http://${addr.address === "::" ? "localhost" : addr.address}:${addr.port}/`
   );
