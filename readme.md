@@ -33,7 +33,7 @@
 
    1. Connect to the server via SSH.
    2. Navigate to the root directory using `cd <dir>`
-   3. Ensure that the `.htaccess` file is configured correctly.
+   3. Ensure that the `.htaccess` file is configured correctly. You might need to replace `127.0.0.1` with your IP.
    4. Execute:
       ```
       mkdir ~/.npm-global
