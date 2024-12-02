@@ -2,7 +2,7 @@ model GeneralSection {
     id Int @id @default(autoincrement())
 
     title       String
-    description String?
+    description String? @db.Text
     published   Boolean @default(false)
     slug        String  @unique
     tags        Tag[]
