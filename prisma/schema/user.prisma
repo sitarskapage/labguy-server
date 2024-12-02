@@ -20,7 +20,7 @@ model Contact {
 
 model Profile {
   picture           Json?
-  statement         String?
+  statement         String? @db.Text
   additional        Json?
   portfolio_pdf_url String?
 
