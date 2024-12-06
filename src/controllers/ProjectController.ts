@@ -34,7 +34,7 @@ export class ProjectController extends ProjectsOnWorksController {
           },
           ProjectsOnWorks: {
             include: {
-              work: { include: { general: true } },
+              work: { include: { general: { include: { tags: true } } } },
             },
             orderBy: { fIndex: "asc" },
           },

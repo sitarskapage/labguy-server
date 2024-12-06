@@ -78,6 +78,7 @@ export class WorkController extends ProjectsOnWorksController {
     const updateData = await this.updateData(req);
     const projects = req.body.projects;
     const count = (await prisma.projectsOnWorks.count()).toString();
+    const { dimensions, year, medium } = req.body;
 
     // Get the project IDs from the request body
     const projectIds = projects.map((project: { id: number }) => project.id);
@@ -96,10 +97,13 @@ export class WorkController extends ProjectsOnWorksController {
 
     // Add missing props
     const newData = {
+      dimensions,
+      year,
+      medium,
       ...updateData,
       media: req.body.media,
     };
-
+    console.log(newData);
     // Update the work entry
     const updatedRecord = await prisma.work.update({
       where: { id: workId }, // Specify the Work ID to update
