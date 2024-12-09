@@ -4,6 +4,12 @@ import expressAsyncHandler from "express-async-handler";
 import { saveSharpImage } from "../utils/saveSharpImage";
 import multer from "multer";
 
+export interface SavedFile extends Express.Multer.File {
+  path: string;
+  filename: string;
+  isBright: boolean;
+}
+
 const processImagesMiddleware = expressAsyncHandler(async (req, res, next) => {
   processImages.array("files")(req, res, (err) => {
     if (err) {
@@ -25,14 +31,21 @@ const processImagesMiddleware = expressAsyncHandler(async (req, res, next) => {
 export const saveSharpImagesMiddleware = expressAsyncHandler(
   async (req, res, next) => {
     if (!req.files) throw new Error("no files found");
+    if (!Array.isArray(req.files)) throw new Error("files  are not array");
 
     const savedFiles = await Promise.all(
-      (req.files as Express.Multer.File[]).map(async (file) => {
-        const { path: filePath, filename } = await saveSharpImage(file);
+      req.files.map(async (file) => {
+        const {
+          path: filePath,
+          filename,
+          isBright,
+        } = await saveSharpImage(file);
+
         return {
           ...file,
           path: filePath,
-          filename: filename,
+          filename,
+          isBright,
         };
       })
     );

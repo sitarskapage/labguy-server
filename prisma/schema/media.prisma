@@ -17,6 +17,7 @@ model ImageRef {
     width       Int?
     height      Int?
     tags        Tag[]
+    isBright    Boolean?
 
     createdAt DateTime  @default(now())
     updatedAt DateTime? @updatedAt
