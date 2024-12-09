@@ -45,7 +45,9 @@
    7. Follow the steps in the [Installation](#installation) section.
    8. `npm i pm2 -g`
    9. `pm2 start bin/www`
-   10. Application should be running in the background now.
+   10. `pm2 save`
+   11. `pm2 startup`
+   12. Application should be running in the background now.
 
 ## Auto-updates
 
