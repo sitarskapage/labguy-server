@@ -1,5 +1,5 @@
 import { Router } from "express";
-import PreferencesController from "../../../controllers/PreferencesController";
+import PreferencesController from "../../controllers/PreferencesController";
 
 const preferencesController = new PreferencesController();
 const preferencesRouter = Router();
