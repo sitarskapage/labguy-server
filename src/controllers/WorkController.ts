@@ -8,7 +8,6 @@ export class WorkController extends ProjectsOnWorksController {
   constructor() {
     super("work");
   }
-
   getOne = expressAsyncHandler(async (req, res) => {
     const parsedId = parseId(req.params.id);
 
