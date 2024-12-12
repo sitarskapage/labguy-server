@@ -13,10 +13,11 @@ model ImageRef {
     filename    String?   @unique
     format      String?
     bytes       Int?
-    description String?   @default("")
+    description String?
     width       Int?
     height      Int?
     tags        Tag[]
+    isBright    Boolean?
 
     createdAt DateTime  @default(now())
     updatedAt DateTime? @updatedAt
@@ -32,7 +33,7 @@ model VideoRef {
     title       String?   @default("Untitled")
     duration    String?
     definition  String?
-    description String?   @default("")
+    description String?
     thumbnail   String?
     tags        Tag[]
 

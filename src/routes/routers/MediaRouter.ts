@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { prisma } from "../../../prismaclient";
-import { MediaController } from "../../../controllers/MediaController";
+import { prisma } from "../../prismaclient";
+import { MediaController } from "../../controllers/MediaController";
 
 const mediaRouter = Router();
 const mediaController = new MediaController();

@@ -4,8 +4,10 @@ import { prisma } from "../src/prismaclient";
 import { ImageController } from "../src/controllers/ImageController";
 import path from "path";
 import fs from "fs";
-import { Prisma, Project, VideoRef } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { generateSlug } from "../src/utils/generateSlug";
+import { SavedFile } from "../src/middleware/uploadImages";
+import { Readable } from "stream";
 
 export const styles = {
   reset: "\x1b[0m",
@@ -64,11 +66,22 @@ async function createPreferences(): Promise<void> {
     throw new Error(`Image file not found at ${imagePath}`);
   }
 
-  const file = {
+  // Read the file into a buffer
+  const fileBuffer = fs.readFileSync(imagePath);
+
+  const file: SavedFile = {
     originalname: "great-mountains_jakubkanna.jpg",
     path: imagePath,
     mimetype: "image/jpeg",
-  } as Express.Multer.File;
+    isBright: false,
+    filename: "great-mountains_jakubkanna.jpg",
+    fieldname: "",
+    encoding: "7bit",
+    size: fileBuffer.length,
+    stream: Readable.from(fileBuffer),
+    destination: "",
+    buffer: fileBuffer,
+  };
 
   const uploadedImage = await imageController.uploadImageFile(file);
 
@@ -76,6 +89,7 @@ async function createPreferences(): Promise<void> {
     { url: "#1", title: "Link" },
     { url: "#2", title: "Another" },
   ];
+
   await prisma.preferences.create({
     data: {
       artists_name: "Artist's Name",

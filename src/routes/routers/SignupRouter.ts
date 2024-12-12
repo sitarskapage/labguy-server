@@ -1,5 +1,5 @@
 import { Router } from "express";
-import SignupController from "../../../controllers/SignupController";
+import SignupController from "../../controllers/SignupController";
 const signupRouter = Router();
 
 // Use the defined route handler in the router

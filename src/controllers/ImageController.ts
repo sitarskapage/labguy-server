@@ -7,6 +7,7 @@ import { successResponse } from "../utils/responses";
 import { MediaController } from "./MediaController";
 import { cloudinary } from "../cloudinary";
 import fs from "fs";
+import { SavedFile } from "../middleware/uploadImages";
 
 export class ImageController extends MediaController {
   constructor() {
@@ -18,7 +19,7 @@ export class ImageController extends MediaController {
     successResponse(res, videoArray);
   });
 
-  async uploadImageFile(image: Express.Multer.File) {
+  async uploadImageFile(image: SavedFile) {
     try {
       const { name: sanitizedFileName } = sanitizeFilename(image.originalname);
 
@@ -53,6 +54,7 @@ export class ImageController extends MediaController {
           connect: createdTags.map((tag) => ({ id: tag.id })),
         },
         createdAt: cldRes.created_at,
+        isBright: image.isBright,
       };
 
       return prisma.imageRef.upsert({
@@ -68,7 +70,7 @@ export class ImageController extends MediaController {
 
   uploadImages = asyncHandler(async (req: Request, res: Response) => {
     try {
-      const images = req.files as Express.Multer.File[];
+      const images = req.files as SavedFile[];
 
       if (!images || images.length < 1) throw new Error("No files received");
 
@@ -82,6 +84,7 @@ export class ImageController extends MediaController {
       res.status(500).json({ error: (error as Error).message });
     }
   });
+
   destroyImages = asyncHandler(async (req, res) => {
     const selectedImgArr = req.body;
 

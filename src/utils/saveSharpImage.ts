@@ -2,6 +2,7 @@ import sharp from "sharp";
 import path from "path";
 import fs from "fs";
 import sanitizeFilename from "./sanitizeFilename";
+import isImageBright from "./isImageBright";
 
 const publicUploadDir = path.resolve("public", "uploads", "images");
 
@@ -10,8 +11,8 @@ if (!fs.existsSync(publicUploadDir)) {
 }
 
 export async function saveSharpImage(
-  file: Express.Multer.File,
-): Promise<{ path: string; filename: string }> {
+  file: Express.Multer.File
+): Promise<{ path: string; filename: string; isBright: boolean }> {
   const sanitized = sanitizeFilename(file.originalname);
   const filename = `${sanitized.name}.jpeg`;
   const filePath = path.join(publicUploadDir, filename);
@@ -26,8 +27,11 @@ export async function saveSharpImage(
 
   await image.resize(resizeOptions).jpeg({ quality: 80 }).toFile(filePath);
 
+  const isBright = await isImageBright(file.buffer);
+
   return {
     path: filePath,
     filename: filename,
+    isBright: isBright,
   };
 }
