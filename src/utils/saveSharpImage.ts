@@ -19,14 +19,26 @@ export async function saveSharpImage(
 
   const image = sharp(file.buffer);
   const metadata = await image.metadata();
+  const maxLength = 3840; //4k
 
-  const resizeOptions =
-    metadata.width && metadata.height && metadata.width > metadata.height
-      ? { width: 2160 }
-      : { height: 2160 };
+  // Check if resizing is needed
+  if (
+    metadata.width &&
+    metadata.height &&
+    (metadata.width > maxLength || metadata.height > maxLength)
+  ) {
+    const resizeOptions =
+      metadata.width > metadata.height
+        ? { width: maxLength }
+        : { height: maxLength };
 
-  await image.resize(resizeOptions).jpeg({ quality: 80 }).toFile(filePath);
+    await image.resize(resizeOptions).jpeg({ quality: 80 }).toFile(filePath);
+  } else {
+    // Save the file as is if no resizing is required
+    await image.jpeg({ quality: 80 }).toFile(filePath);
+  }
 
+  //
   const isBright = await isImageBright(file.buffer);
 
   return {
