@@ -1,9 +1,11 @@
 model Work {
     id Int @id @default(autoincrement())
 
-    medium     String?
-    dimensions String?
-    year       Int?
+    description String? @db.LongText
+    medium      String?
+    dimensions  String?
+    year        Int?
+    urls        Json?
 
     media Json?
 

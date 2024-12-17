@@ -8,6 +8,43 @@ export class WorkController extends ProjectsOnWorksController {
   constructor() {
     super("work");
   }
+
+  getUnique = expressAsyncHandler(async (req, res) => {
+    // there might be multiple works with the same title (variants)
+    // this should respond with non-duplicates, latest works
+
+    const items = await prisma.work.findMany({
+      include: {
+        general: { include: { tags: true } },
+      },
+    });
+
+    //for now use javascript, could be changed in the future if prisma implement nested relations grouping https://github.com/prisma/prisma/issues/8744
+    const uniqueItems = Object.values(
+      items.reduce<{ [key: string]: (typeof items)[0] }>((acc, item) => {
+        const title = item.general?.title;
+
+        // Determine the date to use for comparison (prefer updatedAt, fallback to createdAt)
+        const compareDate = item.general.updatedAt || item.general.createdAt;
+
+        // Keep only the work with the latest updatedAt (or createdAt if updatedAt is missing) for each title
+        if (
+          !acc[title] ||
+          new Date(
+            acc[title].general.updatedAt || acc[title].general.createdAt
+          ) < new Date(compareDate)
+        ) {
+          acc[title] = item;
+        }
+
+        return acc;
+      }, {})
+    );
+
+    // Respond with the processed unique works
+    successResponse(res, uniqueItems);
+  });
+
   getOne = expressAsyncHandler(async (req, res) => {
     const parsedId = parseId(req.params.id);
 
@@ -77,7 +114,7 @@ export class WorkController extends ProjectsOnWorksController {
     const updateData = await this.updateData(req);
     const projects = req.body.projects;
     const count = (await prisma.projectsOnWorks.count()).toString();
-    const { dimensions, year, medium } = req.body;
+    const { dimensions, year, medium, description, urls } = req.body;
 
     // Get the project IDs from the request body
     const projectIds = projects.map((project: { id: number }) => project.id);
@@ -96,13 +133,15 @@ export class WorkController extends ProjectsOnWorksController {
 
     // Add missing props
     const newData = {
+      description,
       dimensions,
       year,
       medium,
       ...updateData,
       media: req.body.media,
+      urls,
     };
-    console.log(newData);
+    console.debug(newData);
     // Update the work entry
     const updatedRecord = await prisma.work.update({
       where: { id: workId }, // Specify the Work ID to update

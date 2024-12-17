@@ -1,6 +1,7 @@
 model Tag {
-    id   Int    @id @default(autoincrement())
-    title String @unique
+    id     Int     @id @default(autoincrement())
+    title  String  @unique
+    public Boolean @default(true)
 
     images  ImageRef[]
     videos  VideoRef[]
