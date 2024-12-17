@@ -16,6 +16,7 @@ export default class TagsController {
     successResponse(res, tags);
   });
 
+  // Upsert multiple tags
   upsert = async (tags: (Tag | string)[] | undefined) => {
     return await Promise.all(
       tags
@@ -37,12 +38,25 @@ export default class TagsController {
     );
   };
 
+  // Update or create a tag based on the title
+  updateOrCreate = asyncHandler(async (req, res) => {
+    const { title, id } = req.body;
+
+    const updatedOrCreatedTag = await prisma.tag.upsert({
+      where: { title },
+      update: { title: title },
+      create: { title: title },
+    });
+
+    successResponse(res, updatedOrCreatedTag);
+  });
+
   // Delete a tag by ID
   delete = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const tag = await prisma.tag.delete({
+    await prisma.tag.delete({
       where: { id: parseInt(id, 10) },
     });
-    res.status(200).send({});
+    res.status(200).json({});
   });
 }

@@ -13,6 +13,7 @@ export class ProjectController extends ProjectsOnWorksController {
   get = expressAsyncHandler(async (req, res) => {
     const items = await prisma.project.findMany({
       select: {
+        generalId: true,
         id: true,
         media: true,
         start_date: true,
