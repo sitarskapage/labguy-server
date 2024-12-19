@@ -7,6 +7,7 @@ import errorHandler from "./src/middleware/errorHandler";
 import { limiter } from "./src/middleware/config/limiter";
 import { authVerifyPOST } from "./src/middleware/auth";
 import compression from "compression";
+import path from "path";
 
 const isDevMode = process.env.NODE_ENV === "development";
 
@@ -23,8 +24,8 @@ app.use(limiter);
 // Compress all routes
 app.use(compression());
 
-// serving static files NOT IMPLEMENTED
-// app.use(express.static(path.join(__dirname, "public")));
+// serving static files
+app.use(express.static(path.join(__dirname, "public")));
 
 //verify all post requests
 app.use(authVerifyPOST);
