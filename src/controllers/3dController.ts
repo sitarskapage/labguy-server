@@ -6,8 +6,12 @@ import { prisma } from "../prismaclient";
 import crypto from "crypto";
 import fs from "fs/promises";
 import path from "path";
-import { ThreedRef } from "@prisma/client";
+import { Prisma, ThreedRef as OriginalThreedRef } from "@prisma/client";
 import { getAllFilesSize } from "../utils/helpers";
+
+interface ThreedRef extends Omit<OriginalThreedRef, "imageRefEtag"> {
+  imageRefEtag?: string;
+}
 
 interface ModelFile extends Express.Multer.File {
   destination: string;
@@ -33,7 +37,7 @@ export class ThreedController extends MediaController {
   private async createMediaEntry(
     modelFile: ModelFile,
     host: string
-  ): Promise<ThreedRef> {
+  ): Promise<Prisma.ThreedRefCreateInput> {
     const filePath = path.resolve(modelFile.destination, modelFile.filename);
     const fileBuffer = await fs.readFile(filePath);
     const etag = crypto.createHash("md5").update(fileBuffer).digest("hex");
@@ -81,5 +85,26 @@ export class ThreedController extends MediaController {
       );
       throw error;
     }
+  });
+
+  update = expressAsyncHandler(async (req: Request, res: Response) => {
+    const { public_id } = req.params;
+
+    let poster;
+
+    if (req.body.poster) poster = { connect: { etag: req.body.poster.etag } };
+
+    const data: ThreedRef = { ...req.body, poster: poster };
+
+    delete data.imageRefEtag;
+
+    const updated = await prisma.threedRef.update({
+      where: { public_id },
+      data: data,
+      include: { poster: true },
+    });
+    console.log(updated);
+
+    successResponse(res, updated);
   });
 }

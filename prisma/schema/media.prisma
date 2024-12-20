@@ -15,7 +15,7 @@ model ImageRef {
     bytes       Int?
     description String?
     width       Int?
-    height      String?
+    height      Int?
     tags        Tag[]
 
     isBright Boolean?
