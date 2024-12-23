@@ -13,6 +13,7 @@ import { isDevMode } from "./src/utils/helpers";
 const app = express();
 
 //middleware
+app.use(cors());
 app.use(express.json());
 app.use(helmet());
 app.use(morgan(isDevMode ? "dev" : "combined"));
@@ -29,9 +30,6 @@ app.use(authVerifyPOST);
 
 // routes
 app.use("/api/", router);
-
-//  cors
-app.use(cors());
 
 // errors
 app.use(errorHandler);
