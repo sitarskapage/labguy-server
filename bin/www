@@ -7,7 +7,7 @@
 require("dotenv").config();
 var app = require("../dist/app").default;
 var debug = require("debug")("server:server");
-var http = require("http");
+var https = require("http");
 /**
  * Get port from environment and store in Express.
  */
@@ -19,7 +19,7 @@ app.set("port", port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+var server = https.createServer(app);
 
 /**
  * Get the IP address from the environment or default to "localhost".
@@ -89,6 +89,6 @@ function onListening() {
 
   // Log the address and port where the server is listening
   console.log(
-    `Server is running at http://${addr.address === "::" ? "localhost" : addr.address}:${addr.port}/`
+    `Server is running at https://${addr.address === "::" ? "localhost" : addr.address}:${addr.port}/`
   );
 }
