@@ -1,9 +1,20 @@
 import { ProjectsOnWorksController } from "./ProjectsOnWorksController";
 import { prisma } from "../prismaclient";
 import expressAsyncHandler from "express-async-handler";
-import { notFoundResponse, successResponse } from "../utils/responses";
+import {
+  badRequestResponse,
+  notFoundResponse,
+  successResponse,
+} from "../utils/responses";
 import { getAllmedia, parseId } from "../utils/helpers";
-import { ImageRef, Prisma, ProjectsOnWorks, VideoRef } from "@prisma/client";
+import {
+  ImageRef,
+  Prisma,
+  Project,
+  ProjectsOnWorks,
+  VideoRef,
+} from "@prisma/client";
+import { Request, Response } from "express";
 import { JsonArray } from "@prisma/client/runtime/library";
 
 export class ProjectController extends ProjectsOnWorksController {
@@ -73,12 +84,9 @@ export class ProjectController extends ProjectsOnWorksController {
 
     successResponse(res, projectsWithCover);
   });
-
-  getOne = expressAsyncHandler(async (req, res) => {
+  private getOneBySlugOrId = async (req: Request, res: Response) => {
     const parsedId = parseId(req.params.id);
-
     let record;
-
     if (typeof parsedId === "string") {
       // Look up by slug
       const generalRecord = await prisma.generalSection.findUnique({
@@ -87,7 +95,7 @@ export class ProjectController extends ProjectsOnWorksController {
 
       if (!generalRecord) return notFoundResponse(res, "Record not found");
 
-      record = await prisma.project.findUnique({
+      return await prisma.project.findUnique({
         where: { generalId: generalRecord.id },
         include: {
           general: {
@@ -105,7 +113,7 @@ export class ProjectController extends ProjectsOnWorksController {
       });
     } else {
       // Look up by numeric ID
-      record = await prisma.project.findUnique({
+      return prisma.project.findUnique({
         where: { id: parsedId },
         include: {
           general: {
@@ -122,8 +130,15 @@ export class ProjectController extends ProjectsOnWorksController {
         },
       });
     }
+  };
 
-    if (!record) return notFoundResponse(res, "Record not found");
+  getOne = expressAsyncHandler(async (req, res, next) => {
+    const record = await this.getOneBySlugOrId(req, res);
+    if (!record) {
+      badRequestResponse(res, "Record not found");
+      return;
+    }
+
     // Get related works media
     const worksMedia = record.ProjectsOnWorks.flatMap((pow) =>
       (pow.work.media as Array<{ etag: string; mediaType: string }>)
