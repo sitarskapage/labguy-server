@@ -6,8 +6,8 @@ enum MediaType {
 
 model ImageRef {
     etag        String    @id @unique
-    public_id   String?   @unique
     mediaType   MediaType @default(IMAGE)
+    public_id   String?   @unique @default(cuid())
     cld_url     String?   @unique
     path        String?   @unique
     filename    String?   @unique
@@ -17,16 +17,18 @@ model ImageRef {
     width       Int?
     height      Int?
     tags        Tag[]
-    isBright    Boolean?
 
-    createdAt DateTime  @default(now())
-    updatedAt DateTime? @updatedAt
+    isBright Boolean?
+
+    createdAt DateTime    @default(now())
+    updatedAt DateTime?   @updatedAt
+    ThreedRef ThreedRef[]
 }
 
 model VideoRef {
     etag        String    @id @unique
     mediaType   MediaType @default(VIDEO)
-    id          String?
+    public_id   String?   @unique @default(cuid())
     vimeo_url   String?   @unique
     sc_url      String?   @unique
     yt_url      String?   @unique
@@ -42,4 +44,23 @@ model VideoRef {
 
     createdAt DateTime  @default(now())
     updatedAt DateTime? @updatedAt
+}
+
+model ThreedRef {
+    etag      String    @id @unique
+    mediaType MediaType @default(THREE_D)
+    url       String?
+    public_id String?   @unique @default(cuid())
+    path      String?   @unique
+    filename  String?   @unique
+    extension String?
+    bytes     Int?
+
+    backgroundColor String?
+    poster          ImageRef? @relation(fields: [imageRefEtag], references: [etag])
+
+    createdAt DateTime  @default(now())
+    updatedAt DateTime? @updatedAt
+
+    imageRefEtag String?
 }

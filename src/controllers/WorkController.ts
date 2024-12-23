@@ -2,7 +2,8 @@ import { ProjectsOnWorksController } from "./ProjectsOnWorksController";
 import expressAsyncHandler from "express-async-handler";
 import { notFoundResponse, successResponse } from "../utils/responses";
 import { prisma } from "../prismaclient";
-import { parseId } from "../utils/helpers";
+import { getAllmedia, parseId } from "../utils/helpers";
+import { ImageRef, ThreedRef, VideoRef } from "@prisma/client";
 
 export class WorkController extends ProjectsOnWorksController {
   constructor() {
@@ -93,14 +94,27 @@ export class WorkController extends ProjectsOnWorksController {
       });
     }
 
-    // Post-process to map projects from ProjectsOnWorks
+    // Post-process
     if (record) {
+      // map projects from ProjectsOnWorks
       const projects = record.ProjectsOnWorks.map((p) => p.project); // Extract the project objects
 
-      // Add 'projects' field to the response
+      // get ordered media
+      const mediaOrdered = Array.isArray(record.media)
+        ? (
+            record.media as ({ etag: string; mediaType: string } | null)[]
+          ).filter((media) => media && media.etag && media.mediaType)
+        : [];
+
+      const media = await getAllmedia(
+        mediaOrdered as { etag: string; mediaType: string }[]
+      );
+
+      // Add up-to-date fields to the response
       const response = {
         ...record,
         projects,
+        media,
       };
 
       successResponse(res, response);

@@ -9,6 +9,7 @@ import postRouter from "./routers/PostRouter";
 import projectRouter from "./routers/ProjectRouter";
 import workRouter from "./routers/WorkRouter";
 import tagsRouter from "./routers/TagsRouter";
+import threedRouter from "./routers/3dRouter";
 
 //New Router instance
 const router = Router();
@@ -28,5 +29,6 @@ router.use("/videos", videoRouter);
 router.use("/images", imageRouter);
 router.use("/media", mediaRouter);
 router.use("/tags", tagsRouter);
+router.use("/models", threedRouter);
 
 export default router;

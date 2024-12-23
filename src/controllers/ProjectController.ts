@@ -1,9 +1,20 @@
 import { ProjectsOnWorksController } from "./ProjectsOnWorksController";
 import { prisma } from "../prismaclient";
 import expressAsyncHandler from "express-async-handler";
-import { notFoundResponse, successResponse } from "../utils/responses";
-import { parseId } from "../utils/helpers";
-import { ImageRef, Prisma, ProjectsOnWorks, VideoRef } from "@prisma/client";
+import {
+  badRequestResponse,
+  notFoundResponse,
+  successResponse,
+} from "../utils/responses";
+import { getAllmedia, parseId } from "../utils/helpers";
+import {
+  ImageRef,
+  Prisma,
+  Project,
+  ProjectsOnWorks,
+  VideoRef,
+} from "@prisma/client";
+import { Request, Response } from "express";
 import { JsonArray } from "@prisma/client/runtime/library";
 
 export class ProjectController extends ProjectsOnWorksController {
@@ -73,12 +84,9 @@ export class ProjectController extends ProjectsOnWorksController {
 
     successResponse(res, projectsWithCover);
   });
-
-  getOne = expressAsyncHandler(async (req, res) => {
+  private getOneBySlugOrId = async (req: Request, res: Response) => {
     const parsedId = parseId(req.params.id);
-
     let record;
-
     if (typeof parsedId === "string") {
       // Look up by slug
       const generalRecord = await prisma.generalSection.findUnique({
@@ -87,7 +95,7 @@ export class ProjectController extends ProjectsOnWorksController {
 
       if (!generalRecord) return notFoundResponse(res, "Record not found");
 
-      record = await prisma.project.findUnique({
+      return await prisma.project.findUnique({
         where: { generalId: generalRecord.id },
         include: {
           general: {
@@ -105,7 +113,7 @@ export class ProjectController extends ProjectsOnWorksController {
       });
     } else {
       // Look up by numeric ID
-      record = await prisma.project.findUnique({
+      return prisma.project.findUnique({
         where: { id: parsedId },
         include: {
           general: {
@@ -122,55 +130,56 @@ export class ProjectController extends ProjectsOnWorksController {
         },
       });
     }
+  };
 
-    if (!record) return notFoundResponse(res, "Record not found");
+  getOne = expressAsyncHandler(async (req, res, next) => {
+    const record = await this.getOneBySlugOrId(req, res);
+    if (!record) {
+      badRequestResponse(res, "Record not found");
+      return;
+    }
 
     // Get related works media
-    const worksMedia: string[] = record.ProjectsOnWorks.flatMap((pow) =>
-      (pow.work.media as Array<{ etag: string }>)
-        .filter((mediaItem) => mediaItem && mediaItem.etag)
-        .map((mediaItem) => mediaItem.etag)
+    const worksMedia = record.ProjectsOnWorks.flatMap((pow) =>
+      (pow.work.media as Array<{ etag: string; mediaType: string }>)
+        .filter(
+          (mediaItem) => mediaItem && mediaItem.etag && mediaItem.mediaType
+        )
+        .map((mediaItem) => ({
+          etag: mediaItem.etag,
+          mediaType: mediaItem.mediaType,
+        }))
     );
 
     // Get project media (ordered)
-    const projectMedia: string[] = Array.isArray(record.media)
+    const projectMedia = Array.isArray(record.media)
       ? record.media
           .filter(
-            (m): m is { etag: string } =>
-              m !== null && typeof m === "object" && "etag" in m
+            (m): m is { etag: string; mediaType: string } =>
+              m !== null &&
+              typeof m === "object" &&
+              "etag" in m &&
+              "mediaType" in m
           )
-          .map((m) => m.etag)
+          .map((m) => ({ etag: m.etag, mediaType: m.mediaType }))
       : [];
 
     // Create new set of ordered media
     const combinedMedia = [
       ...projectMedia,
-      ...worksMedia.filter((etag) => !projectMedia.includes(etag)),
+      ...worksMedia.filter(
+        (wm) => !projectMedia.some((pm) => pm.etag === wm.etag)
+      ),
     ];
 
-    // Fetch related media from the database (images and videos)
-    const mediaRefs = await prisma.imageRef.findMany({
-      where: { etag: { in: combinedMedia } },
-    });
-    const videoRefs = await prisma.videoRef.findMany({
-      where: { etag: { in: combinedMedia } },
-    });
+    const media = await getAllmedia(combinedMedia);
 
-    // Combine the images and videos
-    const allMedia = [...mediaRefs, ...videoRefs];
-
-    // Create a map by etag for quick access
-    const mediaMap = new Map(allMedia.map((item) => [item.etag, item]));
-
-    // Reorder allMedia to match the order in combinedMedia and add descriptions
-    const orderedMedia = combinedMedia
-      .map((etag) => mediaMap.get(etag))
-      .filter((item): item is NonNullable<typeof item> => item !== undefined)
-      .map(({ createdAt, updatedAt, ...rest }) => rest) //remove fields
+    // add descriptions
+    const processedMedia = media
       .map((mediaItem) => {
-        // Check if media is part of project or works media
+        if (!mediaItem) return null;
 
-        // If it's works media, find the related work
+        // Check if media is part of project or works media If it's works media, find the related work
         const relatedWork = record.ProjectsOnWorks.find((pow) =>
           (pow.work.media as Array<{ etag: string }>)
             .map((m) => m.etag)
@@ -179,22 +188,20 @@ export class ProjectController extends ProjectsOnWorksController {
 
         // Set description based on media type
         const description =
-          relatedWork && !mediaItem.description
+          relatedWork && !("description" in mediaItem)
             ? `${relatedWork.general.title}, ${relatedWork.medium ? relatedWork.medium + ", " : ""}${relatedWork.dimensions ? relatedWork.dimensions + " cm, " : ""}${relatedWork.year ?? ""}`
-            : mediaItem.description || "";
+            : (mediaItem as any).description || "";
 
         // Return media item with description
         return {
           ...mediaItem,
           description,
         };
-      });
-
-    // Update the record with the ordered media
-    record.media = orderedMedia;
+      })
+      .filter(Boolean);
 
     // Send updated data
-    successResponse(res, record);
+    successResponse(res, { ...record, media: processedMedia });
   });
 
   update = expressAsyncHandler(async (req, res) => {

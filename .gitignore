@@ -130,7 +130,6 @@ dist
 .pnp.*
 
 # labguy
-/prisma/migrations
 .env
 *.pem
 public

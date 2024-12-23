@@ -255,7 +255,7 @@ async function createWork(projectId: number): Promise<void> {
   const video: Prisma.VideoRefCreateWithoutTagsInput = {
     etag: "SEFX1oqb8UAnI8g7Z9ov22gJ6fc",
     mediaType: "VIDEO",
-    id: "z70z6BS4CfE",
+    public_id: "z70z6BS4CfE",
     vimeo_url: null,
     sc_url: null,
     yt_url: "https://www.youtube.com/watch?v=z70z6BS4CfE",
