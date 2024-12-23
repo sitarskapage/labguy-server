@@ -21,6 +21,54 @@ export class ProjectController extends ProjectsOnWorksController {
   constructor() {
     super("project");
   }
+  private getOneBySlugOrId = async (req: Request, res: Response) => {
+    const parsedId = parseId(req.params.id);
+    let record;
+    if (typeof parsedId === "string") {
+      // Look up by slug
+      const generalRecord = await prisma.generalSection.findUnique({
+        where: { slug: parsedId },
+      });
+
+      if (!generalRecord) return notFoundResponse(res, "Record not found");
+
+      return await prisma.project.findUnique({
+        where: { generalId: generalRecord.id },
+        include: {
+          general: {
+            include: {
+              tags: true,
+            },
+          },
+          ProjectsOnWorks: {
+            include: {
+              work: { include: { general: { include: { tags: true } } } },
+            },
+            orderBy: { fIndex: "asc" },
+          },
+        },
+      });
+    } else {
+      // Look up by numeric ID
+      return prisma.project.findUnique({
+        where: { id: parsedId },
+        include: {
+          general: {
+            include: {
+              tags: true,
+            },
+          },
+          ProjectsOnWorks: {
+            include: {
+              work: { include: { general: { include: { tags: true } } } },
+            },
+            orderBy: { fIndex: "asc" },
+          },
+        },
+      });
+    }
+  };
+
   get = expressAsyncHandler(async (req, res) => {
     const items = await prisma.project.findMany({
       select: {
@@ -84,53 +132,6 @@ export class ProjectController extends ProjectsOnWorksController {
 
     successResponse(res, projectsWithCover);
   });
-  private getOneBySlugOrId = async (req: Request, res: Response) => {
-    const parsedId = parseId(req.params.id);
-    let record;
-    if (typeof parsedId === "string") {
-      // Look up by slug
-      const generalRecord = await prisma.generalSection.findUnique({
-        where: { slug: parsedId },
-      });
-
-      if (!generalRecord) return notFoundResponse(res, "Record not found");
-
-      return await prisma.project.findUnique({
-        where: { generalId: generalRecord.id },
-        include: {
-          general: {
-            include: {
-              tags: true,
-            },
-          },
-          ProjectsOnWorks: {
-            include: {
-              work: { include: { general: { include: { tags: true } } } },
-            },
-            orderBy: { fIndex: "asc" },
-          },
-        },
-      });
-    } else {
-      // Look up by numeric ID
-      return prisma.project.findUnique({
-        where: { id: parsedId },
-        include: {
-          general: {
-            include: {
-              tags: true,
-            },
-          },
-          ProjectsOnWorks: {
-            include: {
-              work: { include: { general: { include: { tags: true } } } },
-            },
-            orderBy: { fIndex: "asc" },
-          },
-        },
-      });
-    }
-  };
 
   getOne = expressAsyncHandler(async (req, res, next) => {
     const record = await this.getOneBySlugOrId(req, res);
@@ -188,9 +189,9 @@ export class ProjectController extends ProjectsOnWorksController {
 
         // Set description based on media type
         const description =
-          relatedWork && !("description" in mediaItem)
+          relatedWork && !mediaItem.description
             ? `${relatedWork.general.title}, ${relatedWork.medium ? relatedWork.medium + ", " : ""}${relatedWork.dimensions ? relatedWork.dimensions + " cm, " : ""}${relatedWork.year ?? ""}`
-            : (mediaItem as any).description || "";
+            : mediaItem.description || "";
 
         // Return media item with description
         return {

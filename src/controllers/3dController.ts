@@ -6,7 +6,11 @@ import { prisma } from "../prismaclient";
 import crypto from "crypto";
 import fs from "fs/promises";
 import path from "path";
-import { Prisma, ThreedRef as OriginalThreedRef } from "@prisma/client";
+import {
+  Prisma,
+  ThreedRef as OriginalThreedRef,
+  ImageRef,
+} from "@prisma/client";
 import { getAllFilesSize } from "../utils/helpers";
 
 interface ThreedRef extends Omit<OriginalThreedRef, "imageRefEtag"> {
@@ -19,6 +23,9 @@ interface ModelFile extends Express.Multer.File {
 }
 
 export class ThreedController extends MediaController {
+  constructor() {
+    super("threedRef");
+  }
   private validateModelFile(files: Express.Multer.File[]): ModelFile {
     const modelFile = files.find((file) => {
       const ext = path.extname(file.originalname).toLowerCase();
@@ -106,5 +113,30 @@ export class ThreedController extends MediaController {
     console.log(updated);
 
     successResponse(res, updated);
+  });
+
+  destroy = expressAsyncHandler(async (req, res, _next) => {
+    const items: ThreedRef[] = req.body;
+    const etags = items.map((item) => item.etag);
+
+    const deleted = await prisma.threedRef.deleteMany({
+      where: { etag: { in: etags } },
+    });
+
+    console.log("DESTROYING:", items);
+
+    // Remove folders from public/uploads
+    await Promise.all(
+      items.map(async (item) => {
+        if (items.length > 0) {
+          const dir = path.dirname(item.path as string);
+          await fs.rm(dir, { recursive: true, force: true }).catch(() => {
+            /* ignore cleanup errors */
+          });
+        }
+      })
+    );
+
+    successResponse(res, deleted);
   });
 }

@@ -64,6 +64,9 @@ export abstract class ProjectsOnWorksController extends Controller {
       include: {
         general: { include: { tags: true } },
       },
+      orderBy: {
+        year: "asc",
+      },
     });
     successResponse(res, items);
   });

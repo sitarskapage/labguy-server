@@ -6,7 +6,7 @@ import { successResponse } from "../utils/responses";
 export class MediaController {
   delegate: any;
 
-  constructor(model?: "imageRef" | "videoRef") {
+  constructor(model?: "imageRef" | "videoRef" | "threedRef") {
     this.delegate = model && prisma[model];
   }
 
