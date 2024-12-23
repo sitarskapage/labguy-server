@@ -1,9 +1,9 @@
 model Project {
     id         Int     @id @default(autoincrement())
-    subtitle   String?
+    subtitle   String? @db.Text
     start_date Json?
     end_date   Json?
-    text       String?
+    text       String? @db.Text
     venue      String?
     urls       Json?
     media      Json?

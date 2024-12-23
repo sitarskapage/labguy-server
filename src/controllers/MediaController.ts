@@ -6,7 +6,7 @@ import { successResponse } from "../utils/responses";
 export class MediaController {
   delegate: any;
 
-  constructor(model?: "imageRef" | "videoRef") {
+  constructor(model?: "imageRef" | "videoRef" | "threedRef") {
     this.delegate = model && prisma[model];
   }
 
@@ -17,8 +17,13 @@ export class MediaController {
     // Fetch all videos
     const videos = await prisma.videoRef.findMany({});
 
+    //Fetch all 3d models
+    const threed = await prisma.threedRef.findMany({
+      include: { poster: true },
+    });
+
     // Combine the results
-    const media = [...images, ...videos];
+    const media = [...images, ...videos, ...threed];
 
     // Sort combined results by createdAt. It's slow but good enough for now.
     media.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());

@@ -2,12 +2,52 @@ import { ProjectsOnWorksController } from "./ProjectsOnWorksController";
 import expressAsyncHandler from "express-async-handler";
 import { notFoundResponse, successResponse } from "../utils/responses";
 import { prisma } from "../prismaclient";
-import { parseId } from "../utils/helpers";
+import { getAllmedia, parseId } from "../utils/helpers";
+import { ImageRef, ThreedRef, VideoRef } from "@prisma/client";
 
 export class WorkController extends ProjectsOnWorksController {
   constructor() {
     super("work");
   }
+
+  getUnique = expressAsyncHandler(async (req, res) => {
+    // there might be multiple works with the same title (variants)
+    // this should respond with non-duplicates, latest works
+
+    const items = await prisma.work.findMany({
+      include: {
+        general: { include: { tags: true } },
+      },
+      orderBy: {
+        year: "asc",
+      },
+    });
+
+    //for now use javascript, could be changed in the future if prisma implement nested relations grouping https://github.com/prisma/prisma/issues/8744
+    const uniqueItems = Object.values(
+      items.reduce<{ [key: string]: (typeof items)[0] }>((acc, item) => {
+        const title = item.general?.title;
+
+        // Determine the date to use for comparison (prefer updatedAt, fallback to createdAt)
+        const compareDate = item.general.updatedAt || item.general.createdAt;
+
+        // Keep only the work with the latest updatedAt (or createdAt if updatedAt is missing) for each title
+        if (
+          !acc[title] ||
+          new Date(
+            acc[title].general.updatedAt || acc[title].general.createdAt
+          ) < new Date(compareDate)
+        ) {
+          acc[title] = item;
+        }
+
+        return acc;
+      }, {})
+    );
+
+    // Respond with the processed unique works
+    successResponse(res, uniqueItems);
+  });
 
   getOne = expressAsyncHandler(async (req, res) => {
     const parsedId = parseId(req.params.id);
@@ -57,14 +97,27 @@ export class WorkController extends ProjectsOnWorksController {
       });
     }
 
-    // Post-process to map projects from ProjectsOnWorks
+    // Post-process
     if (record) {
+      // map projects from ProjectsOnWorks
       const projects = record.ProjectsOnWorks.map((p) => p.project); // Extract the project objects
 
-      // Add 'projects' field to the response
+      // get ordered media
+      const mediaOrdered = Array.isArray(record.media)
+        ? (
+            record.media as ({ etag: string; mediaType: string } | null)[]
+          ).filter((media) => media && media.etag && media.mediaType)
+        : [];
+
+      const media = await getAllmedia(
+        mediaOrdered as { etag: string; mediaType: string }[]
+      );
+
+      // Add up-to-date fields to the response
       const response = {
         ...record,
         projects,
+        media,
       };
 
       successResponse(res, response);
@@ -78,6 +131,7 @@ export class WorkController extends ProjectsOnWorksController {
     const updateData = await this.updateData(req);
     const projects = req.body.projects;
     const count = (await prisma.projectsOnWorks.count()).toString();
+    const { dimensions, year, medium, description, urls } = req.body;
 
     // Get the project IDs from the request body
     const projectIds = projects.map((project: { id: number }) => project.id);
@@ -96,10 +150,15 @@ export class WorkController extends ProjectsOnWorksController {
 
     // Add missing props
     const newData = {
+      description,
+      dimensions,
+      year,
+      medium,
       ...updateData,
       media: req.body.media,
+      urls,
     };
-
+    console.debug(newData);
     // Update the work entry
     const updatedRecord = await prisma.work.update({
       where: { id: workId }, // Specify the Work ID to update

@@ -33,19 +33,25 @@
 
    1. Connect to the server via SSH.
    2. Navigate to the root directory using `cd <dir>`
-   3. Ensure that the `.htaccess` file is configured correctly. You might need to replace `127.0.0.1` with your IP.
-   4. Execute:
+   3. Ensure that the `.htaccess` file is configured correctly.
+      `touch htaccess`
+      ```DirectoryIndex disabled
+      RewriteEngine On
+      RewriteRule ^$ http://127.0.0.1:3000/ [P,L]
+      RewriteCond %{REQUEST_FILENAME} !-f
+      RewriteCond %{REQUEST_FILENAME} !-d
+      RewriteRule ^(.\*)$ http://127.0.0.1:3000/$1 [P,L]
       ```
-      mkdir ~/.npm-global
-      npm config set prefix '~/.npm-global'
-      echo 'export PATH=~/.npm-global/bin:~/bin:$PATH ' >> $HOME/.bash_profile && source $HOME/.bash_profile
-      ```
-   5. `git clone https://username:token@github.com/username/repo.git`
-   6. Make sure the node version is compatible.
-   7. Follow the steps in the [Installation](#installation) section.
-   8. `npm i pm2 -g`
-   9. `pm2 start bin/www`
-   10. Application should be running in the background now.
+      You need to replace`127.0.0.1`with your server IP.
+
+2. Execute:
+   ```
+   mkdir ~/.npm-global
+   npm config set prefix '~/.npm-global'
+   echo 'export PATH=~/.npm-global/bin:~/bin:$PATH ' >> $HOME/.bash_profile && source $HOME/.bash_profile
+   ```
+   5.`git clone https://username:token@github.com/username/repo.git` 6. Make sure the node version is compatible.
+3. Follow the steps in the [Installation](#installation) section. 8.`npm i pm2 -g` 9.`pm2 start bin/www` 10.`pm2 save` 11.`pm2 startup` 12. Application should be running in the background now.
 
 ## Auto-updates
 
@@ -61,3 +67,7 @@ In the Future
 - Tag update page
 - Dashboard
 - Portfolio generator page
+
+```
+
+```

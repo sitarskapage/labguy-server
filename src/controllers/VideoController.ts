@@ -50,7 +50,7 @@ export class VideoController extends MediaController {
 
     const reference = {
       etag: videoData.etag,
-      id: videoData.id,
+      public_id: videoData.id,
       yt_url: req.body.youtube_url,
       title: videoData.snippet.title,
       description: videoData.snippet.description,

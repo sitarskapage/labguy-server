@@ -7,15 +7,17 @@ import errorHandler from "./src/middleware/errorHandler";
 import { limiter } from "./src/middleware/config/limiter";
 import { authVerifyPOST } from "./src/middleware/auth";
 import compression from "compression";
-
-const isDevMode = process.env.NODE_ENV === "development";
+import { isDevMode } from "./src/utils/helpers";
 
 // init
 const app = express();
 
+// Trust proxy headers
+app.enable("trust proxy");
+
 //middleware
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 app.use(helmet());
 app.use(morgan(isDevMode ? "dev" : "combined"));
 app.use(limiter);
@@ -23,8 +25,8 @@ app.use(limiter);
 // Compress all routes
 app.use(compression());
 
-// serving static files NOT IMPLEMENTED
-// app.use(express.static(path.join(__dirname, "public")));
+// serving static files
+app.use(express.static("public"));
 
 //verify all post requests
 app.use(authVerifyPOST);
