@@ -9,11 +9,11 @@
   "description": "Express REST Server featuring: JWT Auth, Prisma, Cloudinary and standard middlewares like Helmet; Limitter; Morgan",
   "main": "./bin/www",
   "scripts": {
-    "prebuild": " ts-node scripts/postinstall && ts-node scripts/copy-assets",
+    "prebuild": "node_modules/.bin/ts-node scripts/prebuild",
     "build": "tsc",
     "start": "NODE_ENV=production node ./bin/www",
     "dev": "NODE_ENV=development nodemon ./app.ts",
-    "postinstall": "npx prisma generate && npm run build && npx prisma migrate deploy",
+    "postinstall": "npm run build && npx prisma migrate deploy",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
