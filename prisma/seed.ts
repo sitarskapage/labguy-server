@@ -59,7 +59,7 @@ async function createPreferences(): Promise<void> {
   const imageController = new ImageController();
   const imagePath = path.resolve(
     __dirname,
-    "assets/great-mountains_jakubkanna.jpg"
+    "assets/2228_DSF6878_jakubkanna2.png"
   );
 
   if (!fs.existsSync(imagePath)) {
@@ -70,11 +70,11 @@ async function createPreferences(): Promise<void> {
   const fileBuffer = fs.readFileSync(imagePath);
 
   const file: SavedFile = {
-    originalname: "great-mountains_jakubkanna.jpg",
+    originalname: "2228_DSF6878_jakubkanna2.png",
     path: imagePath,
     mimetype: "image/jpeg",
     isBright: false,
-    filename: "great-mountains_jakubkanna.jpg",
+    filename: "2228_DSF6878_jakubkanna2.png",
     fieldname: "",
     encoding: "7bit",
     size: fileBuffer.length,
@@ -83,7 +83,7 @@ async function createPreferences(): Promise<void> {
     buffer: fileBuffer,
   };
 
-  const uploadedImage = await imageController.uploadImageFile(file);
+  // const uploadedImage = await imageController.uploadImageFile(file);
 
   const urls = [
     { url: "#1", title: "Link" },
@@ -93,7 +93,7 @@ async function createPreferences(): Promise<void> {
   await prisma.preferences.create({
     data: {
       artists_name: "Artist's Name",
-      homepage_media: uploadedImage,
+      // homepage_media: uploadedImage,
       homepage_heading: "Homepage",
       homepage_subheading: "Sub-Heading",
       homepage_urls: urls,
