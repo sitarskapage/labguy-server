@@ -10,7 +10,7 @@
   "main": "./bin/www",
   "scripts": {
     "prebuild": "node_modules/.bin/ts-node scripts/prebuild",
-    "build": "tsc",
+    "build": "npx prisma generate && tsc",
     "start": "NODE_ENV=production node ./bin/www",
     "dev": "NODE_ENV=development nodemon ./app.ts",
     "postinstall": "npm run build && npx prisma migrate deploy",
