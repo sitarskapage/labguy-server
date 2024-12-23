@@ -89,6 +89,6 @@ function onListening() {
 
   // Log the address and port where the server is listening
   console.log(
-    `Server is running at https://${addr.address === "::" ? "localhost" : addr.address}:${addr.port}/`
+    `Server is running at http://${addr.address === "::" ? "localhost" : addr.address}:${addr.port}/`
   );
 }
