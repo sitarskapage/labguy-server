@@ -18,6 +18,9 @@ export class WorkController extends ProjectsOnWorksController {
       include: {
         general: { include: { tags: true } },
       },
+      orderBy: {
+        year: "asc",
+      },
     });
 
     //for now use javascript, could be changed in the future if prisma implement nested relations grouping https://github.com/prisma/prisma/issues/8744
