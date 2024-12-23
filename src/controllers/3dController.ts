@@ -61,7 +61,7 @@ export class ThreedController extends MediaController {
 
   upload = expressAsyncHandler(async (req: Request, res: Response) => {
     const files = req.files as Express.Multer.File[];
-    const host = `https://${req.get("host")}`;
+    const host = `${req.protocol}://${req.get("host")}`;
 
     try {
       const modelFile = this.validateModelFile(files);

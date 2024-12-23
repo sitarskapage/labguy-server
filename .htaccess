@@ -1,7 +1,5 @@
 DirectoryIndex disabled
 RewriteEngine On
-RequestHeader set X-Forwarded-Proto "https"
-RequestHeader set X-Forwarded-SSL "on"
 
 RewriteRule ^$ http://127.0.0.1:3000/ [P,L]
 RewriteCond %{REQUEST_FILENAME} !-f

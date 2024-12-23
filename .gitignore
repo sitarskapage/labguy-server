@@ -134,3 +134,4 @@ dist
 *.pem
 public
 .code-workspace
+.htaccess
