@@ -190,7 +190,9 @@ export class ProjectController extends ProjectsOnWorksController {
         // Set description based on media type
         const description = relatedWork
           ? `${relatedWork.general.title}, ${relatedWork.medium ? relatedWork.medium + ", " : ""}${relatedWork.dimensions ? relatedWork.dimensions + " cm, " : ""}${relatedWork.year ?? ""}`
-          : (mediaItem as any).description || "";
+          : "description" in mediaItem
+            ? mediaItem.description
+            : "";
 
         // Return media item with description
         return {
