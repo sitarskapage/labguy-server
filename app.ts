@@ -24,7 +24,7 @@ app.use(limiter);
 app.use(compression());
 
 // serving static files
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static("public"));
 
 //verify all post requests
 app.use(authVerifyPOST);
