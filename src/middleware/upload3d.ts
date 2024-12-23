@@ -1,8 +1,9 @@
 import multer from "multer";
 import path from "path";
-import fs from "fs/promises";
+import fs from "fs";
 import sanitizeFilename from "../utils/sanitizeFilename";
 import { Request } from "express";
+import { publicUploadDir } from "../utils/helpers";
 
 interface ModelRequest extends Request {
   modelFolder?: string;
@@ -27,22 +28,13 @@ export const process3d = multer({
         sanitizeFilename(path.parse(file.originalname).name).name;
       req.modelFolder = modelFolder;
 
-      const rootDir = path.resolve(__dirname, "../..");
-
-      const dir = path.join(
-        rootDir,
-        "public",
-        "uploads",
-        "models",
-        modelFolder
-      );
-
-      console.log("Creating directory:", dir);
+      const dir = path.join(publicUploadDir, "models", modelFolder);
 
       try {
-        await fs.mkdir(dir, { recursive: true });
-        const stats = await fs.stat(dir);
-        console.log("Directory created with permissions:", stats.mode);
+        if (!fs.existsSync(dir)) {
+          fs.mkdirSync(dir, { recursive: true });
+        }
+        console.log("Saving file to:", dir);
         cb(null, dir);
       } catch (error) {
         console.error("Directory creation error:", error);

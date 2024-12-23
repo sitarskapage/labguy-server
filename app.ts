@@ -8,8 +8,7 @@ import { limiter } from "./src/middleware/config/limiter";
 import { authVerifyPOST } from "./src/middleware/auth";
 import compression from "compression";
 import path from "path";
-
-const isDevMode = process.env.NODE_ENV === "development";
+import { isDevMode } from "./src/utils/helpers";
 
 // init
 const app = express();
