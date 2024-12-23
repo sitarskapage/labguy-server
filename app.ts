@@ -12,6 +12,9 @@ import { isDevMode } from "./src/utils/helpers";
 // init
 const app = express();
 
+// Trust proxy headers
+app.enable("trust proxy");
+
 //middleware
 app.use(cors());
 app.use(express.json());

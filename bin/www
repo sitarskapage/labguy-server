@@ -15,9 +15,6 @@ var http = require("http");
 var port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
-// Trust the first proxy
-app.set("trust proxy", "127.0.0.1");
-
 /**
  * Create HTTP server.
  */
