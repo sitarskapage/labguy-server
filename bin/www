@@ -7,7 +7,7 @@
 require("dotenv").config();
 var app = require("../dist/app").default;
 var debug = require("debug")("server:server");
-var https = require("http");
+var http = require("http");
 /**
  * Get port from environment and store in Express.
  */
@@ -15,11 +15,14 @@ var https = require("http");
 var port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
+// Trust the first proxy
+app.set("trust proxy", "127.0.0.1");
+
 /**
  * Create HTTP server.
  */
 
-var server = https.createServer(app);
+var server = http.createServer(app);
 
 /**
  * Get the IP address from the environment or default to "localhost".
