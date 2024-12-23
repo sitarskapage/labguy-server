@@ -36,7 +36,6 @@ export class ProfileController {
       picture: picture,
       portfolio_pdf_url: portfolio,
     };
-    console.log(p);
     const cArr = p.contact;
 
     if (!Array.isArray(cArr)) throw new Error("Contact field is not an array");
@@ -64,7 +63,6 @@ export class ProfileController {
 
       // Overwrite
       for (const cItem of cArr) {
-        console.log(cItem);
         await prisma.contact.upsert({
           where: { id: cItem.id || 0 },
           update: {

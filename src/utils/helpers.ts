@@ -23,8 +23,8 @@ export const getAllFilesSize = async (dirPath: string): Promise<number> => {
 
 export async function getAllmedia(
   mediaList: { etag: string; mediaType: string }[]
-): Promise<(ImageRef | VideoRef | ThreedRef | null)[]> {
-  return await Promise.all(
+): Promise<(ImageRef | VideoRef | ThreedRef)[]> {
+  const mediaResults = await Promise.all(
     mediaList.map(async (media) => {
       switch (media.mediaType) {
         case "IMAGE":
@@ -43,5 +43,8 @@ export async function getAllmedia(
           return null;
       }
     })
+  );
+  return mediaResults.filter(
+    (media): media is ImageRef | VideoRef | ThreedRef => media !== null
   );
 }

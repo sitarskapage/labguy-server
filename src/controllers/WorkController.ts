@@ -101,12 +101,14 @@ export class WorkController extends ProjectsOnWorksController {
 
       // get ordered media
       const mediaOrdered = Array.isArray(record.media)
-        ? (record.media as { etag: string; mediaType: string }[]).filter(
-            (media) => media.etag && media.mediaType
-          )
+        ? (
+            record.media as ({ etag: string; mediaType: string } | null)[]
+          ).filter((media) => media && media.etag && media.mediaType)
         : [];
 
-      const media = await getAllmedia(mediaOrdered);
+      const media = await getAllmedia(
+        mediaOrdered as { etag: string; mediaType: string }[]
+      );
 
       // Add up-to-date fields to the response
       const response = {

@@ -1,6 +1,6 @@
 import multer from "multer";
 import path from "path";
-import fs from "fs";
+import fs from "fs/promises";
 import sanitizeFilename from "../utils/sanitizeFilename";
 import { Request } from "express";
 
@@ -21,29 +21,39 @@ const isGltfFile = (file: Express.Multer.File): boolean => {
 
 export const process3d = multer({
   storage: multer.diskStorage({
-    destination: (req: ModelRequest, file, cb) => {
-      if (req.modelFolder) {
-        const dir = path.join(
-          __dirname,
-          `../../../public/uploads/models/${req.modelFolder}`
-        );
-        return cb(null, dir);
-      }
+    destination: async (req: ModelRequest, file, cb) => {
+      const modelFolder =
+        req.modelFolder ||
+        sanitizeFilename(path.parse(file.originalname).name).name;
+      req.modelFolder = modelFolder;
 
-      const parsed = path.parse(file.originalname);
-      const sanitized = sanitizeFilename(parsed.name);
-      req.modelFolder = sanitized.name;
+      const rootDir = path.resolve(__dirname, "../..");
 
       const dir = path.join(
-        __dirname,
-        `../../../public/uploads/models/${req.modelFolder}`
+        rootDir,
+        "public",
+        "uploads",
+        "models",
+        modelFolder
       );
-      fs.mkdirSync(dir, { recursive: true });
-      cb(null, dir);
+
+      console.log("Creating directory:", dir);
+
+      try {
+        await fs.mkdir(dir, { recursive: true });
+        const stats = await fs.stat(dir);
+        console.log("Directory created with permissions:", stats.mode);
+        cb(null, dir);
+      } catch (error) {
+        console.error("Directory creation error:", error);
+        cb(error as Error, "");
+      }
     },
     filename: (req, file, cb) => {
       const sanitized = sanitizeFilename(file.originalname);
-      cb(null, `${sanitized.name}${sanitized.ext}`);
+      const filename = `${sanitized.name}${sanitized.ext}`;
+      console.log("Saving file as:", filename);
+      cb(null, filename);
     },
   }),
   fileFilter: (req: ModelRequest, file, cb) => {
@@ -52,6 +62,9 @@ export const process3d = multer({
       "model/gltf+json",
       "application/octet-stream",
       "image/png",
+      "image/jpeg",
+      "image/jpg",
+      "image/webp",
     ];
 
     if (!req.gltfCount) req.gltfCount = 0;
