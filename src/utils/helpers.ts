@@ -41,6 +41,7 @@ export async function getAllmedia(
         case "THREE_D":
           return await prisma.threedRef.findUnique({
             where: { etag: media.etag },
+include:{poster:true}
           });
         default:
           return null;
