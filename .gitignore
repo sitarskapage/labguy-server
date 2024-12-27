@@ -131,7 +131,7 @@ dist
 
 # labguy
 .env
-.htaccess
 *.pem
 public
 .code-workspace
+.htaccess
