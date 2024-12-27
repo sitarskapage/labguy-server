@@ -19,7 +19,7 @@ export class WorkController extends ProjectsOnWorksController {
         general: { include: { tags: true } },
       },
       orderBy: {
-        year: "asc",
+        year: "desc",
       },
     });
 
