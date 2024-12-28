@@ -63,10 +63,9 @@
 
 In the Future
 
-- Add Vimdeo, Soundcloud, 3D support
-- Tag update page
+- Add Vimdeo, Soundcloud
 - Dashboard
-- Portfolio generator page
+- Portfolio generator
 
 ```
 
