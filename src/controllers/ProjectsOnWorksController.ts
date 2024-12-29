@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import { generateSlug } from "../utils/generateSlug";
-import { successResponse } from "../utils/responses";
+import { notFoundResponse, successResponse } from "../utils/responses";
 import { prisma } from "../prismaclient";
 import { Controller, LowercaseModelName } from "./Controller";
 import TagsController from "./TagsController";
-import { Project } from "@prisma/client";
 
 function notEmptyArray(arr: unknown): boolean {
   return Array.isArray(arr) && arr.length > 0;
