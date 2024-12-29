@@ -54,7 +54,7 @@ export class Controller {
     const record = await this.delegate.findFirst({
       include: { general: true },
       orderBy: {
-        general: { createdAt: "desc" },
+        general: { updatedAt: "desc" },
       },
     });
     if (!record) {
