@@ -8,6 +8,7 @@ export function createDeafultRouter<T extends Controller>(
   const router = Router();
 
   // Single entity routes
+  router.get("/latest", controller.getOneLatest);
   router.get("/:id", controller.getOne);
   router.post("/create", controller.create);
   router.post("/update/:id", controller.update);
