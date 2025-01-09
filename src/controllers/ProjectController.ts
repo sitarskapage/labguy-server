@@ -77,6 +77,8 @@ export class ProjectController extends ProjectsOnWorksController {
         media: true,
         start_date: true,
         end_date: true,
+        venue: true,
+        urls: true,
         subtitle: true,
         general: {
           include: {
