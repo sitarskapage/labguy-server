@@ -100,7 +100,7 @@ export class ProjectController extends ProjectsOnWorksController {
           orderBy: { fIndex: "asc" },
         },
       },
-      orderBy: { end_date: "asc" },
+      orderBy: { end_date: "desc" },
     });
 
     const projectsWithCover = items.map((project) => {

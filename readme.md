@@ -63,8 +63,7 @@
 
 In the Future
 
-- Add Vimdeo, Soundcloud
-- Dashboard
+- Add Vimdeo, Soundcloud support
 - Portfolio generator
 
 ```
