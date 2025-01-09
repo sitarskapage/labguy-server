@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { WorkController } from "../../controllers/WorkController";
-import { createDeafultRouter } from "../../utils/createDefaultRouter";
 import expressAsyncHandler from "express-async-handler";
 
 const workController = new WorkController();
@@ -8,6 +7,7 @@ const workController = new WorkController();
 const workRouter = Router();
 
 // Single entity routes
+workRouter.get("/latest", workController.getOneLatest);
 workRouter.get("/:id", workController.getOne);
 workRouter.post("/create", workController.create);
 workRouter.post("/update/:id", workController.update);

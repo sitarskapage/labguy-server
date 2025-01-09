@@ -64,6 +64,8 @@ jobs:
         run: |
           ssh staging << 'EOF'
             cd labguy-server
+            git reset --hard
+            git config pull.rebase true
             git pull origin main
             npm install
             npm run build

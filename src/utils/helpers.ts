@@ -1,7 +1,15 @@
 import fs from "fs/promises";
 import path from "path";
 import { prisma } from "../prismaclient";
-import { ImageRef, ThreedRef, VideoRef } from "@prisma/client";
+import {
+  ImageRef,
+  ThreedRef as OriginalThreedRef,
+  VideoRef,
+} from "@prisma/client";
+
+interface ThreedRef extends OriginalThreedRef {
+  poster: ImageRef | null;
+}
 
 export const isDevMode = process.env.NODE_ENV === "development";
 export const publicUploadDir = path.resolve("public", "uploads");
@@ -41,6 +49,7 @@ export async function getAllmedia(
         case "THREE_D":
           return await prisma.threedRef.findUnique({
             where: { etag: media.etag },
+            include: { poster: true },
           });
         default:
           return null;

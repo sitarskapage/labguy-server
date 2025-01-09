@@ -50,16 +50,18 @@ export class Controller {
     successResponse(res, record);
   });
 
-  getOneLatest = asyncHandler(async (req: Request, res: Response) => {
+  getOneLatest = asyncHandler(async (req, res) => {
     const record = await this.delegate.findFirst({
+      include: { general: true },
       orderBy: {
-        createdAt: "desc",
+        general: { updatedAt: "desc" },
       },
     });
-
-    if (!record) throw new Error("Record not found");
-
-    successResponse(res, record);
+    if (!record) {
+      notFoundResponse(res);
+    } else {
+      successResponse(res, record);
+    }
   });
 
   //CREATE
