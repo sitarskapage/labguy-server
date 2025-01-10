@@ -43,7 +43,7 @@ export default class TagsController {
     const { title, id } = req.body;
 
     const updatedOrCreatedTag = await prisma.tag.upsert({
-      where: { title },
+      where: { id },
       update: { title: title },
       create: { title: title },
     });
