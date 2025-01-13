@@ -1,19 +1,19 @@
 import express from "express";
-import helmet from "helmet";
 import cors from "cors";
+import helmet from "helmet";
 import morgan from "morgan";
-import router from "./src/routes";
+import compression from "compression";
 import errorHandler from "./src/middleware/errorHandler";
 import { limiter } from "./src/middleware/config/limiter";
 import { authVerifyPOST } from "./src/middleware/auth";
-import compression from "compression";
 import { isDevMode } from "./src/utils/helpers";
+import router from "./src/routes/index";
 
 // init
 const app = express();
 
 // Trust proxy headers
-app.enable("trust proxy");
+app.set("trust proxy", "127.0.0.1");
 
 //middleware
 app.use(cors());
