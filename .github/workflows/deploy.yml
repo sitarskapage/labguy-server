@@ -1,6 +1,10 @@
 name: Deploy to Sever
 
 on:
+  workflow_run:
+    workflows: ["Sync Fork"]  # Trigger on completion of the "Sync Fork" workflow
+    types:
+      - completed
   push:
     branches:
       - main
