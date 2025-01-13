@@ -9,6 +9,10 @@ model Preferences {
 
     enable_dashboard_darkmode Boolean @default(false)
     enable_portfolio_pdf      Boolean @default(true)
+    enable_yt                 Boolean @default(false)
+    enable_vimeo              Boolean @default(false)
+    enable_sc                 Boolean @default(false)
+    enable_images             Boolean @default(false)
 
     createdAt DateTime  @default(now())
     updatedAt DateTime? @updatedAt
