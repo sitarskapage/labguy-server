@@ -102,7 +102,24 @@ export class ProjectController extends ProjectsOnWorksController {
       },
       orderBy: { end_date: "desc" },
     });
+    items.sort((a, b) => {
+      function safeDate(jsonValue: any): Date {
+        if (jsonValue && typeof jsonValue === "object") {
+          const { year, month, day } = jsonValue;
+          return new Date(
+            Number(year) || 0,
+            (Number(month) || 1) - 1,
+            Number(day) || 1
+          );
+        }
+        return new Date(0); // Default for invalid or null values
+      }
 
+      const dateA = safeDate(a.end_date);
+      const dateB = safeDate(b.end_date);
+
+      return dateB.getTime() - dateA.getTime();
+    });
     const projectsWithCover = items.map((project) => {
       let firstPhoto: string | null = null;
 

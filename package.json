@@ -9,7 +9,7 @@
   "description": "Express REST Server featuring: JWT Auth, Prisma, Cloudinary and standard middlewares like Helmet; Limitter; Morgan",
   "main": "./bin/www",
   "scripts": {
-    "prebuild": "node_modules/.bin/ts-node scripts/prebuild",
+    "prebuild": "ts-node ./scripts/prebuild.ts",
     "build": "npx prisma generate && tsc",
     "start": "NODE_ENV=production node ./bin/www",
     "dev": "NODE_ENV=development nodemon ./app.ts",
