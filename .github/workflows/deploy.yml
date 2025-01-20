@@ -64,35 +64,38 @@ jobs:
         run: npm run build
 
       - name: Check for new changes
-        run: |
-          # Check for new changes in the repository
-          ssh staging << 'EOF'
-            if [ -d "~/labguy-server" ]; then
-              cd ~/labguy-server
-              git fetch origin main
-              git diff --quiet origin/main
-              if [ $? -eq 0 ]; then
-                echo "No new changes. Skipping deployment."
-                echo "CHANGES=false" >> $GITHUB_ENV
-              else
-                echo "There are new changes. Proceeding with deployment."
-                echo "CHANGES=true" >> $GITHUB_ENV
-              fi
-            else
-              echo "Directory ~/labguy-server does not exist."
-              exit 1
-            fi
-          EOF
+      id: check_changes
+      run: |
+        # Check for new changes in the repository
+        ssh staging << 'EOF'
+          git fetch origin main
+          git diff --quiet origin/main
+          if [ $? -eq 0 ]; then
+            echo "No new changes. Skipping deployment."
+            exit 0
+          else
+            echo "There are new changes. Proceeding with deployment."
+            exit 1
+          fi
+        EOF
+        
+        # Set the environment variable in GitHub Actions based on the SSH result
+        if [ $? -eq 0 ]; then
+          echo "CHANGES=false" >> $GITHUB_ENV
+        else
+          echo "CHANGES=true" >> $GITHUB_ENV
+        fi
+      
 
-      - name: Deploy to Server
-        if:
-        run: |
-          ssh staging << 'EOF'
-            cd labguy-server
-            git reset --hard
-            git config pull.rebase true
-            git pull origin main
-            npm install
-            npm run build
-            pm2 restart www
-          EOF
+      # - name: Deploy to Server
+      # if:
+      # run: |
+      #   ssh staging << 'EOF'
+      #     cd labguy-server
+      #     git reset --hard
+      #     git config pull.rebase true
+      #     git pull origin main
+      #     npm install
+      #     npm run build
+      #     pm2 restart www
+      #   EOF
