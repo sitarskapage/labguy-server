@@ -63,20 +63,14 @@ jobs:
       - name: Build the application
         run: npm run build
 
-      - name: Check for new changess
+      - name: Check for new changes
         run: |
           # Check for new changes in the repository
           ssh staging << 'EOF'
+            set -e
             cd ~/labguy-server
             git fetch origin main
             git diff --quiet origin/main
-            if [ $? -eq 0 ]; then
-              echo "No new changes. Skipping deployment."
-              exit 0
-            else
-              echo "There are new changes. Proceeding with deployment."
-              exit 1
-            fi
           EOF
 
           # Set the environment variable in GitHub Actions based on the SSH result
@@ -86,15 +80,16 @@ jobs:
             echo "CHANGES=true" >> $GITHUB_ENV
           fi
 
-      # - name: Deploy to Server
-      # if:
-      # run: |
-      #   ssh staging << 'EOF'
-      #     cd labguy-server
-      #     git reset --hard
-      #     git config pull.rebase true
-      #     git pull origin main
-      #     npm install
-      #     npm run build
-      #     pm2 restart www
-      #   EOF
+      - name: Deploy to Server
+        if: ${{ env.CHANGES == 'true' }}
+        run: |
+          ssh staging << 'EOF'
+            set -e  # Ensure the script exits on error
+            cd ~/labguy-server
+            git reset --hard
+            git config pull.rebase true
+            git pull origin main
+            npm install
+            npm run build
+            pm2 restart www
+          EOF
