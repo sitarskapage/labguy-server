@@ -64,24 +64,26 @@ jobs:
         run: npm run build
 
       - name: Check for new changes
-        id: check_changes # Add an ID to reference the result in a condition
+        id: check_changes
         run: |
           # Check for new changes in the repository
           ssh staging << 'EOF'
             cd labguy-server
             git fetch origin main
-            git diff --quiet origin/main  # Check for differences between local and remote
+            git diff --quiet origin/main
             if [ $? -eq 0 ]; then
               echo "No new changes. Skipping deployment."
-              echo "changes=false" >> $GITHUB_ENV  # Set a variable to indicate no changes
+              echo "CHANGES=false" >> "$GITHUB_ENV"
             else
               echo "There are new changes. Proceeding with deployment."
-              echo "changes=true" >> $GITHUB_ENV  # Set a variable to indicate new changes
+              echo "CHANGES=true" >> "$GITHUB_ENV"
             fi
           EOF
+        env:
+          CHANGES: false
 
       - name: Deploy to Server
-        if: env.changes == 'true'
+        if: ${{ env.CHANGES == 'true' }}
         run: |
           ssh staging << 'EOF'
             cd labguy-server
