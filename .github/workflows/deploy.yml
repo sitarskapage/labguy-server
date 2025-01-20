@@ -63,29 +63,27 @@ jobs:
       - name: Build the application
         run: npm run build
 
-      - name: Check for new changes
-      id: check_changes
-      run: |
-        # Check for new changes in the repository
-        ssh staging << 'EOF'
-          git fetch origin main
-          git diff --quiet origin/main
+      - name: Check for new changess
+        run: |
+          # Check for new changes in the repository
+          ssh staging << 'EOF'
+            git fetch origin main
+            git diff --quiet origin/main
+            if [ $? -eq 0 ]; then
+              echo "No new changes. Skipping deployment."
+              exit 0
+            else
+              echo "There are new changes. Proceeding with deployment."
+              exit 1
+            fi
+          EOF
+
+          # Set the environment variable in GitHub Actions based on the SSH result
           if [ $? -eq 0 ]; then
-            echo "No new changes. Skipping deployment."
-            exit 0
+            echo "CHANGES=false" >> $GITHUB_ENV
           else
-            echo "There are new changes. Proceeding with deployment."
-            exit 1
+            echo "CHANGES=true" >> $GITHUB_ENV
           fi
-        EOF
-        
-        # Set the environment variable in GitHub Actions based on the SSH result
-        if [ $? -eq 0 ]; then
-          echo "CHANGES=false" >> $GITHUB_ENV
-        else
-          echo "CHANGES=true" >> $GITHUB_ENV
-        fi
-      
 
       # - name: Deploy to Server
       # if:
