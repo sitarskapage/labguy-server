@@ -69,10 +69,10 @@ jobs:
             cd ~/labguy-server
             git fetch origin main
             git diff --quiet origin/main
-            DIFF_STATUS=$?
+            exit $?
           EOF
 
-          if [ $DIFF_STATUS -eq 0 ]; then
+          if [ $? -eq 0 ]; then
             echo "CHANGES=false" >> $GITHUB_ENV
           else
             echo "CHANGES=true" >> $GITHUB_ENV
