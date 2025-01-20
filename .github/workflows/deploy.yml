@@ -1,8 +1,8 @@
-name: Deploy to Sever
+name: Deploy to Server
 
 on:
   workflow_run:
-    workflows: ["Sync Fork"]  # Trigger on completion of the "Sync Fork" workflow
+    workflows: ["Sync Fork"] # Trigger on completion of the "Sync Fork" workflow
     types:
       - completed
   push:
@@ -21,11 +21,10 @@ jobs:
           ref: main
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
-
       - name: Set up Nodejs
         uses: actions/setup-node@v2
         with:
-          node-version: '22.5.1'
+          node-version: "22.5.1"
 
       - name: Setup SSH
         env:
@@ -36,11 +35,11 @@ jobs:
         run: |
           echo "Creating .ssh directory..."
           mkdir -p $HOME/.ssh/
-          
+
           echo "Writing SSH key to staging.key..."
           echo "$SSH_KEY" > $HOME/.ssh/staging.key
           chmod 600 $HOME/.ssh/staging.key  # Set permissions for the private key
-          
+
           echo "Creating SSH config file..."
           cat >> $HOME/.ssh/config <<EOF
           Host staging
@@ -64,7 +63,26 @@ jobs:
       - name: Build the application
         run: npm run build
 
+      - name: Check for new changes
+        run: |
+          # Check if there are any new changes in the repository
+          ssh staging << 'EOF'
+            cd labguy-server
+            git fetch origin main
+            LOCAL=$(git rev-parse @)
+            REMOTE=$(git rev-parse origin/main)
+            if [ $LOCAL != $REMOTE ]; then
+              echo "There are new changes. Proceeding with deployment."
+              exit 0
+            else
+              echo "No new changes. Skipping deployment."
+              exit 1
+            fi
+          EOF
+        continue-on-error: true # Allow workflow to continue even if no new changes
+
       - name: Deploy to Server
+        if: success() # Only proceed if there are new changes
         run: |
           ssh staging << 'EOF'
             cd labguy-server
