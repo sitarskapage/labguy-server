@@ -65,24 +65,22 @@ jobs:
 
       - name: Check for new changes
         run: |
-          # Check if there are any new changes in the repository
           ssh staging << 'EOF'
             cd labguy-server
             git fetch origin main
-            LOCAL=$(git rev-parse @)
-            REMOTE=$(git rev-parse origin/main)
-            if [ $LOCAL != $REMOTE ]; then
-              echo "There are new changes. Proceeding with deployment."
-              exit 0
-            else
+            git reset --hard origin/main
+            if git diff --quiet origin/main; then
               echo "No new changes. Skipping deployment."
               exit 1
+            else
+              echo "There are new changes. Proceeding with deployment."
+              exit 0
             fi
           EOF
-        continue-on-error: true # Allow workflow to continue even if no new changes
+        continue-on-error: true
 
       - name: Deploy to Server
-        if: success() # Only proceed if there are new changes
+        if: success()
         run: |
           ssh staging << 'EOF'
             cd labguy-server
