@@ -73,14 +73,13 @@ jobs:
             git diff --quiet origin/main
             if [ $? -eq 0 ]; then
               echo "No new changes. Skipping deployment."
-              echo "CHANGES=false" >> "$GITHUB_ENV"
+              echo "{CHANGES}={value}" >> "$GITHUB_ENV"
             else
               echo "There are new changes. Proceeding with deployment."
-              echo "CHANGES=true" >> "$GITHUB_ENV"
+              echo "{CHANGES}={value}" >> "$GITHUB_ENV"
+
             fi
           EOF
-        env:
-          CHANGES: false
 
       - name: Deploy to Server
         if: ${{ env.CHANGES == 'true' }}
