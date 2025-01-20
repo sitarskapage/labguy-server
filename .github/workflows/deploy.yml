@@ -2,7 +2,7 @@ name: Deploy to Server
 
 on:
   workflow_run:
-    workflows: ["Sync Fork"] # Trigger on completion of the "Sync Fork" workflow
+    workflows: ["Sync Fork"]
     types:
       - completed
   push:
@@ -64,25 +64,24 @@ jobs:
         run: npm run build
 
       - name: Check for new changes
+        id: check_changes # Add an ID to reference the result in a condition
         run: |
-          # Check if there are any new changes in the repository
+          # Check for new changes in the repository
           ssh staging << 'EOF'
             cd labguy-server
             git fetch origin main
-            LOCAL=$(git rev-parse @)
-            REMOTE=$(git rev-parse origin/main)
-            if [ $LOCAL != $REMOTE ]; then
-              echo "There are new changes. Proceeding with deployment."
-              exit 0
-            else
+            git diff --quiet origin/main  # Check for differences between local and remote
+            if [ $? -eq 0 ]; then
               echo "No new changes. Skipping deployment."
-              exit 1
+              echo "changes=false" >> $GITHUB_ENV  # Set a variable to indicate no changes
+            else
+              echo "There are new changes. Proceeding with deployment."
+              echo "changes=true" >> $GITHUB_ENV  # Set a variable to indicate new changes
             fi
           EOF
-        continue-on-error: true # Allow workflow to continue even if no new changes
 
       - name: Deploy to Server
-        if: success() # Only proceed if there are new changes
+        if: env.changes == 'true'
         run: |
           ssh staging << 'EOF'
             cd labguy-server
