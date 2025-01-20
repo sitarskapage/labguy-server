@@ -65,14 +65,16 @@ jobs:
 
       - name: Check for new changes
         run: |
-          ssh -T staging << 'EOF'
+          # Run SSH commands and capture the exit code of `git diff` inside the SSH session
+          STATUS=$(ssh -T staging << 'EOF'
             cd ~/labguy-server
             git fetch origin main
             git diff --quiet origin/main
-            exit $?
-          EOF
+            echo $?
+          EOF)
 
-          if [ $? -eq 0 ]; then
+          # Set the environment variable based on the exit code returned from the SSH session
+          if [ "$STATUS" -eq 0 ]; then
             echo "CHANGES=false" >> $GITHUB_ENV
           else
             echo "CHANGES=true" >> $GITHUB_ENV
