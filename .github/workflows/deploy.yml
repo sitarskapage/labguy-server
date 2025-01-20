@@ -67,6 +67,7 @@ jobs:
         run: |
           # Check for new changes in the repository
           ssh staging << 'EOF'
+            cd ~/labguy-server
             git fetch origin main
             git diff --quiet origin/main
             if [ $? -eq 0 ]; then
