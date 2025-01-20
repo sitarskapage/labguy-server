@@ -65,16 +65,14 @@ jobs:
 
       - name: Check for new changes
         run: |
-          # Check for new changes in the repository
-          ssh staging << 'EOF'
-            set -e
+          ssh -T staging << 'EOF'
             cd ~/labguy-server
             git fetch origin main
             git diff --quiet origin/main
+            DIFF_STATUS=$?
           EOF
 
-          # Set the environment variable in GitHub Actions based on the SSH result
-          if [ $? -eq 0 ]; then
+          if [ $DIFF_STATUS -eq 0 ]; then
             echo "CHANGES=false" >> $GITHUB_ENV
           else
             echo "CHANGES=true" >> $GITHUB_ENV
@@ -84,7 +82,6 @@ jobs:
         if: ${{ env.CHANGES == 'true' }}
         run: |
           ssh staging << 'EOF'
-            set -e  # Ensure the script exits on error
             cd ~/labguy-server
             git reset --hard
             git config pull.rebase true
