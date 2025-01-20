@@ -76,7 +76,7 @@ jobs:
               echo "CHANGES=false" >> "$GITHUB_ENV"
             else
               echo "There are new changes. Proceeding with deployment."
-              echo "CHANGES}=true" >> "$GITHUB_ENV"
+              echo "CHANGES=true" >> "$GITHUB_ENV"
 
             fi
           EOF
