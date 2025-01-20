@@ -64,24 +64,28 @@ jobs:
         run: npm run build
 
       - name: Check for new changes
-        id: check_changes
         run: |
           # Check for new changes in the repository
           ssh staging << 'EOF'
-            cd labguy-server
-            git fetch origin main
-            git diff --quiet origin/main
-            if [ $? -eq 0 ]; then
-              echo "No new changes. Skipping deployment."
-              echo "CHANGES=false" >> $GITHUB_ENV
+            if [ -d "~/labguy-server" ]; then
+              cd ~/labguy-server
+              git fetch origin main
+              git diff --quiet origin/main
+              if [ $? -eq 0 ]; then
+                echo "No new changes. Skipping deployment."
+                echo "CHANGES=false" >> $GITHUB_ENV
+              else
+                echo "There are new changes. Proceeding with deployment."
+                echo "CHANGES=true" >> $GITHUB_ENV
+              fi
             else
-              echo "There are new changes. Proceeding with deployment."
-              echo "CHANGES=true" >> $GITHUB_ENV
+              echo "Directory ~/labguy-server does not exist."
+              exit 1
             fi
           EOF
 
       - name: Deploy to Server
-        if: ${{ env.CHANGES == 'true' }}
+        if:
         run: |
           ssh staging << 'EOF'
             cd labguy-server
