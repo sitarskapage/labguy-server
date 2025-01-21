@@ -315,6 +315,41 @@ async function createTag() {
   );
 }
 
+//
+async function createPost() {
+  let post = await prisma.post.findFirst();
+
+  if (post) {
+    return console.log(
+      `${styles.grey}Post already exists. Skipping seed.${styles.reset}`
+    );
+  }
+
+  const title = "First Post";
+
+  post = await prisma.post.create({
+    data: {
+      general: {
+        create: {
+          title: title,
+          description: "Description of the post.",
+          slug: await generateSlug(title, prisma.post),
+          published: true,
+        },
+      },
+      author: { connect: { id: 1 } },
+      content: [
+        {
+          text: "<p>This is the first post content.</p>",
+        },
+      ],
+    },
+  });
+
+  console.log(
+    `${styles.grey}First post created successfully with ID: ${post.id}.${styles.reset}`
+  );
+}
 export async function seed(): Promise<void> {
   try {
     if (env.ADMIN_EMAIL) {
@@ -329,6 +364,8 @@ export async function seed(): Promise<void> {
     const projectId = await createProject();
 
     projectId && (await createWork(projectId));
+
+    await createPost();
 
     await createTag();
   } catch (error: any) {
