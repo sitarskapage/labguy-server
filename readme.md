@@ -4,17 +4,21 @@
 
 1. Create/add variables in `.env` file in root directory.
    ```js
-    DIRECT_URL="mysql://USER:PASSWORD@HOST:PORT/DATABASE" #connect to db
-    DATABASE_URL="mysql://USER:PASSWORD@HOST:PORT/DATABASE" #connect to db
-    ADMIN_EMAIL="abcd@gmail.com" #send Email
-    ADMIN_EMAIL_PASSWORD="abcd abcd abcd abcd" #send Email
-    CLD_CLOUD_NAME="abcd" #upload Images
-    CLD_API_KEY="12345" #upload Images
-    CLD_API_SECRET="1a2b3c4d" #upload Images
-    CLD_PRESET_NAME="abcd" #upload Images
-    YT_API_KEY="1a2b3c4d" #get Youtube Video data
-    DASHBOARD_ADMIN_PATH="admin" #create Reset Password Link
-    IP="127.0.0.1" #run server
+   DIRECT_URL="mysql://USER:PASSWORD@HOST:PORT/DATABASE" # db
+   DATABASE_URL="mysql://USER:PASSWORD@HOST:PORT/DATABASE" #db
+   DATABASE_SHADOW_URL="mysql://USER:PASSWORD@HOST:PORT/DATABASE" #db
+   ADMIN_EMAIL="abcd@gmail.com" # Email
+   ADMIN_EMAIL_PASSWORD="abcd abcd abcd abcd" # Email
+   CLD_CLOUD_NAME="abcd" # Images
+   CLD_API_KEY="12345" # Images
+   CLD_API_SECRET="1a2b3c4d" # Images
+   CLD_PRESET_NAME="abcd"  Images
+   YT_API_KEY="1a2b3c4d" # Youtube Video data
+   DASHBOARD_ADMIN_PATH="admin" # Reset Password Link
+   IP="127.0.0.1" # server
+   VIMEO_ID="b3747ed69ddb778c6e816d1bf074a5b3d015797d"  # vimeo
+   VIMEO_SECRET="BVMacJ+4SUCEa+Pntt/6NMnP95PnsYNghcMOwqU0k9ADaR9uew8gx3Le8Yjk0knc3eWNG1PwwCT/XhxF/aDDQ2UmYZD6HilFFk/3i/HfOLhSKTbC7HqRobKB6AbGf23U" # vimeo
+   VIMEO_TOKEN="z5801b1ba30652319f6a9934e7ga2d45" # vimeo
    ```
 2. Create/add in `.gitignore` file in root directory.
    ```js
