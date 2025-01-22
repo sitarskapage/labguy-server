@@ -5,11 +5,11 @@ echo "Checking if the PM2 process 'www' is running..."
 # Ensure PM2 is in the PATH
 PATH=$PATH:/usr/local/bin
 
-# Check if the process 'www' is running using PM2
-pm2 describe www > /dev/null 2>&1
+# Get the status of the PM2 process 'www'
+status=$(pm2 show www | grep status | awk '{print $4}')
 
-# Check the exit status of the pm2 describe command
-if [ $? -eq 0 ]; then
+# Check if the status is 'online'
+if [ "$status" == "online" ]; then
   echo "PM2 process 'www' is running."
 else
   echo "PM2 process 'www' is not running."
