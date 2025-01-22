@@ -1,18 +1,20 @@
 #!/bin/bash
 
-echo "Checking if any Node.js process is running..."
+echo "Checking if the PM2 process 'www' is running..."
 
-# Check if any Node.js process is running
-ps cax | grep node > /dev/null
+# Ensure PM2 is in the PATH
+PATH=$PATH:/usr/local/bin
 
-# Check if the process is running
+# Check if the process 'www' is running using PM2
+pm2 describe www > /dev/null 2>&1
+
+# Check the exit status of the pm2 describe command
 if [ $? -eq 0 ]; then
-  echo "Process is running."
+  echo "PM2 process 'www' is running."
 else
-  echo "Process is not running."
-  # Ensure PM2 is in the PATH
-  PATH=$PATH:/usr/local/bin
+  echo "PM2 process 'www' is not running."
   # Start the process using PM2
-  echo "Starting process with PM2..."
+  echo "Starting 'www' process with PM2..."
+  pm2 resurrect
   pm2 start www
 fi
