@@ -3,7 +3,7 @@
 echo "Checking if the PM2 process 'www' is running..."
 
 # Ensure PM2 is in the PATH
-PATH=$PATH:/usr/local/bin
+PATH=$PATH:/home/host797681/.npm-global/bin
 
 # Get the status of the PM2 process 'www'
 status=$(pm2 show www | grep status | awk '{print $4}')
