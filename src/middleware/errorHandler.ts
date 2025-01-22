@@ -1,13 +1,8 @@
 import { Prisma } from "@prisma/client";
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, ErrorRequestHandler } from "express";
 
 // Define the error handler middleware
-export default function errorHandler(
-  err: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   // Log the error stack for debugging
   console.error(err.stack);
 
@@ -16,15 +11,19 @@ export default function errorHandler(
     if (err.code === "P2002") {
       const target = err?.meta?.target;
 
-      return res.status(409).json({
+      res.status(409).json({
         error: {
           message: `${target ? target : "Value"} is already in use.`,
         },
       });
+      return; // Ensure the function stops here and does not fall through
     }
   }
 
   // Send a 500 Internal Server Error response
   res.status(500).json({ error: { message: "Internal Server Error" } });
+  //
   next();
-}
+};
+
+export default errorHandler;
