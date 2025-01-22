@@ -2,8 +2,8 @@ name: Sync Fork
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Runs every 30 minutes
-  workflow_dispatch:  # Triggered by manual button click
+    - cron: "0 0 * * *" # Runs every 30 minutes
+  workflow_dispatch: # Triggered by manual button click
 
 jobs:
   sync:
@@ -15,4 +15,4 @@ jobs:
         with:
           base: main
           head: main
-          
+          merge_method: rebase
