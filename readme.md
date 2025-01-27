@@ -43,7 +43,7 @@
       RewriteRule ^(.\*)$ http://127.0.0.1:3000/$1 [P,L]
       ```
 
-      \*You need to replace`127.0.0.1`with your hosting IP.
+      \*You need to replace`127.0.0.1`with your machine's IP.
 
    5. Execute:
 
