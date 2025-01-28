@@ -65,7 +65,7 @@
 
       ```
 
-      \*Make sure to replace hostname
+      \*Make sure to replace hostname and check paths
 
    10. Application should be pernamently running in the background now.
 
