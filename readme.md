@@ -73,7 +73,7 @@
 ## Auto-updates
 :warning: **CAUTION** it will synchronize your commit history.
 
-1. Create Personal Access Token (PAT) with repo and workflow permissions
+1. Create classic Personal Access Token (PAT) with **repo** and **workflow** permissions enabled
 2. Add secrets to the forked repo:
    ```
    PAT
