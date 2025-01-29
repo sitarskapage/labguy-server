@@ -71,7 +71,7 @@
    10. Application should be pernamently running in the background now.
 
 ## Auto-updates
-:warning: **CAUTION** this will synchronize your commit history.
+:warning: **CAUTION** it will synchronize your commit history.
 
 1. Create Personal Access Token (PAT) with repo and workflow permissions
 2. Add secrets to the forked repo:
