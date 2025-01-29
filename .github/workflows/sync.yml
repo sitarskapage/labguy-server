@@ -1,4 +1,4 @@
-name: Sync Fork
+name: Sync Repo with Upstream
 
 on:
   schedule:
@@ -6,17 +6,38 @@ on:
   workflow_dispatch: # Triggered by manual button click
 
 jobs:
-  sync:
+  sync-repo:
     runs-on: ubuntu-latest
+
     permissions:
       contents: write
-      pull-requests: write
-      repository-projects: write
+      actions: write
 
     steps:
-      - name: Fork Sync
-        uses: tgymnich/fork-sync@v2.0.10
+      # Step 1: Checkout the current repository
+      - name: Checkout the repository
+        uses: actions/checkout@v2
         with:
-          base: main
-          head: main
-          merge_method: rebase
+          token: ${{ secrets.PAT }}
+
+      # Step 2: Set up Git user info
+      - name: Set up Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+      # Step 3: Add the upstream remote (the remote repository)
+      - name: Add upstream remote
+        run: |
+          git remote add upstream https://github.com/jakubkanna/labguy-server
+      # Step 4: Fetch the upstream changes
+      - name: Fetch upstream
+        run: |
+          git fetch upstream
+      # Step 5: Reset the current repository to match the upstream's main branch
+      - name: Reset to upstream/main
+        run: |
+          git reset --hard upstream/main
+      # Step 6: Push the changes to the origin (your fork)
+      - name: Push changes
+        run: |
+          git push origin main --force
