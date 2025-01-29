@@ -70,17 +70,19 @@
    10. Application should be pernamently running in the background now.
 
 ## Auto-updates
+**CAUTION** this will synchronize your commit history.
 
-1. Add secrets to the forked repo:
+1. Create Personal Access Token (PAT) with repo and workflow permissions
+2. Add secrets to the forked repo:
    ```
+   PAT
    SERVER_SSH_KEY
    SERVER_HOST
    SERVER_USERNAME
    SERVER_PORT
    ```
-2. Add default ruleset for the branch main, `Require a pull request before merging` must be disabled
-3. The first pull request must be manually approved
-
+3. Go to Actions and enable all available actions.
+   
 ## Todo
 
 Planned future features:
