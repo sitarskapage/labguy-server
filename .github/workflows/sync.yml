@@ -1,4 +1,4 @@
-name: Sync Repo with Upstream
+name: Sync
 
 on:
   schedule:
