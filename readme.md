@@ -84,5 +84,4 @@
 ## Todo
 
 Planned future features:
-
 - Portfolio generator
