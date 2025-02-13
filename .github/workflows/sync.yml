@@ -33,11 +33,11 @@ jobs:
       - name: Fetch upstream
         run: |
           git fetch upstream
-      # Step 5: Reset the current repository to match the upstream's main branch
-      - name: Reset to upstream/main
+      # Step 5: Reset the current repository to match the upstream's digital-ocean branch
+      - name: Reset to upstream/digital-ocean
         run: |
-          git reset --hard upstream/main
+          git reset --hard upstream/digital-ocean
       # Step 6: Push the changes to the origin (your fork)
       - name: Push changes
         run: |
-          git push origin main --force
+          git push origin digital-ocean --force
