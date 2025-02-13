@@ -33,9 +33,10 @@
    3. Follow the steps in the [Installation](#installation) section.
    4. Create .htaccess file if necessary
 
-      run `touch .htaccess`, then copy paste\*:
+      create .htaccess file:
 
       ```DirectoryIndex disabled
+      DirectoryIndex disabled
       RewriteEngine On
       RewriteRule ^$ http://127.0.0.1:3000/ [P,L]
       RewriteCond %{REQUEST_FILENAME} !-f
@@ -70,9 +71,9 @@
    10. Application should be pernamently running in the background now.
 
 ## Auto-updates
-**CAUTION** this will synchronize your commit history.
+:warning: **CAUTION** it will synchronize your commit history.
 
-1. Create Personal Access Token (PAT) with repo and workflow permissions
+1. Create classic Personal Access Token (PAT) with **repo** and **workflow** permissions enabled
 2. Add secrets to the forked repo:
    ```
    PAT
