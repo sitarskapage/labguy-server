@@ -57,9 +57,6 @@
    6. `npm i pm2 -g`
    7. `pm2 start bin/www`
    8. `pm2 save`
-
-      \*Make sure to replace hostname and check paths
-
    9. Application should be running in the background now.
 
 ## Auto-updates
