@@ -57,18 +57,10 @@
    6. `npm i pm2 -g`
    7. `pm2 start bin/www`
    8. `pm2 save`
-   9. `crontab -e`, press `i` and insert text in a new line\*:
-
-      ```
-      @reboot /home/<hostname>/.npm-global/bin/pm2 resurrect
-
-      */5 * * * * /home/<hostname>/labguy-server/bin/check_node.sh
-
-      ```
 
       \*Make sure to replace hostname and check paths
 
-   10. Application should be pernamently running in the background now.
+   9. Application should be running in the background now.
 
 ## Auto-updates
 :warning: **CAUTION** it will synchronize your commit history.
