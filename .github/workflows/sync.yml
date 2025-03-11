@@ -33,11 +33,11 @@ jobs:
       - name: Fetch upstream
         run: |
           git fetch upstream
-      # Step 5: Reset the current repository to match the upstream's digital-ocean branch
-      - name: Reset to upstream/digital-ocean
+      # Step 5: Reset the current repository to match the upstream's vps branch
+      - name: Reset to upstream/vps
         run: |
-          git reset --hard upstream/digital-ocean
+          git reset --hard upstream/vps
       # Step 6: Push the changes to the origin (your fork)
       - name: Push changes
         run: |
-          git push origin digital-ocean --force
+          git push origin vps --force

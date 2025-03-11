@@ -16,7 +16,7 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v2
         with:
-          ref: digital-ocean
+          ref: vps
           token: ${{ secrets.PAT }}
 
       - name: Set up Nodejs
@@ -66,8 +66,8 @@ jobs:
           # Run SSH commands and capture the exit code of `git diff` inside the SSH session
           STATUS=$(ssh -T staging << 'EOF'
             cd ~/labguy-server
-            git fetch origin digital-ocean
-            git diff --quiet origin/digital-ocean
+            git fetch origin vps
+            git diff --quiet origin/vps
             echo $?
           EOF)
 
@@ -85,7 +85,7 @@ jobs:
             cd ~/labguy-server
             git reset --hard
             git config pull.rebase true
-            git pull origin digital-ocean
+            git pull origin vps
             npm install
             npm run build
             pm2 restart www
