@@ -13,7 +13,7 @@ model ImageRef {
     filename    String?   @unique
     format      String?
     bytes       Int?
-    description String?
+    description String?   @db.LongText
     width       Int?
     height      Int?
     tags        Tag[]
@@ -35,7 +35,7 @@ model VideoRef {
     title       String?   @default("Untitled")
     duration    String?
     definition  String?
-    description String?
+    description String?   @db.LongText
     thumbnail   String?
     tags        Tag[]
 
@@ -56,7 +56,7 @@ model ThreedRef {
     extension String?
     bytes     Int?
 
-    description     String?
+    description     String?   @db.LongText
     backgroundColor String?
     poster          ImageRef? @relation(fields: [imageRefEtag], references: [etag])
 
