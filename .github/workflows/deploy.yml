@@ -11,82 +11,26 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
-
     steps:
-      - name: Check out the repository
-        uses: actions/checkout@v2
+      - name: Deploy
+        uses: appleboy/ssh-action@v1.2.1
         with:
-          ref: vps
-          token: ${{ secrets.PAT }}
-
-      - name: Set up Nodejs
-        uses: actions/setup-node@v2
-        with:
-          node-version: "22.5.1"
-
-      - name: Setup SSH
-        env:
-          SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
-          SSH_HOST: ${{ secrets.SERVER_HOST }}
-          SSH_USER: ${{ secrets.SERVER_USERNAME }}
-          SSH_PORT: ${{ secrets.SERVER_PORT }}
-        run: |
-          echo "Creating .ssh directory..."
-          mkdir -p $HOME/.ssh/
-
-          echo "Writing SSH key to staging.key..."
-          echo "$SSH_KEY" > $HOME/.ssh/staging.key
-          chmod 600 $HOME/.ssh/staging.key  # Set permissions for the private key
-
-          echo "Creating SSH config file..."
-          cat >> $HOME/.ssh/config <<EOF
-          Host staging
-              HostName $SSH_HOST
-              User $SSH_USER
-              Port $SSH_PORT
-              IdentityFile $HOME/.ssh/staging.key
-              StrictHostKeyChecking no
-          EOF
-
-      - name: Load environment variables
-        run: |
-          ssh staging "cat ~/labguy-server/.env" > .env
-          set -a
-          source .env
-          set +a
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build the application
-        run: npm run build
-
-      - name: Check for new changes
-        run: |
-          # Run SSH commands and capture the exit code of `git diff` inside the SSH session
-          STATUS=$(ssh -T staging << 'EOF'
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            source ~/.bashrc
+            source ~/.nvm/nvm.sh
             cd ~/labguy-server
             git fetch origin vps
             git diff --quiet origin/vps
-            echo $?
-          EOF)
-
-          # Set the environment variable based on the exit code returned from the SSH session
-          if [ "$STATUS" -eq 0 ]; then
-            echo "CHANGES=false" >> $GITHUB_ENV
-          else
-            echo "CHANGES=true" >> $GITHUB_ENV
-          fi
-
-      - name: Deploy to Server
-        if: ${{ env.CHANGES == 'true' }}
-        run: |
-          ssh staging << 'EOF'
-            cd ~/labguy-server
-            git reset --hard
-            git config pull.rebase true
-            git pull origin vps
-            npm install
-            npm run build
-            pm2 restart www
-          EOF
+            STATUS=$?
+            if [ "$STATUS" -eq 1 ]; then
+              git reset --hard
+              git config pull.rebase true
+              git pull origin vps
+              npm install
+              npm run build
+              pm2 restart www
+            fi
